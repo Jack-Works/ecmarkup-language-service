@@ -1,0 +1,3 @@
+[submodule "ecmarkup"]
+	path = language-service/ecmarkup
+	url = https://github.com/tc39/ecmarkup

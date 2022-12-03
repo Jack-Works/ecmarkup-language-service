@@ -1,0 +1,16 @@
+{
+    "name": "ecmarkup-language-server",
+    "private": true,
+    "packageManager": "pnpm@7.17.1",
+    "description": "Language server and editor plugins for ecmarkup",
+    "author": "Jack Works",
+    "license": "MIT",
+    "scripts": {
+        "postinstall": "cd ./language-service/ecmarkup/ && npm install && npx tsc -p tsconfig.json --stripInternal false --declarationMap true",
+        "watch": "tsc -b . -w"
+    },
+    "devDependencies": {
+        "prettier": "^2.8.0",
+        "typescript": "5.0.0-dev.20221121"
+    }
+}

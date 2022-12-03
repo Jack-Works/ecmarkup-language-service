@@ -1,0 +1,83 @@
+{
+    "name": "ecmarkup-language-extension-vscode",
+    "private": true,
+    "description": "VSCode extension for ecmarkup",
+    "author": "Jack Works",
+    "license": "MIT",
+    "version": "0.1.0",
+    "main": "./lib/extension.js",
+    "enableProposedApis": false,
+    "publisher": "Jack Works",
+    "activationEvents": [
+        "onLanguage:ecmarkup"
+    ],
+    "contributes": {
+        "htmlLanguageParticipants": [
+            {
+                "languageId": "ecmarkup"
+            }
+        ],
+        "languages": [
+            {
+                "id": "ecmarkup",
+                "extensions": [
+                    ".emu"
+                ]
+            }
+        ],
+        "semanticTokenScopes": [
+            {
+                "language": "ecmarkup",
+                "scopes": {
+                    "boolean": [
+                        "constant.language.boolean"
+                    ],
+                    "if": [
+                        "keyword.control.conditional"
+                    ],
+                    "assert": [
+                        "keyword.control.assert"
+                    ],
+                    "eq": [
+                        "keyword.operator.logical"
+                    ],
+                    "var": [
+                        "storage.type"
+                    ],
+                    "return": [
+                        "keyword.control.flow"
+                    ],
+                    "loop": [
+                        "keyword.control.loop"
+                    ]
+                }
+            }
+        ],
+        "grammars": [
+            {
+                "language": "ecmarkup",
+                "scopeName": "text.html.ecmarkup",
+                "path": "./syntaxes/ecmarkup.tmLanguage.json"
+            }
+        ]
+    },
+    "repository": {
+        "type": "git"
+    },
+    "engines": {
+        "vscode": "^1.73.0"
+    },
+    "dependencies": {
+        "ecmarkup-language-server": "workspace:^",
+        "vscode-languageclient": "^8.0.2"
+    },
+    "devDependencies": {
+        "@types/node": "^18.11.10",
+        "@types/vscode": "^1.52.0",
+        "del": "^7.0.0",
+        "rollup": "^3.5.1",
+        "vsce": "^2.15.0",
+        "vscode-test": "^1.6.1"
+    },
+    "scripts": {}
+}
