@@ -351,6 +351,10 @@
                     "name": "collapsed",
                     "description": "If present, production is displayed in collapsed format with LHS and RHS on the same line.",
                     "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-grammar" }]
+                },
+                {
+                    "name": "type",
+                    "values": [{ "name": "definition" }]
                 }
             ]
         },

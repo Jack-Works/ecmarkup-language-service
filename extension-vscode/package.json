@@ -89,6 +89,12 @@
                 "scopeName": "text.html.ecmarkup",
                 "path": "./syntaxes/ecmarkup.tmLanguage.json"
             }
+        ],
+        "snippets": [
+            {
+                "language": "ecmarkup",
+                "path": "./snippets.json"
+            }
         ]
     },
     "repository": {

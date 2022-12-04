@@ -1,0 +1,336 @@
+{
+    "Ecmarkup Metadata": {
+        "prefix": "metadata",
+        "body": [
+            "<pre class=\"metadata\">",
+            "title: ${1:Proposal Name}",
+            "stage: ${2:0}",
+            "contributors: ${3:Your name}",
+            "</pre>"
+        ],
+        "description": "Add Ecmarkup metadata"
+    },
+    "Built-in Function": {
+        "prefix": "emu-clause built-in",
+        "body": [
+            "<emu-clause id=\"sec-${1/(.*)/${1:/downcase}/}\">",
+            "    <h1>${1:Something.prototype.function} ( )</h1>",
+            "    <p>This function performs the following steps when called:</p>",
+            "    <emu-alg>",
+            "        1. ${0:Return true.}",
+            "    </emu-alg>",
+            "</emu-clause>",
+            ""
+        ],
+        "description": "Create a new built-in function"
+    },
+    "Abstract Operation": {
+        "prefix": "emu-clause abstract operation",
+        "body": [
+            "<emu-clause id=\"sec-${1/(.*)/${1:/downcase}/}\" type=\"abstract operation\">",
+            "    <h1>",
+            "        ${1:AbstractOperationName} (",
+            "            _${2:input}_: ${3:an ECMAScript language value},",
+            "        ): ${4:either a normal completion containing an Object or a throw completion}",
+            "    </h1>",
+            "    <dl class=\"header\">",
+            "    </dl>",
+            "    <emu-alg>",
+            "        1. ${0:Return _${2}_}.",
+            "    </emu-alg>",
+            "</emu-clause>"
+        ],
+        "description": "Create a new Abstract Operation"
+    },
+    "Abstract Closure": {
+        "prefix": "abstract closure",
+        "body": [
+            "1. Let _${1:closure}_ be a new Abstract Closure with no parameters that captures _${2:something}_ and performs the following steps when called:",
+            "    1. ${4:Return _${2}_.}",
+            "1. Let _${3:f}_ be CreateBuiltinFunction(${1}, 0, *\"\"*, « »)."
+        ],
+        "description": "Create a new Abstract Closure and a coresponding ECMAScript function."
+    },
+
+    "Syntax directed operation (Runtime Evaluation)": {
+        "prefix": "Runtime Semantics: Evaluation",
+        "body": [
+            "<emu-clause id=\"sec-${1}-runtime-semantics-evaluation\" type=\"sdo\">",
+            "    <h1>Runtime Semantics: Evaluation</h1>",
+            "    <emu-grammar>",
+            "        ${2}",
+            "    </emu-grammar>",
+            "    <emu-alg>",
+            "        ${3}",
+            "    </emu-alg>${0}",
+            "</emu-clause>",
+            ""
+        ]
+    },
+    "Syntax directed operation (Early Error)": {
+        "prefix": "Static Semantics: Early Error",
+        "body": [
+            "<emu-clause id=\"sec-${1}-static-semantics-early-errors\">",
+            "    <h1>Static Semantics: Early Errors</h1>",
+            "    <emu-grammar>",
+            "        ${2}",
+            "    </emu-grammar>",
+            "    <ul>",
+            "        <li>",
+            "            It is a Syntax Error if ${3}.",
+            "        </li>",
+            "    </ul>${0}",
+            "</emu-clause>",
+            ""
+        ]
+    },
+    "class": {
+        "prefix": "class",
+        "body": [
+            "<emu-clause id=\"sec-${1:some-class}-objects\">",
+            "    <h1>${1/(.*)/${1:/pascalcase}/} Objects</h1>",
+            "    <p>A ${1/(.*)/${1:/pascalcase}/} is an object that ${2: do something}.</p>",
+            "",
+            "    <emu-clause id=\"sec-${1}-constructor\">",
+            "        <h1>The ${1/(.*)/${1:/pascalcase}/} Constructor</h1>",
+            "        <p>The <dfn variants=\"${1/(.*)/${1:/pascalcase}/}s\">${1/(.*)/${1:/pascalcase}/}</dfn> constructor:</p>",
+            "        <ul>",
+            "            <li>is <dfn>%${1/(.*)/${1:/pascalcase}/}%</dfn>.</li>",
+            "            <li>is the initial value of the *\"${1/(.*)/${1:/pascalcase}/}\"* property of the global object.</li>",
+            "            <li>creates and initializes a new ${1/(.*)/${1:/pascalcase}/} when called as a constructor.</li>",
+            "            <li>is not intended to be called as a function and will throw an exception when called in that manner.</li>",
+            "            <li>",
+            "                may be used as the value in an `extends` clause of a class definition. Subclass constructors that intend",
+            "                to inherit the specified `${1/(.*)/${1:/pascalcase}/}` behaviour must include a `super` call to the",
+            "                `${1/(.*)/${1:/pascalcase}/}` constructor to create and initialize the subclass instance with the",
+            "                internal state necessary to support the `${1/(.*)/${1:/pascalcase}/}.prototype` built-in methods.",
+            "            </li>",
+            "        </ul>",
+            "",
+            "        <emu-clause id=\"sec-${1}-constructor-function\">",
+            "            <h1>${1/(.*)/${1:/pascalcase}/} ( )</h1>",
+            "            <p>This function performs the following steps when called:</p>",
+            "            <emu-alg>",
+            "                1. If NewTarget is *undefined*, throw a *TypeError* exception.",
+            "                1. Let _object_ be ? OrdinaryCreateFromConstructor(NewTarget, *\"%${1/(.*)/${1:/pascalcase}/}.prototype%\"*, « [[${3:InternalSlot}]] »).",
+            "                1. Return _object_.",
+            "            </emu-alg>",
+            "        </emu-clause>",
+            "    </emu-clause>",
+            "",
+            "    <emu-clause id=\"sec-properties-of-the-${1}-constructor\">",
+            "        <h1>Properties of the ${1/(.*)/${1:/pascalcase}/} Constructor</h1>",
+            "        <p>The ${1/(.*)/${1:/pascalcase}/} constructor:</p>",
+            "        <ul>",
+            "            <li>has a [[Prototype]] internal slot whose value is %Function.prototype%.</li>",
+            "            <li>has the following properties:</li>",
+            "        </ul>",
+            "",
+            "        <emu-clause id=\"sec-${1}.prototype\">",
+            "            <h1>${1/(.*)/${1:/pascalcase}/}.prototype</h1>",
+            "            <p>",
+            "                The initial value of `${1/(.*)/${1:/pascalcase}/}.prototype` is the ${1/(.*)/${1:/pascalcase}/} prototype",
+            "                object.",
+            "            </p>",
+            "            <p>",
+            "                This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]:",
+            "                *false* }.",
+            "            </p>",
+            "        </emu-clause>",
+            "    </emu-clause>",
+            "",
+            "    <emu-clause id=\"sec-properties-of-the-${1}-prototype-object\">",
+            "        <h1>Properties of the ${1/(.*)/${1:/pascalcase}/} Prototype Object</h1>",
+            "        <p>The <dfn>${1/(.*)/${1:/pascalcase}/} prototype</dfn> object:</p>",
+            "        <ul>",
+            "            <li>is <dfn>%${1/(.*)/${1:/pascalcase}/}.prototype%</dfn>.</li>",
+            "            <li>has a [[Prototype]] internal slot whose value is %Object.prototype%.</li>",
+            "            <li>is an ordinary object.</li>",
+            "            <li>does not have [[Cells]] and [[${2}]] internal slots.</li>",
+            "        </ul>",
+            "",
+            "        <emu-clause id=\"sec-${1}.prototype.constructor\">",
+            "            <h1>${1/(.*)/${1:/pascalcase}/}.prototype.constructor</h1>",
+            "            <p>",
+            "                The initial value of `${1/(.*)/${1:/pascalcase}/}.prototype.constructor` is %${1/(.*)/${1:/pascalcase}/}%.",
+            "            </p>",
+            "        </emu-clause>",
+            "",
+            "        <emu-clause id=\"sec-${1}.prototype.function\">",
+            "            <h1>${1/(.*)/${1:/pascalcase}/}.prototype.function ( )</h1>",
+            "            <p>This method performs the following steps when called:</p>",
+            "            <emu-alg>",
+            "                1. Let _object_ be the *this* value.",
+            "                1. Perform ? RequireInternalSlot(_object_, [[$2]]).",
+            "            </emu-alg>",
+            "        </emu-clause>",
+            "",
+            "        <emu-clause id=\"sec-${1}.prototype-@@tostringtag\">",
+            "            <h1>${1/(.*)/${1:/pascalcase}/}.prototype [ @@toStringTag ]</h1>",
+            "            <p>The initial value of the @@toStringTag property is the String value *\"${1/(.*)/${1:/pascalcase}/}\"*.</p>",
+            "            <p>",
+            "                This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]:",
+            "                *true* }.",
+            "            </p>",
+            "        </emu-clause>",
+            "    </emu-clause>",
+            "",
+            "    <emu-clause id=\"sec-properties-of-$1-instances\">",
+            "        <h1>Properties of ${1/(.*)/${1:/pascalcase}/} Instances</h1>",
+            "        <p>",
+            "            ${1/(.*)/${1:/pascalcase}/} instances are ordinary objects that inherit properties from the",
+            "            ${1/(.*)/${1:/pascalcase}/} prototype. ${1/(.*)/${1:/pascalcase}/} instances also have [[$3]]",
+            "            internal slots.",
+            "        </p>",
+            "    </emu-clause>",
+            "</emu-clause>",
+            ""
+        ]
+    },
+    "Throw an exception": {
+        "prefix": "throw exception",
+        "body": "throw a *${1:TypeError}* exception.",
+        "description": "Throw an exception"
+    },
+    "Define record": {
+        "prefix": "emu-clause record",
+        "body": [
+            "<emu-clause id=\"sec-${1/[\\\\ ]/-/g}\">",
+            "    <h1>${1:Something Records}</h1>",
+            "    <p>A <dfn variants=\"${1}s\">${1}</dfn> is a Record value used to ${2:do something}.</p>",
+            "    <p>${1}s have the fields listed in <emu-xref href=\"#table-${1/[\\\\ ]/-/g}\"></emu-xref>.</p>",
+            "    <emu-table id=\"table-${1/[\\\\ ]/-/g}\" caption=\"${1} Fields\">",
+            "        <table>",
+            "            <thead>",
+            "                <tr>",
+            "                    <th>${3:Field Name}</th>",
+            "                    <th>${4:Value}</th>",
+            "                    <th>${5:Meaning}</th>",
+            "                </tr>",
+            "            </thead>",
+            "            <tbody>",
+            "                <tr>",
+            "                    <td>[[${6:FieldName}]]</td>",
+            "                    <td>${7:an ECMAScript language value}</td>",
+            "                    <td>${8:}</td>",
+            "                </tr>",
+            "                ${0:}",
+            "            </tbody>",
+            "        </table>",
+            "    </emu-table>",
+            "</emu-clause>",
+            ""
+        ],
+        "description": "Create a new Table"
+    },
+    "Add record field": {
+        "prefix": "tr",
+        "body": [
+            "<tr>",
+            "    <td>[[${1:Field}]]</td>",
+            "    <td>${2:an ECMAScript language value}</td>",
+            "    <td>${3}</td>",
+            "</tr>"
+        ],
+        "description": "Add a new row."
+    },
+    "If else": {
+        "prefix": "if",
+        "body": ["1. If ${1:condition}, then", "    1. ${2}", "1. Else,", "    1. ${3}"]
+    },
+    "If else if": {
+        "prefix": "if",
+        "body": [
+            "1. If ${1:condition}, then",
+            "    1. ${2}",
+            "1. Else if ${3},",
+            "    1. ${4}",
+            "1. Else,",
+            "    1. ${5}"
+        ]
+    },
+    "Evaluation": {
+        "prefix": "evaluation",
+        "body": "1. Let _${1:rhs}_ be ? Evaluation of |${2:Expression}|."
+    },
+    "For each element": {
+        "prefix": "for each",
+        "body": ["1. For each element _${1:e}_ of _${2:list}_, do", "    1. "]
+    },
+    "Repeat": {
+        "prefix": "repeat",
+        "body": "1. Repeat,\n    1."
+    },
+    "Perform": {
+        "prefix": "preform",
+        "body": "Perform ? "
+    },
+    "Return": {
+        "prefix": "return",
+        "body": "Return "
+    },
+    "Set": {
+        "prefix": "set",
+        "body": "Set _${1:var}_ to _${2:var}_."
+    },
+    "Let": {
+        "prefix": "let",
+        "body": "Let _${1:var}_ be _${2:var}_."
+    },
+    ">": {
+        "prefix": ">",
+        "body": "&gt; "
+    },
+    ">=": {
+        "prefix": ">=",
+        "body": "&ge; "
+    },
+    "<": {
+        "prefix": "<",
+        "body": "&lt; "
+    },
+    "<=": {
+        "prefix": "<=",
+        "body": "&le; "
+    },
+    "&": {
+        "prefix": "&",
+        "body": "&amp;"
+    },
+    "∉": {
+        "prefix": "not belongs to",
+        "body": "&notin;"
+    },
+    "∈": {
+        "prefix": "belongs to",
+        "body": "&in;"
+    },
+    "∞": {
+        "prefix": "Infinity",
+        "body": "∞"
+    },
+    "List": {
+        "prefix": "list",
+        "body": "« ${1} »"
+    },
+    "Symbol.*": {
+        "prefix": "Symbol",
+        "body": "@@${1|asyncIterator,hasInstance,isConcatSpreadable,iterator,match,matchAll,replace,search,species,split,toPrimitive,toStringTag,unscopables|}"
+    },
+    "𝔽 (Floating point number)": {
+        "prefix": "float",
+        "body": "𝔽"
+    },
+    "ℝ (Mathematical)": {
+        "prefix": "real",
+        "body": "ℝ"
+    },
+    "ℤ (Bigint)": {
+        "prefix": "bigint",
+        "body": "ℤ"
+    },
+    "It is a Syntax Error if ": {
+        "prefix": "It is a Syntax Error if ",
+        "body": "It is a Syntax Error if "
+    }
+}
