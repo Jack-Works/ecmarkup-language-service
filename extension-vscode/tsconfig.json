@@ -3,7 +3,8 @@
     "compilerOptions": {
         "outDir": "./lib/",
         "tsBuildInfoFile": "./lib/.tsbuildinfo",
-        "rootDir": "./src/"
+        "rootDir": "./src/",
+        "lib": ["ES2022", "DOM", "DOM.Iterable"]
     },
     "include": ["./src/"]
 }

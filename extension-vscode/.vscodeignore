@@ -1,0 +1,6 @@
+src
+lib
+!lib/node.js
+!lib/web.js
+!lib/language-server-node.js
+!lib/language-server-web.js

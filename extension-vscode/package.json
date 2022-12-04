@@ -19,14 +19,16 @@
     "publisher": "Jack Works",
     "license": "MIT",
     "version": "0.1.0",
-    "main": "./lib/extension.js",
+    "main": "./lib/node.js",
     "enableProposedApis": false,
     "activationEvents": [
         "onLanguage:ecmarkup"
     ],
     "contributes": {
         "html": {
-            "customData": ["./custom-element.json"]
+            "customData": [
+                "./custom-element.json"
+            ]
         },
         "commands": [
             {
@@ -103,17 +105,22 @@
     "engines": {
         "vscode": "^1.73.0"
     },
-    "dependencies": {
-        "ecmarkup-language-server": "workspace:^",
-        "vscode-languageclient": "^8.0.2"
-    },
     "devDependencies": {
         "@types/node": "^18.11.10",
         "@types/vscode": "^1.52.0",
         "del": "^7.0.0",
+        "ecmarkup-language-server": "workspace:^",
+        "esbuild": "^0.15.17",
         "rollup": "^3.5.1",
         "vsce": "^2.15.0",
+        "vscode-languageclient": "^8.0.2",
         "vscode-test": "^1.6.1"
     },
-    "scripts": {}
+    "scripts": {
+        "vscode:prepublish": "npm run build-web-extension && npm run build-node-extension && npm run build-web-server && npm run build-node-server",
+        "build-web-extension": " esbuild ./src/web.ts                                               --bundle --platform=browser  --outfile=lib/web.js                  --minify --target=chrome102 --external:vscode --define:process.env.NODE_ENV=true --format=cjs",
+        "build-web-server": "    esbuild ./node_modules/ecmarkup-language-server/src/server-web.ts  --bundle --platform=browser  --outfile=lib/language-server-node.js --minify --target=chrome102                   --define:process.env.NODE_ENV=true --format=cjs",
+        "build-node-extension": "esbuild ./src/node.ts                                              --bundle --platform=node     --outfile=lib/node.js                 --minify --target=node16.14 --external:vscode --define:process.env.NODE_ENV=true --format=cjs",
+        "build-node-server": "   esbuild ./node_modules/ecmarkup-language-server/src/server-node.ts --bundle --platform=node     --outfile=lib/language-server-web.js  --minify --target=node16.14 --external:canvas --define:process.env.NODE_ENV=true --format=cjs"
+    }
 }
