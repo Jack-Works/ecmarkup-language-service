@@ -4,6 +4,7 @@ import { Spec } from '../ecmarkup.js'
 import { DiagnosticSeverity, type Diagnostic } from 'vscode-languageserver-types'
 import { createPosition, createRange, createRangeZeroLength, unreachable } from './utils.js'
 import type { Warning } from '../../ecmarkup/lib/Spec.js'
+import { getBiblio } from './biblio.js'
 
 export class SourceFile {
     constructor(public readonly uri: string, public readonly languageId: string, public readonly text: TextDocument) {}
@@ -13,11 +14,15 @@ export class SourceFile {
         if (!this.#node) {
             const html = this.text.getText()
             const dom = utils.htmlToDom(html)
+            const biblio = getBiblio(this.uri)
+            const biblios = Array.isArray(biblio) ? biblio : [biblio]
             this.#node = new Spec(
                 this.uri,
-                () => Promise.reject('fetch is not supported yet'),
+                (url) => {
+                    return fetch(url).then(x => x.text())
+                },
                 dom,
-                { lintSpec: true },
+                { lintSpec: true, extraBiblios: biblios },
                 html
             )
         }
@@ -25,8 +30,7 @@ export class SourceFile {
     }
     #progressingBuild = new Map<number, Promise<Diagnostic[]>>()
     build() {
-        if (this.#progressingBuild.has(this.text.version))
-            return this.#progressingBuild.get(this.text.version)!
+        if (this.#progressingBuild.has(this.text.version)) return this.#progressingBuild.get(this.text.version)!
 
         const diagnostics: Diagnostic[] = []
         this.node.warn = (err) => {
