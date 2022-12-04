@@ -1,0 +1,497 @@
+{
+    "$schema": "https://raw.githubusercontent.com/microsoft/vscode-html-languageservice/main/docs/customData.schema.json",
+    "version": 1.1,
+    "tags": [
+        {
+            "name": "emu-val",
+            "description": {
+                "kind": "markdown",
+                "value": "ECMAScript Language Type Values, eg. **undefined**, **true**, **1𝔽**, **\"string\"**, **TypeError**, etc.\n\n```html\n<emu-val>TypeError</emu-val>\n```"
+            },
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emd-overview" }]
+        },
+        {
+            "name": "emu-const",
+            "description": {
+                "kind": "markdown",
+                "value": "Specification types and their instances, eg. _throw_ and _empty_.\n\n```html\n<emu-const>empty</emu-const>\n```"
+            },
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emd-overview" }]
+        },
+        {
+            "name": "emu-intro",
+            "description": "Non-normative introductory information.",
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-intro" }],
+            "attributes": [
+                {
+                    "name": "aoid",
+                    "description": "Abstract operation ID. A unique name identifying this clause as an abstract operation. Algorithm steps will auto-link calls to this abstract operation to this clause. If left blank, the aoid will be set to the id of this clause.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-intro" }]
+                }
+            ]
+        },
+        {
+            "name": "emu-clause",
+            "description": {
+                "kind": "markdown",
+                "value": "Normative clause.\n\n```html\n<emu-clause id=\"sec-example-operation\" type=\"abstract operation\">\n  <h1>\n    ExampleOperation (\n      _S_: a String,\n      optional _length_: a non-negative integer,\n    )\n  </h1>\n  <dl class=\"header\">\n    <dt>description</dt>\n    <dd>It returns a List of the code points of the first _length_ grapheme clusters of _S_ using the host environment's current locale, or all code points when _length_ is not present.</dd>\n  </dl>\n  <p>This clause is normative.</p>\n</emu-clause>\n```"
+            },
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-clause" }],
+            "attributes": [
+                {
+                    "name": "example",
+                    "description": "If present, the clause is an example.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-clause" }]
+                },
+                {
+                    "name": "legacy",
+                    "description": "If present, the clause is Legacy.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-clause" }]
+                },
+                {
+                    "name": "normative-optional",
+                    "description": "If present, the clause is Normative Optional.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-clause" }]
+                },
+                {
+                    "name": "number",
+                    "description": {
+                        "kind": "markdown",
+                        "value": "Optional: An explicit clause number, overriding the default auto-incrementing number. Can be a nested number, as in `number=\"2.1\"`."
+                    },
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-clause" }]
+                },
+                {
+                    "name": "type",
+                    "description": "Optional: Type of feature described by the clause.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-clause" }],
+                    "values": [
+                        {
+                            "name": "abstract operation",
+                            "description": "In order to facilitate their use in multiple parts of this specification, some algorithms, called abstract operations, are named and written in parameterized functional form so that they may be referenced by name from within other algorithms.",
+                            "references": [
+                                {
+                                    "name": "ECMA262 Specification",
+                                    "url": "https://tc39.es/ecma262/#sec-algorithm-conventions-abstract-operations"
+                                }
+                            ]
+                        },
+                        { "name": "concrete method" },
+                        {
+                            "name": "host-defined abstract operation",
+                            "description": {
+                                "kind": "markdown",
+                                "value": "A host hook is an abstract operation that is defined in whole or in part by an external source."
+                            },
+                            "references": [
+                                { "name": "ECMA262 Specification", "url": "https://tc39.es/ecma262/#host-defined" },
+                                {
+                                    "name": "ECMA262 Host hooks",
+                                    "url": "https://tc39.es/ecma262/#sec-host-layering-points"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "implementation-defined abstract operation",
+                            "description": "An implementation-defined facility is one that defers its definition to an external source without further qualification.",
+                            "references": [
+                                {
+                                    "name": "ECMA262 Specification",
+                                    "url": "https://tc39.es/ecma262/#implementation-defined"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "internal method",
+                            "description": "The actual semantics of objects, in ECMAScript, are specified via algorithms called internal methods. Each object in an ECMAScript engine is associated with a set of internal methods that defines its runtime behaviour.",
+                            "references": [
+                                {
+                                    "name": "ECMA262 Specification",
+                                    "url": "https://tc39.es/ecma262/#sec-object-internal-methods-and-internal-slots"
+                                }
+                            ]
+                        },
+                        { "name": "numeric method" },
+                        {
+                            "name": "sdo",
+                            "description": "A syntax-directed operation is a named operation whose definition consists of algorithms, each of which is associated with one or more productions from one of the ECMAScript grammars.",
+                            "references": [
+                                {
+                                    "name": "ECMA262 Specification",
+                                    "url": "https://tc39.es/ecma262/#sec-algorithm-conventions-syntax-directed-operations"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "syntax-directed operation",
+                            "description": "A syntax-directed operation is a named operation whose definition consists of algorithms, each of which is associated with one or more productions from one of the ECMAScript grammars.",
+                            "references": [
+                                {
+                                    "name": "ECMA262 Specification",
+                                    "url": "https://tc39.es/ecma262/#sec-algorithm-conventions-syntax-directed-operations"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "emu-annex",
+            "description": "Annex clause.",
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-annex" }],
+            "attributes": [
+                {
+                    "name": "normative",
+                    "description": "If present, annex is normative. Default is non-normative.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-annex" }]
+                },
+                {
+                    "name": "aoid",
+                    "description": "Abstract operation ID. A unique name identifying this clause as an abstract operation. Algorithm steps will auto-link calls to this abstract operation to this clause. If left blank, the aoid will be set to the id of this clause.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-annex" }]
+                }
+            ]
+        },
+        {
+            "name": "dfn",
+            "attributes": [
+                {
+                    "name": "variants",
+                    "description": "Other variants of the term, such as plural forms, can be provided as a comma-seperated list in the variants attribute on the element.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#definitions" }]
+                }
+            ]
+        },
+        {
+            "name": "emu-meta",
+            "description": {
+                "kind": "markdown",
+                "value": "Effects can be added within an algorithm using an <emu-meta> tag\n\n```html\n<emu-meta effects=\"user-code\">_O_.[[Get]]</emu-meta>\n```"
+            },
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#effects" }],
+            "attributes": [
+                {
+                    "name": "effects",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#effects" }],
+                    "values": [{ "name": "user-code" }]
+                },
+                {
+                    "name": "suppress-effects",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#effects" }],
+                    "values": [{ "name": "user-code" }]
+                }
+            ]
+        },
+        {
+            "name": "emu-alg",
+            "description": {
+                "kind": "markdown",
+                "value": "Algorithm steps. Should not contain any HTML. The node's textContent is parsed as an Ecmarkdown document. Additionally, calls to abstract operations inside algorithm steps are automatically linked to their definitions by first checking for any clauses or algorithms with the appropriate \"aoid\" in the current spec, and afterwards checking any linked [bibliography files](https://tc39.es/ecmarkup/#emu-biblio).\n\n```html\n<emu-alg aoid=\"EmuAlgExample\">\n  1. Let _clauseAbstractOp_ be the result of calling EmuAlg().\n  1. Step 2.\n    1. Let _recurse_ be the result of calling EmuAlgExample(*true*).\n    1. Return the result of evaluating this |NonTerminalProduction|\n</emu-alg>\n```"
+            },
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-alg" }],
+            "attributes": [
+                {
+                    "name": "aoid",
+                    "description": "Abstract operation ID. A unique name identifying this clause as an abstract operation. Algorithm steps will auto-link calls to this abstract operation to this clause. If left blank, the aoid will be set to the id of this clause.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-alg" }]
+                },
+                {
+                    "name": "replaces-step",
+                    "description": {
+                        "kind": "markdown",
+                        "value": "Algorithms may be specified to replace a labeled step, in which case the algorithm will adopt the numbering of that step.\n\n```html\n<emu-alg>\n  1. Step.\n  1. Step 2.\n    1. [id=\"step-replace-me\"] Replaced.\n      1. Substep.\n</emu-alg>\n<p>The following is an alernative definition of step <emu-xref href=\"#step-replace-me\"></emu-xref>.</p>\n<emu-alg replaces-step=\"replace-me\">\n  1. Replacement.\n    1. Substep.\n</emu-alg>\n```"
+                    },
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-alg" }]
+                }
+            ]
+        },
+        {
+            "name": "emu-eqn",
+            "description": {
+                "kind": "markdown",
+                "value": "An equation, similar to those found in ES6 [Year Number](https://tc39.es/ecma262/#sec-year-number."
+            },
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-eqn" }],
+            "attributes": [
+                {
+                    "name": "aoid",
+                    "description": "Abstract operation ID. A unique name identifying this clause as an abstract operation. Algorithm steps will auto-link calls to this abstract operation to this clause. If left blank, the aoid will be set to the id of this clause.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-eqn" }]
+                }
+            ]
+        },
+        {
+            "name": "emu-note",
+            "description": "Non-normative explanatory text. Comes in two flavors - regular notes and Editor's notes. Regular notes are intended for the implementers and end users of this specification. Editor's notes are notes to and from the Editors and will generally be removed prior to a specification being finalized and ratified.",
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-note" }],
+            "attributes": [
+                {
+                    "name": "type",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-note" }],
+                    "values": [{ "name": "editor" }]
+                }
+            ]
+        },
+        {
+            "name": "emu-xref",
+            "description": {
+                "kind": "markdown",
+                "value": "Cross-reference another clause, production, note, example, abstract operation, or labeled step. If the text content of this element is empty, a suitable default is used. The title attribute controls this default - when present, clauses are referred to using their title rather than number. This also applies to examples which are indexed first by their containing clause and then their example number.\nCross-references to an id check for clauses, productions, examples, and steps in this order. For each type, the local document is consulted before looking for external sources.\n\n```html\n<p>The clause element is specified in <emu-xref title href=\"#emu-clause\"></emu-xref>.</p>\n```"
+            },
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-xref" }],
+            "attributes": [
+                {
+                    "name": "href",
+                    "description": "Optional: URL of the target clause, production, or example to cross-reference.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-xref" }]
+                },
+                {
+                    "name": "title",
+                    "description": "Optional: If present, xref will be filled in with the referenced clause's title. Otherwise, the clause's section number is used.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-xref" }]
+                },
+                {
+                    "name": "aoid",
+                    "description": "Optional: aoid of an abstract operation to reference.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-xref" }]
+                }
+            ]
+        },
+        {
+            "name": "emu-not-ref",
+            "description": {
+                "kind": "markdown",
+                "value": "Suppresses automatic linking to definitions.\n\n```html\nThis <emu-not-ref>Get</emu-not-ref> will not be linked.\n```"
+            },
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-not-ref" }]
+        },
+        {
+            "name": "emu-figure",
+            "description": {
+                "kind": "markdown",
+                "value": "Creates a figure that can be xrefed by ID using the emu-xref element. Add a caption using a child emu-caption element.\n\n```html\n<emu-figure>\n  <emu-caption>Example figure<emu-caption>\n  [[insert some awesome graphic here, maybe something like figure 2]]\n</emu-figure>\n\n```"
+            },
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-figure" }],
+            "attributes": [
+                {
+                    "name": "informative",
+                    "description": "Optional: If present, the figure is informative. Otherwise it is normative.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-figure" }]
+                }
+            ]
+        },
+        {
+            "name": "emu-table",
+            "description": {
+                "kind": "markdown",
+                "value": "Creates a table that can be xrefed by ID using the emu-xref element. Add a caption using a child emu-caption element.\n\n```html\n<emu-table>\n  <emu-caption>Example table<emu-caption>\n  <table>\n    <tr><th>Column 1</th><th>Column 2</th></tr>\n    <tr><td>Value</td><td>Value 2</td></tr>\n    <tr><td>Value</td><td>Value 2</td></tr>\n    <tr><td>Value</td><td>Value 2</td></tr>\n    <tr><td>Value</td><td>Value 2</td></tr>\n  </table>\n</emu-table>\n\n```"
+            },
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-table" }],
+            "attributes": [
+                {
+                    "name": "caption",
+                    "description": "Optional: Caption for the example",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-table" }]
+                },
+                {
+                    "name": "informative",
+                    "description": "Optional: If present, the table is informative. Otherwise it is normative.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-table" }]
+                }
+            ]
+        },
+        {
+            "name": "emu-caption",
+            "description": "",
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-table" }]
+        },
+        {
+            "name": "emu-example",
+            "description": {
+                "kind": "markdown",
+                "value": "Creates an informative example. Examples are numbered based on how many are present in the example's containing clause. Can be xrefed by ID using emu-xref.\n\n```html\n<emu-example caption=\"Example Example\">\n  This is an example.\n</emu-example>\n\n```"
+            },
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-example" }],
+            "attributes": [
+                {
+                    "name": "caption",
+                    "description": "Optional: Caption for the example",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-example" }]
+                }
+            ]
+        },
+        {
+            "name": "emu-biblio",
+            "description": {
+                "kind": "markdown",
+                "value": "Links a bibliography file. The bibliography file is a JSON document containing URLs for referenced documents along with any algorithms they define.\n\n```html\n<emu-biblio href=\"./biblio.json\"></emu-biblio>\n\n```"
+            },
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-biblio" }],
+            "attributes": [
+                {
+                    "name": "href",
+                    "description": "Required: URL to the biblio file.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-biblio" }]
+                }
+            ]
+        },
+        {
+            "name": "emu-grammar",
+            "description": {
+                "kind": "markdown",
+                "value": "Text inside emu-grammar elements is parsed using [Grammarkdown](https://github.com/rbuckton/grammarkdown). The syntax is essentially identical to the notational conventions in ECMAScript (minus formatting). See the [Grammarkdown readme](https://github.com/rbuckton/grammarkdown).\n\nGrammar will be displayed as an \"inline\" element flowing with text unless it is the immediate child of an emu-clause-like element."
+            },
+            "references": [
+                { "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-grammar" },
+                { "name": "grammarkdown", "url": "https://github.com/rbuckton/grammarkdown" }
+            ],
+            "attributes": [
+                {
+                    "name": "collapsed",
+                    "description": "If present, production is displayed in collapsed format with LHS and RHS on the same line.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-grammar" }]
+                }
+            ]
+        },
+        {
+            "name": "emu-production",
+            "description": {
+                "kind": "markdown",
+                "value": "This is the top level element that contains all grammar productions. Each production MUST include at least one right-hand side (see emu-rhs).\n\nThe production will be displayed as an \"inline\" element flowing with text unless it is the immediate child of an emu-clause-like element or if its containing emu-grammar element is an immediate child of an emu-clause-like element.\n\n```html\n<emu-production name=\"WhileStatement\">\n  <emu-rhs>while ( <emu-nt>Expression</emu-nt> ) <emu-nt>Statement</emu-nt></emu-rhs>\n</emu-production>\n\n<emu-production name=\"ArgumentList\">\n  <emu-rhs><emu-nt>AssignmentExpression</emu-nt></emu-rhs>\n  <emu-rhs><emu-nt>ArgumentList</emu-nt> , <emu-nt>AssignmentExpression</emu-nt></emu-rhs>\n</emu-production>\n\n<emu-production name=\"IterationStatement\">\n  <emu-rhs>for ( <emu-nt>LexicalDeclaration</emu-nt> ; <emu-nt optional>Expression</emu-nt> ;\n  <emu-nt optional>Expression</emu-nt> ) <emu-nt>Statement</emu-nt></emu-rhs>\n</emu-production>\n\n<emu-production name=\"Identifier\" type=\"lexical\">\n  <emu-rhs><emu-nt>IdentifierName</emu-nt> <emu-gmod>but not\n  <emu-nt>ReservedWord</emu-nt></emu-gmod></emu-rhs>\n</emu-production>\n\n<emu-production name=\"SourceCharacter\" type=\"lexical\">\n  <emu-rhs><emu-gprose>any Unicode code point</emu-gprose></emu-rhs>\n</emu-production>\n\n<emu-production name=\"ExpressionStatement\" params=\"Yield\">\n  <emu-rhs>\n    <emu-gann>lookahead ∉ {\n      <emu-t>{</emu-t>,\n      <emu-t>function</emu-t>,\n      <emu-t>class</emu-t>,\n      <emu-t>let [</emu-t>\n    }</emu-gann>\n  </emu-rhs>\n</emu-production>\n\n<emu-production name=\"DecimalDigit\" type=\"lexical\" oneof>\n  <emu-rhs>0 1 2 3 4 5 6 7 8 9</emu-rhs>\n</emu-production>\n\n<emu-production name=\"StatementList\" params=\"Return, In\">\n  <emu-rhs constraints=\"~Return\"><emu-nt>ReturnStatement</emu-nt></emu-rhs>\n  <emu-rhs><emu-nt>ExpressionStatement</emu-nt></emu-rhs>\n</emu-production>\n```"
+            },
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-production" }],
+            "attributes": [
+                {
+                    "name": "name",
+                    "description": "Required. Name of the production (i.e. the non-terminal on the LHS).",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-production" }]
+                },
+                {
+                    "name": "params",
+                    "description": "Parameters for this production. Multiple parameters separated by commas.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-production" }]
+                },
+                {
+                    "name": "type",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-production" }],
+                    "values": [{ "name": "lexical" }, { "name": "regexp" }]
+                },
+                {
+                    "name": "oneof",
+                    "description": {
+                        "kind": "markdown",
+                        "value": "If present, production is a one-of production.\n\n```html\n<emu-production name=\"DecimalDigit\" type=\"lexical\" oneof>\n  <emu-rhs>0 1 2 3 4 5 6 7 8 9</emu-rhs>\n</emu-production>\n\n<emu-production name=\"StatementList\" params=\"Return, In\">\n  <emu-rhs constraints=\"~Return\"><emu-nt>ReturnStatement</emu-nt></emu-rhs>\n  <emu-rhs><emu-nt>ExpressionStatement</emu-nt></emu-rhs>\n</emu-production>\n```"
+                    },
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-production" }]
+                },
+                {
+                    "name": "collapsed",
+                    "description": "If present, production is displayed in collapsed format with LHS and RHS on the same line.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-production" }]
+                }
+            ]
+        },
+        {
+            "name": "emu-rhs",
+            "description": {
+                "kind": "markdown",
+                "value": "Describes one right-hand-side alternative of a production. Text nodes inside of an rhs are split on each space and turned into terminals.\n\n```html\n<emu-rhs>a b c</emu-rhs>\n\n\n```"
+            },
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-rhs" }],
+            "attributes": [
+                {
+                    "name": "constraints",
+                    "description": {
+                        "kind": "markdown",
+                        "value": "any constraints for this RHS. Multiple constraints separated by commas.\n\n```html\n<emu-production name=\"StatementList\" params=\"Return, In\">\n  <emu-rhs constraints=\"~Return\"><emu-nt>ReturnStatement</emu-nt></emu-rhs>\n  <emu-rhs><emu-nt>ExpressionStatement</emu-nt></emu-rhs>\n</emu-production>\n\n\n```"
+                    },
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-rhs" }]
+                },
+                {
+                    "name": "a",
+                    "description": "Optional alternative id used to reference a particular RHS via emu-prodref. Must be unique for all emu-rhs elements inside an emu-production.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-rhs" }]
+                }
+            ]
+        },
+        {
+            "name": "emu-nt",
+            "description": "Non-terminal. Alpha characters only.",
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-nt" }],
+            "attributes": [
+                {
+                    "name": "optional",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-nt" }]
+                },
+                {
+                    "name": "params",
+                    "description": "Parameters for this production. Multiple parameters separated by commas.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-nt" }]
+                },
+                {
+                    "name": "oneof",
+                    "description": {
+                        "kind": "markdown",
+                        "value": "If present, production is a one-of production.\n\n```html\n<emu-production name=\"DecimalDigit\" type=\"lexical\" oneof>\n  <emu-rhs>0 1 2 3 4 5 6 7 8 9</emu-rhs>\n</emu-production>\n\n<emu-production name=\"StatementList\" params=\"Return, In\">\n  <emu-rhs constraints=\"~Return\"><emu-nt>ReturnStatement</emu-nt></emu-rhs>\n  <emu-rhs><emu-nt>ExpressionStatement</emu-nt></emu-rhs>\n</emu-production>\n```"
+                    },
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-nt" }]
+                }
+            ]
+        },
+        {
+            "name": "emu-t",
+            "description": "Terminal. No attributes available. Mostly don't need to create these elements manually as they are created automatically inside emu-rhs elements.",
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-t" }]
+        },
+        {
+            "name": "emu-gmod",
+            "description": {
+                "kind": "markdown",
+                "value": "Contains well-known modifiers to a right-hand side of a production. The only well-known modifier at present is the \"but not\" modifier.\n\n```html\n<emu-production name=\"Identifier\" type=\"lexical\">\n  <emu-rhs><emu-nt>IdentifierName</emu-nt> <emu-gmod>but not\n  <emu-nt>ReservedWord</emu-nt></emu-gmod></emu-rhs>\n</emu-production>\n```"
+            },
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-gmod" }]
+        },
+        {
+            "name": "emu-gann",
+            "description": {
+                "kind": "markdown",
+                "value": "Contains well-known annotations to to a right-hand side of a production. The only well-known modifiers at present are \"lookahead\" and \"empty\". Any text inside a gann element is wrapped in square brackets.\n\n```html\n<emu-production name=\"ExpressionStatement\" params=\"Yield\">\n  <emu-rhs>\n    <emu-gann>lookahead ∉ {\n      <emu-t>{</emu-t>,\n      <emu-t>function</emu-t>,\n      <emu-t>class</emu-t>,\n      <emu-t>let [</emu-t>\n    }</emu-gann>\n  </emu-rhs>\n</emu-production>\n```"
+            },
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-gann" }]
+        },
+        {
+            "name": "emu-gprose",
+            "description": {
+                "kind": "markdown",
+                "value": "Contains any prose text that describes a production.\n\n```html\n<emu-production name=\"SourceCharacter\" type=\"lexical\">\n  <emu-rhs><emu-gprose>any Unicode code point</emu-gprose></emu-rhs>\n</emu-production>\n```"
+            },
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-gprose" }]
+        },
+        {
+            "name": "emu-prodref",
+            "description": "References a production defined elsewhere in the document. Ecmarkup will insert either the entire production or a particular RHS depending on attributes.",
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-prodref" }],
+            "attributes": [
+                {
+                    "name": "name",
+                    "description": "Required. Name of the production to reference.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-prodref" }]
+                },
+                {
+                    "name": "a",
+                    "description": "Optional. If present, specified a particular alternative ID to reference.",
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-prodref" }]
+                }
+            ]
+        }
+    ],
+    "globalAttributes": [
+        {
+            "name": "oldids",
+            "description": "Old IDs for any element can be stored as a comma-separated list inside an oldids attribute, allowing links using them to continue working as expected.",
+            "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#oldids" }]
+        }
+    ],
+    "valueSets": []
+}

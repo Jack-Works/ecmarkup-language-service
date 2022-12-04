@@ -1,5 +1,5 @@
 import * as path from 'path'
-import { extensions, workspace, type ExtensionContext } from 'vscode'
+import { commands, extensions, workspace, type ExtensionContext } from 'vscode'
 import {
     LanguageClient,
     type LanguageClientOptions,
@@ -32,6 +32,8 @@ export async function activate(context: ExtensionContext) {
     }
     client = new LanguageClient('ecmarkup.language.service', 'ecmarkup language service', serverOptions, clientOptions)
     client.start()
+
+    context.subscriptions.push(commands.registerCommand('ecmarkup.restart', () => client.restart()))
 }
 
 export async function deactivate() {

@@ -1,17 +1,40 @@
 {
     "name": "ecmarkup-language-extension-vscode",
+    "displayName": "Ecmarkup",
+    "description": "Ecmarkup language support",
+    "categories": [
+        "Formatters",
+        "Linters",
+        "Programming Languages",
+        "Snippets"
+    ],
+    "keywords": [
+        "tc39",
+        "ecmarkup",
+        "specification"
+    ],
     "private": true,
-    "description": "VSCode extension for ecmarkup",
+    "preview": true,
     "author": "Jack Works",
+    "publisher": "Jack Works",
     "license": "MIT",
     "version": "0.1.0",
     "main": "./lib/extension.js",
     "enableProposedApis": false,
-    "publisher": "Jack Works",
     "activationEvents": [
         "onLanguage:ecmarkup"
     ],
     "contributes": {
+        "html": {
+            "customData": ["./custom-element.json"]
+        },
+        "commands": [
+            {
+                "command": "ecmarkup.restart",
+                "title": "Restart ecmarkup language server",
+                "category": "Developer"
+            }
+        ],
         "htmlLanguageParticipants": [
             {
                 "languageId": "ecmarkup"
@@ -20,6 +43,13 @@
         "languages": [
             {
                 "id": "ecmarkup",
+                "aliases": [
+                    "Ecmarkup",
+                    "emu"
+                ],
+                "filenames": [
+                    "spec.html"
+                ],
                 "extensions": [
                     ".emu"
                 ]
