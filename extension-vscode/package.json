@@ -103,13 +103,13 @@
         "vscode": "^1.74.0"
     },
     "devDependencies": {
-        "@types/node": "^18.11.10",
-        "@types/vscode": "^1.52.0",
+        "@types/node": "^18.11.12",
+        "@types/vscode": "^1.74.0",
+        "@vscode/vsce": "^2.15.0",
         "del": "^7.0.0",
         "ecmarkup-language-server": "workspace:^",
-        "esbuild": "^0.15.17",
-        "rollup": "^3.5.1",
-        "vsce": "^2.15.0",
+        "esbuild": "^0.16.4",
+        "rollup": "^3.7.2",
         "vscode-languageclient": "^8.0.2",
         "vscode-test": "^1.6.1"
     },

@@ -10,7 +10,7 @@
         "watch": "tsc -b . -w"
     },
     "devDependencies": {
-        "prettier": "^2.8.0",
+        "prettier": "^2.8.1",
         "typescript": "5.0.0-dev.20221121"
     }
 }
