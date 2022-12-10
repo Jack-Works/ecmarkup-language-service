@@ -21,6 +21,7 @@
     "version": "0.1.0",
     "main": "./lib/node.js",
     "enableProposedApis": false,
+    "activationEvents": [],
     "contributes": {
         "html": {
             "customData": [
@@ -43,7 +44,7 @@
             {
                 "id": "ecmarkup",
                 "aliases": [
-                    "Ecmarkup",
+                    "ecmarkup",
                     "emu"
                 ],
                 "filenames": [
@@ -114,10 +115,11 @@
         "vscode-test": "^1.6.1"
     },
     "scripts": {
-        "vscode:prepublish": "npm run build-web-extension && npm run build-node-extension && npm run build-web-server && npm run build-node-server",
-        "build-web-extension": " esbuild ./src/web.ts                                               --bundle --platform=browser  --outfile=lib/web.js                  --minify --target=chrome102 --external:vscode --define:process.env.NODE_ENV=true --format=cjs",
-        "build-web-server": "    esbuild ./node_modules/ecmarkup-language-server/src/server-web.ts  --bundle --platform=browser  --outfile=lib/language-server-node.js --minify --target=chrome102                   --define:process.env.NODE_ENV=true --format=cjs",
-        "build-node-extension": "esbuild ./src/node.ts                                              --bundle --platform=node     --outfile=lib/node.js                 --minify --target=node16.14 --external:vscode --define:process.env.NODE_ENV=true --format=cjs",
-        "build-node-server": "   esbuild ./node_modules/ecmarkup-language-server/src/server-node.ts --bundle --platform=node     --outfile=lib/language-server-web.js  --minify --target=node16.14 --external:canvas --define:process.env.NODE_ENV=true --format=cjs"
+        "vsce": "vsce package",
+        "vscode:prepublish": "npm run build-web-extension && npm run build-node-extension && npm run build-node-server",
+        "build-web-extension": " esbuild ./src/web.ts                                               --bundle --platform=browser  --outfile=lib/web.js                  --minify --target=chrome102 --external:vscode --define:process.env.NODE_ENV='production'                                    --format=cjs --sourcemap",
+        "build-web-server": "    esbuild ./node_modules/ecmarkup-language-server/src/server-web.ts  --bundle --platform=browser  --outfile=lib/language-server-web.js  --minify --target=chrome102                   --define:process.env.NODE_ENV='production'                                    --format=cjs --sourcemap",
+        "build-node-extension": "esbuild ./src/node.ts                                              --bundle --platform=node     --outfile=lib/node.js                 --minify --target=node16.14 --external:vscode --define:process.env.NODE_ENV='production'                                    --format=cjs --sourcemap",
+        "build-node-server": "   esbuild ./node_modules/ecmarkup-language-server/src/server-node.ts --bundle --platform=node     --outfile=lib/language-server-node.js --minify --target=node16.14 --external:canvas --define:process.env.NODE_ENV='production' --define:require.resolve=undefined --format=cjs --sourcemap"
     }
 }

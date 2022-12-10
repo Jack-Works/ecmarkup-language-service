@@ -1,5 +1,11 @@
 {
-    "references": [{ "path": "./language-service" }, { "path": "./extension-vscode" }],
+    "references": [
+        { "path": "./tsconfig-ecmarkup.json" },
+        { "path": "./tsconfig-grammarkdown.json" },
+        { "path": "./language-service" },
+        { "path": "./extension-vscode" }
+    ],
+    "files": [],
     "compilerOptions": {
         // Classification follows https://www.typescriptlang.org/tsconfig
 
@@ -49,6 +55,5 @@
 
         // Completeness
         "skipLibCheck": true
-    },
-    "include": []
+    }
 }

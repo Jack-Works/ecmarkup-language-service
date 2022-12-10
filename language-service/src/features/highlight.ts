@@ -7,10 +7,10 @@ import type {
     SemanticTokens,
 } from 'vscode-languageserver/node.js'
 import type { SourceFile } from '../utils/document.js'
-import type { AlgorithmElementWithTree } from '../../ecmarkup/lib/Algorithm.js'
-import { type PathItem, type Expr, parse as parseExpr, walk as walkExpr } from '../../ecmarkup/lib/expr-parser.js'
+import type { AlgorithmElementWithTree } from 'ecmarkup/lib/Algorithm.js'
+import { type Expr, parse as parseExpr, walk as walkExpr } from 'ecmarkup/lib/expr-parser.js'
 import type { OrderedListNode } from 'ecmarkdown'
-import { offsetToLineAndColumn } from '../../ecmarkup/lib/utils.js'
+import { offsetToLineAndColumn } from 'ecmarkup/lib/utils.js'
 
 export function semanticTokensProvider(
     connection: Connection,

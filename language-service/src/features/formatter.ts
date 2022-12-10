@@ -5,7 +5,7 @@ import type {
     ServerCapabilities,
 } from 'vscode-languageserver'
 import type { SourceFile } from '../utils/document.js'
-import { printDocument } from '../../ecmarkup/lib/formatter/ecmarkup.js'
+import { printDocument } from 'ecmarkup/lib/formatter/ecmarkup.js'
 import { createPosition, createRange } from '../utils/utils.js'
 
 export function formatProvider(

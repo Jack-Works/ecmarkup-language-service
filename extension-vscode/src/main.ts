@@ -9,6 +9,8 @@ export async function onActivate(
 ) {
     // See: https://github.com/microsoft/vscode/issues/160585
     const htmlExtension = extensions.getExtension('vscode.html-language-features')
+    // Note: do not remove the await here.
+    // we need to let the HTML extension start first, otherwise our semanticTokens will be ignored due to emit order.
     await htmlExtension?.activate()
 
     const clientOptions: WebOptions = {

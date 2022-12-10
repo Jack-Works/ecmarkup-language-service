@@ -1,0 +1,12 @@
+{
+    "extends": "./grammarkdown/tsconfig.json",
+    "compilerOptions": {
+        "composite": true,
+        "rootDir": "./grammarkdown/src",
+        "outDir": "./grammarkdown/dist",
+        "tsBuildInfoFile": "./grammarkdown/dist/.tsbuildinfo",
+        "typeRoots": ["./grammarkdown/node_modules/@types"],
+        "declarationMap": true,
+        "stripInternal": false
+    }
+}

@@ -1,3 +1,5 @@
 packages:
     - language-service
     - extension-vscode
+    - ecmarkup
+    - grammarkdown

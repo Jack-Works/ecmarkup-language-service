@@ -6,11 +6,24 @@
     "author": "Jack Works",
     "license": "MIT",
     "scripts": {
-        "postinstall": "cd ./language-service/ecmarkup/ && npm install && npx tsc -p tsconfig.json --stripInternal false --declarationMap true",
         "watch": "tsc -b . -w"
     },
     "devDependencies": {
         "prettier": "^2.8.1",
-        "typescript": "5.0.0-dev.20221121"
+        "typescript": "5.0.0-dev.20221210"
+    },
+    "pnpm": {
+        "overrides": {
+            "typescript": "5.0.0-dev.20221210",
+            "grammarkdown": "workspace:*"
+        },
+        "packageExtensions": {
+            "grammarkdown": {
+                "dependencies": {
+                    "@esfx/disposable": "*",
+                    "jest-matcher-utils": "*"
+                }
+            }
+        }
     }
 }

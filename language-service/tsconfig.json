@@ -1,4 +1,5 @@
 {
+    "references": [{ "path": "../tsconfig-ecmarkup.json" }, { "path": "../tsconfig-grammarkdown.json" }],
     "extends": "../tsconfig.json",
     "compilerOptions": {
         "outDir": "./lib/",

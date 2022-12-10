@@ -1,3 +1,6 @@
 [submodule "ecmarkup"]
-	path = language-service/ecmarkup
-	url = https://github.com/tc39/ecmarkup
+	path = ecmarkup
+	url = https://github.com/Jack-Works/ecmarkup.git
+[submodule "grammarkdown"]
+	path = grammarkdown
+	url = https://github.com/Jack-Works/grammarkdown.git

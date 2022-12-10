@@ -1,9 +1,9 @@
 import { TextDocument, type TextDocumentContentChangeEvent } from 'vscode-languageserver-textdocument'
-import utils from '../../ecmarkup/lib/utils.js'
+import utils from 'ecmarkup/lib/utils.js'
 import { Spec } from '../ecmarkup.js'
 import { DiagnosticSeverity, type Diagnostic } from 'vscode-languageserver-types'
 import { createPosition, createRange, createRangeZeroLength, unreachable } from './utils.js'
-import type { Warning } from '../../ecmarkup/lib/Spec.js'
+import type { Warning } from 'ecmarkup/lib/Spec.js'
 import { getBiblio } from './biblio.js'
 
 export class SourceFile {

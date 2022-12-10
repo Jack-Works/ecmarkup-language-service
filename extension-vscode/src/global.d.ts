@@ -1,5 +1,5 @@
 declare module NodeJS {
     export interface ProcessEnv {
-        PRODUCTION: boolean
+        NODE_ENV: 'production' | 'development'
     }
 }
