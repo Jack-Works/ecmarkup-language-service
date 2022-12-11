@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from 'fs'
 
 const repoName = 'ecmarkup-language-extension-vscode'
 const publishName = 'ecmarkup'
-const manifest = new URL('./extension-vscode/package.json')
+const manifest = new URL('./extension-vscode/package.json', import.meta.url)
 const file = readFileSync(manifest, 'utf-8')
 
 spawnSync('pnpm run build', { shell: true, stdio: 'inherit' })
