@@ -13,12 +13,11 @@
         "ecmarkup",
         "specification"
     ],
-    "private": true,
     "preview": true,
     "author": "Jack Works",
-    "publisher": "Jack Works",
+    "publisher": "MagicWorks",
     "license": "MIT",
-    "version": "0.1.0",
+    "version": "0.0.0",
     "main": "./lib/node.js",
     "enableProposedApis": false,
     "activationEvents": [],
@@ -98,7 +97,8 @@
         ]
     },
     "repository": {
-        "type": "git"
+        "type": "git",
+        "url": "https://github.com/Jack-Works/ecmarkup-language-service"
     },
     "engines": {
         "vscode": "^1.74.0"
@@ -116,6 +116,7 @@
     },
     "scripts": {
         "vsce": "vsce package",
+        "vsce-publish": "vsce publish",
         "vscode:prepublish": "npm run build-web-extension && npm run build-node-extension && npm run build-node-server",
         "build-web-extension": " esbuild ./src/web.ts                                               --bundle --platform=browser  --outfile=lib/web.js                  --minify --target=chrome102 --external:vscode --define:process.env.NODE_ENV='production'                                    --format=cjs --sourcemap",
         "build-web-server": "    esbuild ./node_modules/ecmarkup-language-server/src/server-web.ts  --bundle --platform=browser  --outfile=lib/language-server-web.js  --minify --target=chrome102                   --define:process.env.NODE_ENV='production'                                    --format=cjs --sourcemap",

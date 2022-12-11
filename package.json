@@ -6,9 +6,12 @@
     "author": "Jack Works",
     "license": "MIT",
     "scripts": {
-        "watch": "tsc -b . -w"
+        "release": "pnpm run build && pnpm -C extension-vscode run vsce",
+        "watch": "tsc -b . -w",
+        "build": "tsc -b ."
     },
     "devDependencies": {
+        "@changesets/cli": "^2.25.2",
         "prettier": "^2.8.1",
         "typescript": "5.0.0-dev.20221210"
     },
