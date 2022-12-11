@@ -101,7 +101,7 @@ importers:
       '@types/vscode': 1.74.0
       '@vscode/vsce': 2.15.0
       del: 7.0.0
-      ecmarkup-language-server: link:../language-service
+      ecmarkup-language-server: link:../language-server
       esbuild: 0.16.4
       rollup: 3.7.2
       vscode-languageclient: 8.0.2
@@ -162,7 +162,7 @@ importers:
       typescript: 5.0.0-dev.20221210
       yargs: 15.4.1
 
-  language-service:
+  language-server:
     specifiers:
       ecmarkdown: ^7.2.0
       ecmarkup: workspace:^

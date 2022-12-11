@@ -6,7 +6,7 @@
     "author": "Jack Works",
     "license": "MIT",
     "scripts": {
-        "release": "pnpm run build && pnpm -C extension-vscode run vsce-publish && npx changeset tag",
+        "release": "node ./release.mjs",
         "watch": "tsc -b . -w",
         "build": "tsc -b ."
     },

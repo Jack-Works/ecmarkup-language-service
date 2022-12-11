@@ -2,7 +2,7 @@
     "references": [
         { "path": "./tsconfig-ecmarkup.json" },
         { "path": "./tsconfig-grammarkdown.json" },
-        { "path": "./language-service" },
+        { "path": "./language-server" },
         { "path": "./extension-vscode" }
     ],
     "files": [],
