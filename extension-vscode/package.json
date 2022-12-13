@@ -42,8 +42,8 @@
         "languages": [
             {
                 "id": "ecmarkup",
+                "configuration": "./syntaxes/ecmarkup.language-configuration.json",
                 "aliases": [
-                    "ecmarkup",
                     "emu"
                 ],
                 "filenames": [
@@ -52,41 +52,38 @@
                 "extensions": [
                     ".emu"
                 ]
-            }
-        ],
-        "semanticTokenScopes": [
+            },
             {
-                "language": "ecmarkup",
-                "scopes": {
-                    "boolean": [
-                        "constant.language.boolean"
-                    ],
-                    "if": [
-                        "keyword.control.conditional"
-                    ],
-                    "assert": [
-                        "keyword.control.assert"
-                    ],
-                    "eq": [
-                        "keyword.operator.logical"
-                    ],
-                    "var": [
-                        "storage.type"
-                    ],
-                    "return": [
-                        "keyword.control.flow"
-                    ],
-                    "loop": [
-                        "keyword.control.loop"
-                    ]
-                }
+                "id": "grammarkdown",
+                "extensions": [
+                    ".grammarkdown"
+                ],
+                "configuration": "./syntaxes/grammarkdown.language-configuration.json"
             }
         ],
         "grammars": [
             {
-                "language": "ecmarkup",
+                "path": "./syntaxes/ecmarkup.tmLanguage.json",
+                "scopeName": "text.html.ecmarkup.injection",
+                "injectTo": [
+                    "text.html"
+                ],
+                "embeddedLanguages": {
+                    "meta.embedded.block.grammarkdown": "grammarkdown"
+                }
+            },
+            {
+                "path": "./syntaxes/emu-file.tmLanguage.json",
                 "scopeName": "text.html.ecmarkup",
-                "path": "./syntaxes/ecmarkup.tmLanguage.json"
+                "language": "ecmarkup",
+                "embeddedLanguages": {
+                    "meta.embedded.block.grammarkdown": "grammarkdown"
+                }
+            },
+            {
+                "path": "./syntaxes/grammarkdown.tmLanguage.json",
+                "scopeName": "source.grammarkdown",
+                "language": "grammarkdown"
             }
         ],
         "snippets": [
@@ -107,6 +104,7 @@
         "@types/node": "^18.11.12",
         "@types/vscode": "^1.74.0",
         "@vscode/vsce": "^2.15.0",
+        "com.matheusds365.vscode.yamlsyntax2json": "^1.0.5",
         "del": "^7.0.0",
         "ecmarkup-language-server": "workspace:^",
         "esbuild": "^0.16.4",
@@ -115,6 +113,7 @@
         "vscode-test": "^1.6.1"
     },
     "scripts": {
+        "tmlang": "npx yamlsyntax2json ./syntaxes/grammarkdown.tmLanguage.yaml ./syntaxes/grammarkdown.tmLanguage.json",
         "vsce": "vsce package",
         "vsce-publish": "vsce publish",
         "vscode:prepublish": "npm run build-web-extension && npm run build-node-extension && npm run build-node-server",

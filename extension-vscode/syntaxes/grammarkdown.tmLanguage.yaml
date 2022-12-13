@@ -1,0 +1,307 @@
+---
+'$schema': https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json
+name: source.grammarkdown
+scopeName: source.grammarkdown
+
+variables:
+  Keyword: 'empty|lookahead|lexical|goal|not|here|one|of|or|but|no|through'
+  Identifier: '\b(?!\b{{Keyword}}\b)\w+\b'
+
+patterns:
+- include: '#SingleLineComment'
+- include: '#MultiLineComment'
+- include: '#NewProduction'
+- include: '#RemovedProduction'
+- include: '#Production'
+
+repository:
+  NewProduction:
+    begin: '(<)(ins)(>)'
+    beginCaptures:
+      1: { name: punctuation.definition.tag.begin.html }
+      2: { name: entity.name.tag.html }
+      3: { name: punctuation.definition.tag.end.html }
+    end: '(</)(ins)(>)'
+    endCaptures:
+      1: { name: punctuation.definition.tag.begin.html }
+      2: { name: entity.name.tag.html }
+      3: { name: punctuation.definition.tag.end.html }
+    patterns:
+    - include: '#Production'
+  RemovedProduction:
+    begin: '(<)(del)(>)'
+    beginCaptures:
+      1: { name: punctuation.definition.tag.begin.html }
+      2: { name: entity.name.tag.html }
+      3: { name: punctuation.definition.tag.end.html }
+    end: '(</)(del)(>)'
+    endCaptures:
+      1: { name: punctuation.definition.tag.begin.html }
+      2: { name: entity.name.tag.html }
+      3: { name: punctuation.definition.tag.end.html }
+    patterns:
+    - include: '#Production'
+  SingleLineComment:
+    name: comment.line.double-slash
+    match: '//.*$'
+  MultiLineComment:
+    name: comment.block
+    begin: '/\*'
+    end: '\*/'
+  UnicodeCharacterLiteral:
+    name: constant.character.escape
+    begin: '<|&lt;'
+    end: '>|&gt;'
+  UnicodeCodepointLiteral:
+    name: constant.character.escape
+    match: 'U\+[a-fA-F0-9]+'
+  Terminal:
+    name: string.template
+    begin: '(`)'
+    beginCaptures:
+      1: { name: punctuation.definition.string.template.begin }
+    end: '(``|`)'
+    endCaptures:
+      1: { name: punctuation.definition.string.template.end }
+      2: { name: punctuation.definition.string.template.end }
+    patterns:
+    - match: '.+?'
+  ProseFragment:
+    name: meta.paragraph
+    patterns:
+    - include: '#Terminal'
+    - begin: '(\|)'
+      beginCaptures:
+        1: { name: punctuation.reference.terminal.begin }
+      end: '(\|)'
+      endCaptures:
+        1: { name: punctuation.reference.terminal.end }
+      patterns:
+        - include: '#Nonterminal'
+      name: variable
+    - match: '.'
+      name: comment.documentation
+  ProseLine:
+    name: comment.block.documentation
+    begin: '>|&gt;'
+    end: '$'
+    patterns:
+    - include: '#ProseFragment'
+  Arguments:
+    name: arguments
+    begin: '\('
+    end: '\)'
+    patterns:
+    - match: ','
+    - match: '{{Identifier}}'
+      name: variable.parameter
+  PrimarySymbol:
+    patterns:
+    - include: '#Terminal'
+    - include: '#UnicodeCharacterLiteral'
+    - include: '#UnicodeCodepointLiteral'
+    - include: '#Nonterminal'
+  Nonterminal:
+    patterns:
+    - name: entity.name.type.class.syntax
+      match: '{{Identifier}}'
+    - include: '#Arguments'
+  OptionalSymbol:
+    patterns:
+    - match: '\?'
+      name: keyword.operator.optional
+    - include: '#PrimarySymbol'
+  OrClause:
+    patterns:
+    - match: 'or'
+      name: keyword.operator.expression.or
+    - include: '#PrimarySymbol'
+  OneOfSymbol:
+    patterns:
+    - match: 'one\s+of'
+      name: keyword.operator.expression.one-of
+    - include: '#PrimarySymbol'
+  UnarySymbol:
+    patterns:
+    - include: '#OneOfSymbol'
+  ButNotSymbol:
+    patterns:
+    - match: 'but\s+not'
+      name: keyword.operator.expression.but-not
+    - include: '#UnarySymbol'
+  BinarySymbol:
+    patterns:
+    - include: '#ButNotSymbol'
+    - include: '#UnarySymbol'
+  SymbolSet:
+    begin: '({)'
+    beginCaptures:
+      1: { name: punctuation.definition.dictionary.begin }
+    end: '(})'
+    endCaptures:
+      1: { name: punctuation.definition.dictionary.end }
+    patterns:
+    - match: ','
+      name: punctuation.separator.comma
+    - include: '#PrimarySymbol'
+  EmptyAssertionClause:
+    name: meta.attribute.assertion.empty
+    begin: '(empty)'
+    beginCaptures:
+      1: { name: constant.language.null }
+    end: '(?=\])'
+  LookaheadEqualsAssertionClause:
+    name: meta.attribute.assertion.eq
+    begin: '(lookahead)\s+(==)'
+    beginCaptures:
+      1: { name: keyword.control.assert.lookahead }
+      2: { name: keyword.operator.comparison }
+    end: '(?=\])'
+    patterns:
+    - include: '#PrimarySymbol'
+  LookaheadNotEqualsAssertionClause:
+    name: meta.attribute.assertion.ne
+    begin: '(lookahead)\s+(!=)'
+    beginCaptures:
+      1: { name: keyword.control.assert.lookahead }
+      2: { name: keyword.operator.comparison }
+    end: '(?=\])'
+    patterns:
+    - include: '#PrimarySymbol'
+  LookaheadInAssertionClause:
+    name: meta.attribute.assertion.in
+    begin: '(lookahead)\s+(<-|&isin;)'
+    beginCaptures:
+      1: { name: keyword.control.assert.lookahead }
+      2: { name: keyword.operator.expression.in }
+    end: '(?=\])'
+    patterns:
+    - include: '#SymbolSet'
+  LookaheadNotInAssertionClause:
+    name: meta.attribute.assertion.not-in
+    begin: '(lookahead)\s+(<!|&notin;)'
+    beginCaptures:
+      1: { name: keyword.control.assert.lookahead }
+      2: { name: keyword.operator.expression.in }
+    end: '(?=\])'
+    patterns:
+    - include: '#SymbolSet'
+  NoSymbolAssertionClause:
+    name: meta.attribute.assertion.no
+    begin: '(no)'
+    beginCaptures:
+      1: { name: keyword.control.assert.no }
+    end: '(here)'
+    endCaptures:
+      1: { name: keyword.control.assert.here }
+    patterns:
+    - include: '#OrClause'
+  LexicalGoalAssertionClause:
+    name: meta.attribute.assertion.lexical-goal
+    begin: '(lexical)\s+(goal)'
+    beginCaptures:
+      1: { name: keyword.lexical }
+      2: { name: keyword.goal }
+    end: '(?=\])'
+    patterns:
+    - include: '#PrimarySymbol'
+  ParameterValueAssertionClause:
+    name: meta.attribute.assertion.parameter-value
+    begin: '(~)|(\+)|(\?)'
+    beginCaptures:
+      1: { name: keyword.operator.delete }
+      2: { name: keyword.operator.new }
+      3: { name: keyword.operator.optional }
+    end: '(?=\])'
+    contentName: variable.parameter
+    patterns:
+    - match: '(,)'
+      captures:
+        1: { name: punctuation.separator.comma }
+    - match: '(~)|(\+)|(\?)'
+      captures:
+        1: { name: keyword.operator.delete }
+        2: { name: keyword.operator.new }
+      3: { name: keyword.operator.optional }
+    - match: '{{Identifier}}'
+      name: parameter
+  BracketsParameterList:
+    name: meta.parameters
+    begin: '(?=\w)'
+    end: '(?=\])'
+    contentName: variable.parameter
+    patterns:
+    - match: '(,)'
+      captures:
+        1: { name: punctuation.separator.comma }
+    - match: '{{Identifier}}'
+      name: parameter
+  ProseLineAssertionClause:
+    name: meta.attribute.assertion.prose-line
+    begin: '>|&gt;'
+    end: '(?=\])'
+    patterns:
+    - include: '#ProseFragment'
+  Assertion:
+    name: meta.attribute.assertion
+    begin: '(\[)'
+    beginCaptures:
+      1: { name: punctuation.assertions.begin }
+    end: '(\])'
+    endCaptures:
+      1: { name: punctuation.assertions.end }
+    patterns:
+    - include: '#EmptyAssertionClause'
+    - include: '#LookaheadEqualsAssertionClause'
+    - include: '#LookaheadNotEqualsAssertionClause'
+    - include: '#LookaheadInAssertionClause'
+    - include: '#LookaheadNotInAssertionClause'
+    - include: '#NoSymbolAssertionClause'
+    - include: '#LexicalGoalAssertionClause'
+    - include: '#ParameterValueAssertionClause'
+    - include: '#ProseLineAssertionClause'
+    - include: '#BracketsParameterList'
+  Symbol:
+    patterns:
+    - include: '#Assertion'
+    - include: '#BinarySymbol'
+  RightHandSide:
+    patterns:
+    - include: '#ProseLine'
+    - include: '#Symbol'
+  OneOfList:
+    patterns:
+    - match: '(one)\s+(of)'
+      captures:
+        1: { name: keyword.operator.expression.one }
+        2: { name: keyword.operator.expression.of }
+      name: keyword.one-of
+    - include: '#Terminal'
+  Parameters:
+    name: meta.parameters
+    begin: '(\()'
+    beginCaptures:
+      1: { name: meta.brace.round }
+    end: '(\))'
+    endCaptures:
+      1: { name: meta.brace.round }
+    patterns:
+    - match: '(,)'
+      captures:
+        1: { name: punctuation.separator.comma }
+    - match: '{{Identifier}}'
+      name: variable.parameter
+  Production:
+    patterns:
+    - include: '#SingleLineComment'
+    - include: '#Parameters'
+    - include: '#OneOfList'
+    - include: '#RightHandSide'
+    - match: '::|:'
+      name: punctuation.separator
+    - match: '{{Identifier}}'
+      name: entity.name.type.class.syntax
+    - include: '#Keyword'
+  Keyword:
+    match: '{{Keyword}}'
+    name: keyword

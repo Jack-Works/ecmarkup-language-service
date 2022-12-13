@@ -6,6 +6,11 @@ overrides:
 
 packageExtensionsChecksum: 7a22fcc3613ee37358c59f415ec11214
 
+patchedDependencies:
+  com.matheusds365.vscode.yamlsyntax2json@1.0.5:
+    hash: fbtou26lrtdrmhe5vny6stfsny
+    path: patches/com.matheusds365.vscode.yamlsyntax2json@1.0.5.patch
+
 importers:
 
   .:
@@ -90,6 +95,7 @@ importers:
       '@types/node': ^18.11.12
       '@types/vscode': ^1.74.0
       '@vscode/vsce': ^2.15.0
+      com.matheusds365.vscode.yamlsyntax2json: ^1.0.5
       del: ^7.0.0
       ecmarkup-language-server: workspace:^
       esbuild: ^0.16.4
@@ -100,6 +106,7 @@ importers:
       '@types/node': 18.11.12
       '@types/vscode': 1.74.0
       '@vscode/vsce': 2.15.0
+      com.matheusds365.vscode.yamlsyntax2json: 1.0.5
       del: 7.0.0
       ecmarkup-language-server: link:../language-server
       esbuild: 0.16.4
@@ -2630,6 +2637,13 @@ packages:
   /colors/1.2.5:
     resolution: {integrity: sha512-erNRLao/Y3Fv54qUa0LBB+//Uf3YwMUmdJinN20yMXm9zdKKqH9wt7R9IIVZ+K7ShzfpLV/Zg8+VyrBJYB4lpg==}
     engines: {node: '>=0.1.90'}
+    dev: true
+
+  /com.matheusds365.vscode.yamlsyntax2json/1.0.5:
+    resolution: {integrity: sha512-JS0aXBUUIaBEySVVjdsnACYfYReOaPmlaCR2nXzblcewz9k2OfNwKIFAIqCbTg/sVDUtEaFVywgOSrA3aJJ/Mg==}
+    hasBin: true
+    dependencies:
+      js-yaml: 4.1.0
     dev: true
 
   /combined-stream/1.0.8:
@@ -5580,6 +5594,13 @@ packages:
     dependencies:
       argparse: 1.0.10
       esprima: 4.0.1
+
+  /js-yaml/4.1.0:
+    resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
+    hasBin: true
+    dependencies:
+      argparse: 2.0.1
+    dev: true
 
   /jsbn/0.1.1:
     resolution: {integrity: sha512-UVU9dibq2JcFWxQPA6KCqj5O42VOmAY3zQUfEKxU0KpTGXwNoCjkX1e13eHNvw/xPynt6pU0rZ1htjWTNTSXsg==}

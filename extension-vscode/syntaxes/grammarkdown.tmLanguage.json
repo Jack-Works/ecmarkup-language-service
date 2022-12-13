@@ -1,0 +1,633 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "source.grammarkdown",
+    "scopeName": "source.grammarkdown",
+    "patterns": [
+        {
+            "include": "#SingleLineComment"
+        },
+        {
+            "include": "#MultiLineComment"
+        },
+        {
+            "include": "#NewProduction"
+        },
+        {
+            "include": "#RemovedProduction"
+        },
+        {
+            "include": "#Production"
+        }
+    ],
+    "repository": {
+        "NewProduction": {
+            "begin": "(<)(ins)(>)",
+            "end": "(</)(ins)(>)",
+            "patterns": [
+                {
+                    "include": "#Production"
+                }
+            ],
+            "beginCaptures": {
+                "1": {
+                    "name": "punctuation.definition.tag.begin.html"
+                },
+                "2": {
+                    "name": "entity.name.tag.html"
+                },
+                "3": {
+                    "name": "punctuation.definition.tag.end.html"
+                }
+            },
+            "endCaptures": {
+                "1": {
+                    "name": "punctuation.definition.tag.begin.html"
+                },
+                "2": {
+                    "name": "entity.name.tag.html"
+                },
+                "3": {
+                    "name": "punctuation.definition.tag.end.html"
+                }
+            }
+        },
+        "RemovedProduction": {
+            "name": "markup.deleted",
+            "begin": "(<)(del)(>)",
+            "end": "(</)(del)(>)",
+            "patterns": [
+                {
+                    "include": "#Production"
+                }
+            ],
+            "beginCaptures": {
+                "1": {
+                    "name": "punctuation.definition.tag.begin.html"
+                },
+                "2": {
+                    "name": "entity.name.tag.html"
+                },
+                "3": {
+                    "name": "punctuation.definition.tag.end.html"
+                }
+            },
+            "endCaptures": {
+                "1": {
+                    "name": "punctuation.definition.tag.begin.html"
+                },
+                "2": {
+                    "name": "entity.name.tag.html"
+                },
+                "3": {
+                    "name": "punctuation.definition.tag.end.html"
+                }
+            }
+        },
+        "SingleLineComment": {
+            "name": "comment.line.double-slash",
+            "match": "//.*$"
+        },
+        "MultiLineComment": {
+            "name": "comment.block",
+            "begin": "/\\*",
+            "end": "\\*/"
+        },
+        "UnicodeCharacterLiteral": {
+            "name": "constant.character.escape",
+            "begin": "<|&lt;",
+            "end": ">|&gt;"
+        },
+        "UnicodeCodepointLiteral": {
+            "name": "constant.character.escape",
+            "match": "U\\+[a-fA-F0-9]+"
+        },
+        "Terminal": {
+            "name": "string.template",
+            "begin": "(`)",
+            "end": "(``|`)",
+            "patterns": [
+                {
+                    "match": ".+?"
+                }
+            ],
+            "beginCaptures": {
+                "1": {
+                    "name": "punctuation.definition.string.template.begin"
+                }
+            },
+            "endCaptures": {
+                "1": {
+                    "name": "punctuation.definition.string.template.end"
+                },
+                "2": {
+                    "name": "punctuation.definition.string.template.end"
+                }
+            }
+        },
+        "ProseFragment": {
+            "name": "meta.paragraph",
+            "patterns": [
+                {
+                    "include": "#Terminal"
+                },
+                {
+                    "name": "variable",
+                    "begin": "(\\|)",
+                    "end": "(\\|)",
+                    "patterns": [
+                        {
+                            "include": "#Nonterminal"
+                        }
+                    ],
+                    "beginCaptures": {
+                        "1": {
+                            "name": "punctuation.reference.terminal.begin"
+                        }
+                    },
+                    "endCaptures": {
+                        "1": {
+                            "name": "punctuation.reference.terminal.end"
+                        }
+                    }
+                },
+                {
+                    "name": "comment.documentation",
+                    "match": "."
+                }
+            ]
+        },
+        "ProseLine": {
+            "name": "comment.block.documentation",
+            "begin": ">|&gt;",
+            "end": "$",
+            "patterns": [
+                {
+                    "include": "#ProseFragment"
+                }
+            ]
+        },
+        "Arguments": {
+            "name": "arguments",
+            "begin": "\\(",
+            "end": "\\)",
+            "patterns": [
+                {
+                    "match": ","
+                },
+                {
+                    "name": "variable.parameter",
+                    "match": "\\b(?!\\bempty|lookahead|lexical|goal|not|here|one|of|or|but|no|through\\b)\\w+\\b"
+                }
+            ]
+        },
+        "PrimarySymbol": {
+            "patterns": [
+                {
+                    "include": "#Terminal"
+                },
+                {
+                    "include": "#UnicodeCharacterLiteral"
+                },
+                {
+                    "include": "#UnicodeCodepointLiteral"
+                },
+                {
+                    "include": "#Nonterminal"
+                }
+            ]
+        },
+        "Nonterminal": {
+            "patterns": [
+                {
+                    "name": "entity.name.type.class.syntax",
+                    "match": "\\b(?!\\bempty|lookahead|lexical|goal|not|here|one|of|or|but|no|through\\b)\\w+\\b"
+                },
+                {
+                    "include": "#Arguments"
+                }
+            ]
+        },
+        "OptionalSymbol": {
+            "patterns": [
+                {
+                    "name": "keyword.operator.optional",
+                    "match": "\\?"
+                },
+                {
+                    "include": "#PrimarySymbol"
+                }
+            ]
+        },
+        "OrClause": {
+            "patterns": [
+                {
+                    "name": "keyword.operator.expression.or",
+                    "match": "or"
+                },
+                {
+                    "include": "#PrimarySymbol"
+                }
+            ]
+        },
+        "OneOfSymbol": {
+            "patterns": [
+                {
+                    "name": "keyword.operator.expression.one-of",
+                    "match": "one\\s+of"
+                },
+                {
+                    "include": "#PrimarySymbol"
+                }
+            ]
+        },
+        "UnarySymbol": {
+            "patterns": [
+                {
+                    "include": "#OneOfSymbol"
+                }
+            ]
+        },
+        "ButNotSymbol": {
+            "patterns": [
+                {
+                    "name": "keyword.operator.expression.but-not",
+                    "match": "but\\s+not"
+                },
+                {
+                    "include": "#UnarySymbol"
+                }
+            ]
+        },
+        "BinarySymbol": {
+            "patterns": [
+                {
+                    "include": "#ButNotSymbol"
+                },
+                {
+                    "include": "#UnarySymbol"
+                }
+            ]
+        },
+        "SymbolSet": {
+            "begin": "({)",
+            "end": "(})",
+            "patterns": [
+                {
+                    "name": "punctuation.separator.comma",
+                    "match": ","
+                },
+                {
+                    "include": "#PrimarySymbol"
+                }
+            ],
+            "beginCaptures": {
+                "1": {
+                    "name": "punctuation.definition.dictionary.begin"
+                }
+            },
+            "endCaptures": {
+                "1": {
+                    "name": "punctuation.definition.dictionary.end"
+                }
+            }
+        },
+        "EmptyAssertionClause": {
+            "name": "meta.attribute.assertion.empty",
+            "begin": "(empty)",
+            "end": "(?=\\])",
+            "beginCaptures": {
+                "1": {
+                    "name": "constant.language.null"
+                }
+            }
+        },
+        "LookaheadEqualsAssertionClause": {
+            "name": "meta.attribute.assertion.eq",
+            "begin": "(lookahead)\\s+(==)",
+            "end": "(?=\\])",
+            "patterns": [
+                {
+                    "include": "#PrimarySymbol"
+                }
+            ],
+            "beginCaptures": {
+                "1": {
+                    "name": "keyword.control.assert.lookahead"
+                },
+                "2": {
+                    "name": "keyword.operator.comparison"
+                }
+            }
+        },
+        "LookaheadNotEqualsAssertionClause": {
+            "name": "meta.attribute.assertion.ne",
+            "begin": "(lookahead)\\s+(!=)",
+            "end": "(?=\\])",
+            "patterns": [
+                {
+                    "include": "#PrimarySymbol"
+                }
+            ],
+            "beginCaptures": {
+                "1": {
+                    "name": "keyword.control.assert.lookahead"
+                },
+                "2": {
+                    "name": "keyword.operator.comparison"
+                }
+            }
+        },
+        "LookaheadInAssertionClause": {
+            "name": "meta.attribute.assertion.in",
+            "begin": "(lookahead)\\s+(<-|&isin;)",
+            "end": "(?=\\])",
+            "patterns": [
+                {
+                    "include": "#SymbolSet"
+                }
+            ],
+            "beginCaptures": {
+                "1": {
+                    "name": "keyword.control.assert.lookahead"
+                },
+                "2": {
+                    "name": "keyword.operator.expression.in"
+                }
+            }
+        },
+        "LookaheadNotInAssertionClause": {
+            "name": "meta.attribute.assertion.not-in",
+            "begin": "(lookahead)\\s+(<!|&notin;)",
+            "end": "(?=\\])",
+            "patterns": [
+                {
+                    "include": "#SymbolSet"
+                }
+            ],
+            "beginCaptures": {
+                "1": {
+                    "name": "keyword.control.assert.lookahead"
+                },
+                "2": {
+                    "name": "keyword.operator.expression.in"
+                }
+            }
+        },
+        "NoSymbolAssertionClause": {
+            "name": "meta.attribute.assertion.no",
+            "begin": "(no)",
+            "end": "(here)",
+            "patterns": [
+                {
+                    "include": "#OrClause"
+                }
+            ],
+            "beginCaptures": {
+                "1": {
+                    "name": "keyword.control.assert.no"
+                }
+            },
+            "endCaptures": {
+                "1": {
+                    "name": "keyword.control.assert.here"
+                }
+            }
+        },
+        "LexicalGoalAssertionClause": {
+            "name": "meta.attribute.assertion.lexical-goal",
+            "begin": "(lexical)\\s+(goal)",
+            "end": "(?=\\])",
+            "patterns": [
+                {
+                    "include": "#PrimarySymbol"
+                }
+            ],
+            "beginCaptures": {
+                "1": {
+                    "name": "keyword.lexical"
+                },
+                "2": {
+                    "name": "keyword.goal"
+                }
+            }
+        },
+        "ParameterValueAssertionClause": {
+            "name": "meta.attribute.assertion.parameter-value",
+            "begin": "(~)|(\\+)|(\\?)",
+            "end": "(?=\\])",
+            "patterns": [
+                {
+                    "match": "(,)",
+                    "captures": {
+                        "1": {
+                            "name": "punctuation.separator.comma"
+                        }
+                    }
+                },
+                {
+                    "match": "(~)|(\\+)|(\\?)",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.operator.delete"
+                        },
+                        "2": {
+                            "name": "keyword.operator.new"
+                        }
+                    }
+                },
+                {
+                    "name": "parameter",
+                    "match": "\\b(?!\\bempty|lookahead|lexical|goal|not|here|one|of|or|but|no|through\\b)\\w+\\b"
+                }
+            ],
+            "contentName": "variable.parameter",
+            "beginCaptures": {
+                "1": {
+                    "name": "keyword.operator.delete"
+                },
+                "2": {
+                    "name": "keyword.operator.new"
+                },
+                "3": {
+                    "name": "keyword.operator.optional"
+                }
+            }
+        },
+        "BracketsParameterList": {
+            "name": "meta.parameters",
+            "begin": "(?=\\w)",
+            "end": "(?=\\])",
+            "patterns": [
+                {
+                    "match": "(,)",
+                    "captures": {
+                        "1": {
+                            "name": "punctuation.separator.comma"
+                        }
+                    }
+                },
+                {
+                    "name": "parameter",
+                    "match": "\\b(?!\\bempty|lookahead|lexical|goal|not|here|one|of|or|but|no|through\\b)\\w+\\b"
+                }
+            ],
+            "contentName": "variable.parameter"
+        },
+        "ProseLineAssertionClause": {
+            "name": "meta.attribute.assertion.prose-line",
+            "begin": ">|&gt;",
+            "end": "(?=\\])",
+            "patterns": [
+                {
+                    "include": "#ProseFragment"
+                }
+            ]
+        },
+        "Assertion": {
+            "name": "meta.attribute.assertion",
+            "begin": "(\\[)",
+            "end": "(\\])",
+            "patterns": [
+                {
+                    "include": "#EmptyAssertionClause"
+                },
+                {
+                    "include": "#LookaheadEqualsAssertionClause"
+                },
+                {
+                    "include": "#LookaheadNotEqualsAssertionClause"
+                },
+                {
+                    "include": "#LookaheadInAssertionClause"
+                },
+                {
+                    "include": "#LookaheadNotInAssertionClause"
+                },
+                {
+                    "include": "#NoSymbolAssertionClause"
+                },
+                {
+                    "include": "#LexicalGoalAssertionClause"
+                },
+                {
+                    "include": "#ParameterValueAssertionClause"
+                },
+                {
+                    "include": "#ProseLineAssertionClause"
+                },
+                {
+                    "include": "#BracketsParameterList"
+                }
+            ],
+            "beginCaptures": {
+                "1": {
+                    "name": "punctuation.assertions.begin"
+                }
+            },
+            "endCaptures": {
+                "1": {
+                    "name": "punctuation.assertions.end"
+                }
+            }
+        },
+        "Symbol": {
+            "patterns": [
+                {
+                    "include": "#Assertion"
+                },
+                {
+                    "include": "#BinarySymbol"
+                }
+            ]
+        },
+        "RightHandSide": {
+            "patterns": [
+                {
+                    "include": "#ProseLine"
+                },
+                {
+                    "include": "#Symbol"
+                }
+            ]
+        },
+        "OneOfList": {
+            "patterns": [
+                {
+                    "name": "keyword.one-of",
+                    "match": "(one)\\s+(of)",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.operator.expression.one"
+                        },
+                        "2": {
+                            "name": "keyword.operator.expression.of"
+                        }
+                    }
+                },
+                {
+                    "include": "#Terminal"
+                }
+            ]
+        },
+        "Parameters": {
+            "name": "meta.parameters",
+            "begin": "(\\()",
+            "end": "(\\))",
+            "patterns": [
+                {
+                    "match": "(,)",
+                    "captures": {
+                        "1": {
+                            "name": "punctuation.separator.comma"
+                        }
+                    }
+                },
+                {
+                    "name": "variable.parameter",
+                    "match": "\\b(?!\\bempty|lookahead|lexical|goal|not|here|one|of|or|but|no|through\\b)\\w+\\b"
+                }
+            ],
+            "beginCaptures": {
+                "1": {
+                    "name": "meta.brace.round"
+                }
+            },
+            "endCaptures": {
+                "1": {
+                    "name": "meta.brace.round"
+                }
+            }
+        },
+        "Production": {
+            "patterns": [
+                {
+                    "include": "#SingleLineComment"
+                },
+                {
+                    "include": "#Parameters"
+                },
+                {
+                    "include": "#OneOfList"
+                },
+                {
+                    "include": "#RightHandSide"
+                },
+                {
+                    "name": "punctuation.separator",
+                    "match": "::|:"
+                },
+                {
+                    "name": "entity.name.type.class.syntax",
+                    "match": "\\b(?!\\bempty|lookahead|lexical|goal|not|here|one|of|or|but|no|through\\b)\\w+\\b"
+                },
+                {
+                    "include": "#Keyword"
+                }
+            ]
+        },
+        "Keyword": {
+            "name": "keyword",
+            "match": "empty|lookahead|lexical|goal|not|here|one|of|or|but|no|through"
+        }
+    }
+}

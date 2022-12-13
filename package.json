@@ -27,6 +27,9 @@
                     "jest-matcher-utils": "*"
                 }
             }
+        },
+        "patchedDependencies": {
+            "com.matheusds365.vscode.yamlsyntax2json@1.0.5": "patches/com.matheusds365.vscode.yamlsyntax2json@1.0.5.patch"
         }
     }
 }

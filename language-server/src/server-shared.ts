@@ -2,7 +2,6 @@ import { TextDocuments, type InitializeResult, type Connection, TextDocumentSync
 import { SourceFile } from './utils/document.js'
 import { formatProvider } from './features/formatter.js'
 import { enablePushDiagnostics } from './features/diagnostics.js'
-import { semanticTokensProvider } from './features/highlight.js'
 
 const documents: TextDocuments<SourceFile> = new TextDocuments(SourceFile)
 export function initialize(connection: Connection) {
@@ -15,7 +14,6 @@ export function initialize(connection: Connection) {
             capabilities: {
                 textDocumentSync: TextDocumentSyncKind.Incremental,
                 documentFormattingProvider: formatProvider(connection, documents, textDocument?.formatting)!,
-                semanticTokensProvider: semanticTokensProvider(connection, documents, textDocument?.semanticTokens)!,
             },
             serverInfo: {
                 name: 'ecmarkup language server',
