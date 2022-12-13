@@ -55,10 +55,11 @@
             },
             {
                 "id": "grammarkdown",
-                "extensions": [
-                    ".grammarkdown"
-                ],
                 "configuration": "./syntaxes/grammarkdown.language-configuration.json"
+            },
+            {
+                "id": "ecmarkdown",
+                "configuration": "./syntaxes/ecmarkdown.language-configuration.json"
             }
         ],
         "grammars": [
@@ -69,7 +70,8 @@
                     "text.html"
                 ],
                 "embeddedLanguages": {
-                    "meta.embedded.block.grammarkdown": "grammarkdown"
+                    "meta.embedded.block.grammarkdown": "grammarkdown",
+                    "meta.embedded.block.ecmarkdown": "ecmarkdown"
                 }
             },
             {
@@ -77,13 +79,22 @@
                 "scopeName": "text.html.ecmarkup",
                 "language": "ecmarkup",
                 "embeddedLanguages": {
-                    "meta.embedded.block.grammarkdown": "grammarkdown"
+                    "meta.embedded.block.grammarkdown": "grammarkdown",
+                    "meta.embedded.block.ecmarkdown": "ecmarkdown"
                 }
             },
             {
                 "path": "./syntaxes/grammarkdown.tmLanguage.json",
                 "scopeName": "source.grammarkdown",
                 "language": "grammarkdown"
+            },
+            {
+                "path": "./syntaxes/ecmarkdown.tmLanguage.json",
+                "scopeName": "text.html.markdown.ecmarkdown",
+                "language": "ecmarkdown",
+                "embeddedLanguages": {
+                    "meta.embedded.block.html": "html"
+                }
             }
         ],
         "snippets": [
@@ -113,7 +124,9 @@
         "vscode-test": "^1.6.1"
     },
     "scripts": {
-        "tmlang": "npx yamlsyntax2json ./syntaxes/grammarkdown.tmLanguage.yaml ./syntaxes/grammarkdown.tmLanguage.json",
+        "tmlang": "pnpm run tmlang:grammarkdown && pnpm run tmlang:ecmarkdown",
+        "tmlang:gramarkdown": "npx yamlsyntax2json ./syntaxes/grammarkdown.tmLanguage.yaml ./syntaxes/grammarkdown.tmLanguage.json",
+        "tmlang:ecmarkdown": "npx yamlsyntax2json ./syntaxes/ecmarkdown.tmLanguage.yaml ./syntaxes/ecmarkdown.tmLanguage.json",
         "vsce": "vsce package",
         "vsce-publish": "vsce publish",
         "vscode:prepublish": "npm run build-web-extension && npm run build-node-extension && npm run build-node-server",

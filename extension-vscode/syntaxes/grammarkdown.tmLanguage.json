@@ -52,7 +52,6 @@
             }
         },
         "RemovedProduction": {
-            "name": "markup.deleted",
             "begin": "(<)(del)(>)",
             "end": "(</)(del)(>)",
             "patterns": [

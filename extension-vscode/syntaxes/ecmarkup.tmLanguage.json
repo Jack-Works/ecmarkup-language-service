@@ -2,7 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
     "scopeName": "text.html.ecmarkup.injection",
     "injectionSelector": "L:text.html",
-    "patterns": [{ "include": "#emu-grammar" }],
+    "patterns": [{ "include": "#emu-grammar" }, { "include": "#emu-alg" }],
     "repository": {
         "emu-grammar": {
             "comment": "I want to use a zero-width version, but VSCode does not work for the single-line item. To make it work, I have to consume some character. Assume the first token must be an Identifier, this is usually true.",
@@ -11,11 +11,14 @@
                 "2": { "name": "entity.name.type.class.syntax" }
             },
             "end": "(?=</emu-grammar>)",
-            "patterns": [
-                { "include": "text.html.basic#comment" },
-                { "include": "source.grammarkdown" }
-            ],
+            "patterns": [{ "include": "text.html.basic#comment" }, { "include": "source.grammarkdown" }],
             "contentName": "meta.embedded.block.grammarkdown source.grammarkdown"
+        },
+        "emu-alg": {
+            "begin": "(?<=(<emu-alg(?:[\\sa-zA-Z=\"])*>))(.?|$)",
+            "end": "(?=</emu-alg>)",
+            "patterns": [{ "include": "text.html.basic#comment" }, { "include": "text.html.markdown.ecmarkdown" }],
+            "contentName": "meta.embedded.block.ecmarkdown text.html.markdown.ecmarkdown"
         }
     }
 }
