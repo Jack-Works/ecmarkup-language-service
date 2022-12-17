@@ -4,17 +4,62 @@
     "scopeName": "text.html.markdown.ecmarkdown",
     "patterns": [
         {
-            "include": "#Line"
+            "include": "#Sentence"
         }
     ],
     "repository": {
-        "Line": {
+        "Sentence": {
             "begin": "(\\d+\\.)",
             "end": "$",
             "patterns": [
                 {
-                    "include": "#Constants"
+                    "include": "#AttributeList"
                 },
+                {
+                    "include": "#Pattern"
+                }
+            ],
+            "beginCaptures": {
+                "1": {
+                    "name": "punctuation.definition.list.begin.markdown"
+                }
+            }
+        },
+        "AttributeList": {
+            "begin": "(\\[)(?!\\[)",
+            "end": "(\\])(?!\\])",
+            "patterns": [
+                {
+                    "name": "string.quoted",
+                    "begin": "\"",
+                    "end": "\""
+                },
+                {
+                    "name": "punctuation.separator.key-value",
+                    "match": "="
+                },
+                {
+                    "name": "punctuation.separator.list.pair",
+                    "match": ","
+                },
+                {
+                    "name": "entity.other.attribute-name",
+                    "match": ".+?"
+                }
+            ],
+            "beginCaptures": {
+                "1": {
+                    "name": "punctuation.brackets.attribute"
+                }
+            },
+            "endCaptures": {
+                "1": {
+                    "name": "punctuation.brackets.attribute"
+                }
+            }
+        },
+        "Pattern": {
+            "patterns": [
                 {
                     "include": "#Variable"
                 },
@@ -22,15 +67,21 @@
                     "include": "#Intrinsic"
                 },
                 {
+                    "include": "#SpecValue"
+                },
+                {
                     "include": "#Value"
                 },
                 {
+                    "include": "#NonTerminal"
+                },
+                {
                     "name": "storage.type.tsx",
-                    "match": "\\bLet\\b"
+                    "match": "(?i)\\bLet\\b"
                 },
                 {
                     "name": "keyword.control",
-                    "match": "\\bFor each\\b"
+                    "match": "(?i)\\bFor each\\b"
                 },
                 {
                     "begin": "(\\[\\[)",
@@ -54,23 +105,19 @@
                 },
                 {
                     "name": "keyword.control.assert",
-                    "match": "Assert:|!"
+                    "match": "(?i)Assert:|!"
                 },
                 {
                     "name": "keyword.control.trycatch",
-                    "match": "\\b(Throw|\\?)\\b"
+                    "match": "(?i)\\b(Throw|\\?)\\b"
                 },
                 {
                     "name": "keyword.control.flow",
-                    "match": "(?i)\\b(If|Else if|Else,?|then,?|is not present|return)\\b"
+                    "match": "(?i)\\b(If|Else if|Else|then|is not present|return|repeat|while)\\b"
                 },
                 {
                     "name": "constant.language",
                     "match": "\\*(true|false|null|TypeError|RangeError)\\*"
-                },
-                {
-                    "name": "entity.name.type.class.syntax",
-                    "match": "\\|\\w+\\|"
                 },
                 {
                     "name": "entity.name.function",
@@ -79,37 +126,50 @@
                 {
                     "name": "markup.italic",
                     "match": "\\b(Normative Optional|Legacy|implementation-defined|implementation-approximated|host|host hook|host-defined|host environment|chain production|goal symbol|Parse Node|the same Parse Node|must cover|covered|Assert|abstract operations|syntax-directed operation|source text matched by|runtime semantics|static semantics|Early Error Rule|Mathematical values|Extended mathematical values|integer|integral Number|BigInt value for|mathematical value of|extended mathematical value of|clamping|interval|inclusive interval|Values without identity|value with identity|ECMAScript language type|ECMAScript language value|Boolean type|String type|leading surrogate|high-surrogate code unit|trailing surrogate|low-surrogate code unit|surrogate pair|string-concatenation|substring|the ASCII word characters|Symbol type|Number type|finite|Number value for|BigInt type|Object Type|data property|accessor property|property key|property name|integer index|array index|ordinary object|exotic object|function object|constructor|Enums|List|list-concatenation|Record|Relation|strict partial order|strict total order|Completion Record|normal completion|break completion|continue completion|return completion|throw completion|abrupt completion|normal completion containing|Reference Record|Super Reference Record|Property Descriptor|fully populated Property Descriptor|Abstract Closure|Data Block|byte value|Shared Data Block|PrivateElements|ClassFieldDefinition Records|Private Name|ClassStaticBlockDefinition Record|canonical numeric string|array-like object|Iterator Record|Environment Record|Declarative Environment Record|Object Environment Record|Function Environment Record|Global Environment Record|Module Environment Record|PrivateEnvironment Record|realm|Realm Record|execution context|running execution context|execution context stack|the current Realm Record|active function object|ECMAScript code execution contexts|Job|active script or module|prepared to evaluate ECMAScript code|JobCallback Record|agent|Agent Record|executing thread|surrounding agent|agent signifier|agent cluster|hypothetical WeakRef-oblivious|live|strict function|non-strict function|bound function exotic object|Array exotic object|String exotic object|arguments exotic object|Integer-Indexed exotic object|module namespace exotic object|immutable prototype exotic object|Proxy exotic object|ECMAScript source text|Global code|Eval code|Function code|Module code|Directive Prologue|Use Strict Directive|strict mode code|non-strict code|keyword|reserved word|conditional keyword|contextual keyword|direct eval|Script Record|Module Record|ResolvedBinding Record|Cyclic Module Record|Source Text Module Record|ImportEntry Record|ExportEntry Record|early error|global object|Object prototype object|Function prototype object|Boolean prototype object|thisBooleanValue|Symbol prototype object|thisSymbolValue|Error prototype object|_NativeError_ prototype object|AggregateError prototype object|safe|Number prototype object|thisNumberValue|BigInt prototype object|thisBigIntValue|epoch|time value|Date prototype object|thisTimeValue|this Date object|this time value|String prototype object|thisStringValue|left-capturing parenthesis|CharSet|CaptureRange|MatchState|MatchResult|MatcherContinuation|Matcher|RegExp Record|RegExp prototype object|Match Record|Array prototype object|sort order|consistent comparator|TypedArray element type|Map prototype object|Set prototype object|WeakMap prototype object|WeakSet prototype object|read-modify-write modification function|ArrayBuffer prototype object|SharedArrayBuffer prototype object|DataView prototype object|WaiterList|critical section|contention|JSON Serialization Record|WeakRef|WeakRef prototype|FinalizationRegistry|FinalizationRegistry prototype|PromiseCapability Record|Promise prototype object|GeneratorFunction prototype object|AsyncGeneratorFunction prototype object|Generator prototype object|AsyncGenerator prototype object|AsyncGeneratorRequest|AsyncFunction prototype object|memory model|Shared Data Block event|ReadSharedMemory|WriteSharedMemory|ReadModifyWriteSharedMemory|Synchronize|Synchronize event|Agent Events Record|Chosen Value Record|candidate execution|empty candidate execution|agent-order slice|possible read values|IEEE 754-2019)\\b"
+                },
+                {
+                    "name": "storage.type.tsx",
+                    "match": "(?i)\\b(set|append|remove)\\b"
                 }
-            ],
-            "beginCaptures": {
-                "1": {
-                    "name": "punctuation.definition.list.begin.markdown"
-                }
-            }
+            ]
+        },
+        "NonTerminal": {
+            "name": "entity.name.type.class.syntax",
+            "match": "\\|\\w+\\|"
         },
         "Variable": {
             "name": "variable",
-            "begin": "_",
-            "end": "_"
+            "match": "_\\w+_"
         },
         "Intrinsic": {
             "name": "variable.language",
-            "begin": "%",
-            "end": "%"
+            "match": "%[\\w\\.]+%"
+        },
+        "SpecValue": {
+            "name": "markup.italic",
+            "match": "~[\\w-]+~"
+        },
+        "Code": {
+            "begin": "`",
+            "end": "`",
+            "patterns": [
+                {
+                    "include": "source.js"
+                }
+            ],
+            "contentName": "source.js"
         },
         "Value": {
             "name": "variable.language",
-            "begin": "\\*",
-            "end": "\\*",
-            "patterns": [
-                {
-                    "include": "#String"
+            "match": "\\*(?:(\".+?\")|(\\w+))\\*",
+            "captures": {
+                "1": {
+                    "name": "string.quoted"
                 },
-                {
-                    "name": "variable.language",
-                    "match": "\\w+"
+                "2": {
+                    "name": "variable.language"
                 }
-            ]
+            }
         },
         "String": {
             "name": "string.quoted",

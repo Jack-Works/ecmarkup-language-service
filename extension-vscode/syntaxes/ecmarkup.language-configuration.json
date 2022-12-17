@@ -1,4 +1,4 @@
-// copy of html
+// copy from html
 {
 	"comments": {
 		"blockComment": [ "<!--", "-->" ]
@@ -11,11 +11,18 @@
 	],
 	"autoClosingPairs": [
 		{ "open": "{", "close": "}"},
-		{ "open": "[", "close": "]"},
+		// { "open": "[", "close": "]"},
 		{ "open": "(", "close": ")" },
 		{ "open": "'", "close": "'" },
 		{ "open": "\"", "close": "\"" },
-		{ "open": "<!--", "close": "-->", "notIn": [ "comment", "string" ]}
+		{ "open": "<!--", "close": "-->", "notIn": [ "comment", "string" ]},
+		// addition from ecmarkdown and grammarkdown. see https://github.com/microsoft/vscode/issues/133397
+        ["[[", "]]"],
+        ["_", "_"],
+        ["*", "*"],
+        ["~", "~"],
+        ["|", "|"],
+        ["`", "`"]
 	],
 	"surroundingPairs": [
 		{ "open": "'", "close": "'" },
@@ -23,7 +30,14 @@
 		{ "open": "{", "close": "}"},
 		{ "open": "[", "close": "]"},
 		{ "open": "(", "close": ")" },
-		{ "open": "<", "close": ">" }
+		{ "open": "<", "close": ">" },
+		// addition from ecmarkdown and grammarkdown. see https://github.com/microsoft/vscode/issues/133397
+        ["[[", "]]"],
+        ["_", "_"],
+        ["*", "*"],
+        ["~", "~"],
+        ["|", "|"],
+        ["`", "`"]
 	],
 	"colorizedBracketPairs": [
 	],

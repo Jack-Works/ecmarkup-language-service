@@ -11,22 +11,45 @@ variables:
   term: '\b(Normative Optional|Legacy|implementation-defined|implementation-approximated|host|host hook|host-defined|host environment|chain production|goal symbol|Parse Node|the same Parse Node|must cover|covered|Assert|abstract operations|syntax-directed operation|source text matched by|runtime semantics|static semantics|Early Error Rule|Mathematical values|Extended mathematical values|integer|integral Number|BigInt value for|mathematical value of|extended mathematical value of|clamping|interval|inclusive interval|Values without identity|value with identity|ECMAScript language type|ECMAScript language value|Boolean type|String type|leading surrogate|high-surrogate code unit|trailing surrogate|low-surrogate code unit|surrogate pair|string-concatenation|substring|the ASCII word characters|Symbol type|Number type|finite|Number value for|BigInt type|Object Type|data property|accessor property|property key|property name|integer index|array index|ordinary object|exotic object|function object|constructor|Enums|List|list-concatenation|Record|Relation|strict partial order|strict total order|Completion Record|normal completion|break completion|continue completion|return completion|throw completion|abrupt completion|normal completion containing|Reference Record|Super Reference Record|Property Descriptor|fully populated Property Descriptor|Abstract Closure|Data Block|byte value|Shared Data Block|PrivateElements|ClassFieldDefinition Records|Private Name|ClassStaticBlockDefinition Record|canonical numeric string|array-like object|Iterator Record|Environment Record|Declarative Environment Record|Object Environment Record|Function Environment Record|Global Environment Record|Module Environment Record|PrivateEnvironment Record|realm|Realm Record|execution context|running execution context|execution context stack|the current Realm Record|active function object|ECMAScript code execution contexts|Job|active script or module|prepared to evaluate ECMAScript code|JobCallback Record|agent|Agent Record|executing thread|surrounding agent|agent signifier|agent cluster|hypothetical WeakRef-oblivious|live|strict function|non-strict function|bound function exotic object|Array exotic object|String exotic object|arguments exotic object|Integer-Indexed exotic object|module namespace exotic object|immutable prototype exotic object|Proxy exotic object|ECMAScript source text|Global code|Eval code|Function code|Module code|Directive Prologue|Use Strict Directive|strict mode code|non-strict code|keyword|reserved word|conditional keyword|contextual keyword|direct eval|Script Record|Module Record|ResolvedBinding Record|Cyclic Module Record|Source Text Module Record|ImportEntry Record|ExportEntry Record|early error|global object|Object prototype object|Function prototype object|Boolean prototype object|thisBooleanValue|Symbol prototype object|thisSymbolValue|Error prototype object|_NativeError_ prototype object|AggregateError prototype object|safe|Number prototype object|thisNumberValue|BigInt prototype object|thisBigIntValue|epoch|time value|Date prototype object|thisTimeValue|this Date object|this time value|String prototype object|thisStringValue|left-capturing parenthesis|CharSet|CaptureRange|MatchState|MatchResult|MatcherContinuation|Matcher|RegExp Record|RegExp prototype object|Match Record|Array prototype object|sort order|consistent comparator|TypedArray element type|Map prototype object|Set prototype object|WeakMap prototype object|WeakSet prototype object|read-modify-write modification function|ArrayBuffer prototype object|SharedArrayBuffer prototype object|DataView prototype object|WaiterList|critical section|contention|JSON Serialization Record|WeakRef|WeakRef prototype|FinalizationRegistry|FinalizationRegistry prototype|PromiseCapability Record|Promise prototype object|GeneratorFunction prototype object|AsyncGeneratorFunction prototype object|Generator prototype object|AsyncGenerator prototype object|AsyncGeneratorRequest|AsyncFunction prototype object|memory model|Shared Data Block event|ReadSharedMemory|WriteSharedMemory|ReadModifyWriteSharedMemory|Synchronize|Synchronize event|Agent Events Record|Chosen Value Record|candidate execution|empty candidate execution|agent-order slice|possible read values|IEEE 754-2019)\b'
 
 patterns:
-- include: '#Line'
+- include: '#Sentence'
 
 repository:
-  Line:
-    begin: '(\d+\.)'
-    end: '$'
+  Sentence:
+    begin: (\d+\.)
     beginCaptures:
       1: { name: punctuation.definition.list.begin.markdown }
+    end: '$'
     patterns:
-    - include: '#Constants'
+    - include: '#AttributeList'
+    - include: '#Pattern'
+  AttributeList:
+    begin: '(\[)(?!\[)'
+    beginCaptures:
+      1: { name: punctuation.brackets.attribute }
+    end: '(\])(?!\])'
+    endCaptures:
+      1: { name: punctuation.brackets.attribute }
+    patterns:
+    - begin: '"'
+      end: '"'
+      name: string.quoted
+    - match: '='
+      name: punctuation.separator.key-value
+    - match: ','
+      name: punctuation.separator.list.pair
+    - match: '.+?'
+      name: entity.other.attribute-name
+  Pattern:
+    patterns:
     - include: '#Variable'
     - include: '#Intrinsic'
+    # - include: '#Code'
+    - include: '#SpecValue'
     - include: '#Value'
-    - match: '\bLet\b'
+    - include: '#NonTerminal'
+    - match: '(?i)\bLet\b'
       name: storage.type.tsx
-    - match: '\bFor each\b'
+    - match: '(?i)\bFor each\b'
       name: keyword.control
     - begin: '(\[\[)'
       beginCaptures:
@@ -37,36 +60,44 @@ repository:
       patterns:
       - match: '\w+'
         name: variable.object
-    - match: 'Assert:|!'
+    - match: '(?i)Assert:|!'
       name: keyword.control.assert
-    - match: '\b(Throw|\?)\b'
+    - match: '(?i)\b(Throw|\?)\b'
       name: keyword.control.trycatch
-    - match: '(?i)\b(If|Else if|Else,?|then,?|is not present|return)\b'
+    - match: '(?i)\b(If|Else if|Else|then|is not present|return|repeat|while)\b'
       name: keyword.control.flow
     - match: '\*(true|false|null|TypeError|RangeError)\*'
       name: constant.language
-    - match: '\|\w+\|'
-      name: entity.name.type.class.syntax
     - match: '{{aoid}}'
       name: entity.name.function
     - match: '{{term}}'
       name: markup.italic
+    - match: '(?i)\b(set|append|remove)\b'
+      name: storage.type.tsx
+  NonTerminal:
+    match: '\|\w+\|'
+    name: entity.name.type.class.syntax
   Variable:
-    begin: '_'
-    end: '_'
+    match: '_\w+_'
     name: variable
   Intrinsic:
-    begin: '%'
-    end: '%'
+    match: '%[\w\.]+%'
     name: variable.language
-  Value:
-    begin: '\*'
-    end: '\*'
-    name: variable.language
+  SpecValue:
+    match: '~[\w-]+~'
+    name: markup.italic
+  Code:
+    begin: '`'
+    end: '`'
+    contentName: source.js
     patterns:
-    - include: '#String'
-    - match: '\w+'
-      name: variable.language
+    - include: 'source.js'
+  Value:
+    match: '\*(?:(".+?")|(\w+))\*'
+    name: variable.language
+    captures:
+      1: { name: string.quoted }
+      2: { name: variable.language }
   String:
     begin: '"'
     end: '"'

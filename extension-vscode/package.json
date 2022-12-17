@@ -93,7 +93,8 @@
                 "scopeName": "text.html.markdown.ecmarkdown",
                 "language": "ecmarkdown",
                 "embeddedLanguages": {
-                    "meta.embedded.block.html": "html"
+                    "meta.embedded.block.html": "html",
+                    "source.js": "js"
                 }
             }
         ],
