@@ -1,19 +1,14 @@
 import { TextDocuments, type InitializeResult, type Connection, TextDocumentSyncKind } from 'vscode-languageserver'
 import { SourceFile } from './utils/document.js'
-import { formatProvider } from './features/formatter.js'
-import { enablePushDiagnostics } from './features/diagnostics.js'
+import { completionProvider } from './features/completion.js'
 
 const documents: TextDocuments<SourceFile> = new TextDocuments(SourceFile)
 export function initialize(connection: Connection) {
     connection.onInitialize((params) => {
-        const { textDocument } = params.capabilities
-
-        enablePushDiagnostics(connection, documents, textDocument?.publishDiagnostics)
-
         const features: InitializeResult<any> = {
             capabilities: {
                 textDocumentSync: TextDocumentSyncKind.Incremental,
-                documentFormattingProvider: formatProvider(connection, documents, textDocument?.formatting)!,
+                completionProvider: completionProvider(connection, documents)!,
             },
             serverInfo: {
                 name: 'ecmarkup language server',

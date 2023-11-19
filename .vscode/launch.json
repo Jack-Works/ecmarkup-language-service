@@ -21,9 +21,9 @@
             "type": "node",
             "request": "attach",
             "name": "Attach to Server",
-            "port": 29384,
+            "port": 29381,
             "restart": true,
-            "outFiles": ["${workspaceRoot}/language-service/lib/**/*.js"],
+            "outFiles": ["${workspaceRoot}/language-server/lib/**/*.js"],
             "sourceMaps": true
         }
     ],

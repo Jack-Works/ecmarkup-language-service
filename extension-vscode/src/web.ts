@@ -1,6 +1,6 @@
 import { Uri, type ExtensionContext } from 'vscode'
 import { LanguageClient, type LanguageClientOptions } from 'vscode-languageclient/browser.js'
-import { onActivate } from './main'
+import { onActivate } from './main.js'
 
 export async function activate(context: ExtensionContext) {
     onActivate(context, createWorkerLanguageClient)
@@ -13,4 +13,4 @@ export async function activate(context: ExtensionContext) {
     }
 }
 
-export { onDeactivate as deactivate } from './main'
+export { onDeactivate as deactivate } from './main.js'

@@ -1,7 +1,7 @@
 {
-    "name": "ecmarkup-language-extension-vscode",
-    "displayName": "Ecmarkup",
-    "description": "Ecmarkup language support",
+    "name": "ecmarkup-vscode",
+    "displayName": "ecmarkup",
+    "description": "ecmarkup language support",
     "categories": [
         "Formatters",
         "Linters",
@@ -18,7 +18,8 @@
     "publisher": "MagicWorks",
     "license": "MIT",
     "version": "0.2.0",
-    "main": "./lib/node.js",
+    "main": "./index.cjs",
+    "type": "module",
     "enableProposedApis": false,
     "activationEvents": [],
     "contributes": {
@@ -101,7 +102,27 @@
         "snippets": [
             {
                 "language": "ecmarkup",
-                "path": "./snippets.json"
+                "path": "./snippets/ecmarkup.json"
+            },
+            {
+                "language": "ecmarkup",
+                "path": "./snippets/symbols.json"
+            },
+            {
+                "language": "grammarkdown",
+                "path": "./snippets/grammarkdown.json"
+            },
+            {
+                "language": "grammarkdown",
+                "path": "./snippets/symbols.json"
+            },
+            {
+                "language": "ecmarkdown",
+                "path": "./snippets/ecmarkdown.json"
+            },
+            {
+                "language": "ecmarkdown",
+                "path": "./snippets/symbols.json"
             }
         ]
     },
@@ -113,27 +134,25 @@
         "vscode": "^1.74.0"
     },
     "devDependencies": {
-        "@types/node": "^18.11.12",
-        "@types/vscode": "^1.74.0",
-        "@vscode/vsce": "^2.15.0",
-        "com.matheusds365.vscode.yamlsyntax2json": "^1.0.5",
-        "del": "^7.0.0",
+        "@tc39/ecma262-biblio": "^2.1.2657",
+        "@types/node": "^20.9.2",
+        "@types/vscode": "^1.84.1",
+        "@vscode/vsce": "^2.22.0",
         "ecmarkup-language-server": "workspace:^",
-        "esbuild": "^0.16.4",
-        "rollup": "^3.7.2",
-        "vscode-languageclient": "^8.0.2",
+        "esbuild": "^0.19.5",
+        "js-yaml": "^4.1.0",
+        "rollup": "^4.5.0",
+        "vscode-languageclient": "^9.0.1",
         "vscode-test": "^1.6.1"
     },
     "scripts": {
-        "tmlang": "pnpm run tmlang:grammarkdown && pnpm run tmlang:ecmarkdown",
-        "tmlang:gramarkdown": "npx yamlsyntax2json ./syntaxes/grammarkdown.tmLanguage.yaml ./syntaxes/grammarkdown.tmLanguage.json",
-        "tmlang:ecmarkdown": "npx yamlsyntax2json ./syntaxes/ecmarkdown.tmLanguage.yaml ./syntaxes/ecmarkdown.tmLanguage.json",
+        "tmlang": "node ./scripts/generate-tmLanguage.mjs",
         "vsce": "vsce package",
         "vsce-publish": "vsce publish",
         "vscode:prepublish": "npm run build-web-extension && npm run build-node-extension && npm run build-node-server",
-        "build-web-extension": " esbuild ./src/web.ts                                               --bundle --platform=browser  --outfile=lib/web.js                  --minify --target=chrome102 --external:vscode --define:process.env.NODE_ENV='production'                                    --format=cjs --sourcemap",
-        "build-web-server": "    esbuild ./node_modules/ecmarkup-language-server/src/server-web.ts  --bundle --platform=browser  --outfile=lib/language-server-web.js  --minify --target=chrome102                   --define:process.env.NODE_ENV='production'                                    --format=cjs --sourcemap",
-        "build-node-extension": "esbuild ./src/node.ts                                              --bundle --platform=node     --outfile=lib/node.js                 --minify --target=node16.14 --external:vscode --define:process.env.NODE_ENV='production'                                    --format=cjs --sourcemap",
-        "build-node-server": "   esbuild ./node_modules/ecmarkup-language-server/src/server-node.ts --bundle --platform=node     --outfile=lib/language-server-node.js --minify --target=node16.14 --external:canvas --define:process.env.NODE_ENV='production' --define:require.resolve=undefined --format=cjs --sourcemap"
+        "build-web-extension": " esbuild ./src/web.ts                                               --bundle --platform=browser  --outfile=lib/web.js                  --minify --target=chrome102 --external:vscode --define:process.env.NODE_ENV='production'                                    --format=esm --sourcemap",
+        "build-web-server": "    esbuild ./node_modules/ecmarkup-language-server/src/server-web.ts  --bundle --platform=browser  --outfile=lib/language-server-web.js  --minify --target=chrome102                   --define:process.env.NODE_ENV='production'                                    --format=esm --sourcemap",
+        "build-node-extension": "esbuild ./src/node.ts                                              --bundle --platform=node     --outfile=lib/node.js                 --minify --target=node16.14 --external:vscode --define:process.env.NODE_ENV='production'                                    --format=esm --sourcemap",
+        "build-node-server": "   esbuild ./node_modules/ecmarkup-language-server/src/server-node.ts --bundle --platform=node     --outfile=lib/language-server-node.js --minify --target=node16.14 --external:canvas --define:process.env.NODE_ENV='production' --define:require.resolve=undefined --format=esm --sourcemap"
     }
 }

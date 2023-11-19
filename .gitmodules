@@ -1,6 +1,0 @@
-[submodule "ecmarkup"]
-	path = ecmarkup
-	url = https://github.com/Jack-Works/ecmarkup.git
-[submodule "grammarkdown"]
-	path = grammarkdown
-	url = https://github.com/Jack-Works/grammarkdown.git

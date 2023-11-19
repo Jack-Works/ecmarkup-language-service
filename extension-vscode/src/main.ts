@@ -1,11 +1,12 @@
-import { commands, extensions, workspace, type ExtensionContext } from 'vscode'
+import type { ExtensionContext } from 'vscode'
+import { commands, extensions, workspace } from './vscode.js'
 import type { LanguageClient as NodeClient, LanguageClientOptions as NodeOptions } from 'vscode-languageclient/node.js'
 import type { LanguageClient as WebClient, LanguageClientOptions as WebOptions } from 'vscode-languageclient/browser.js'
 
 let client: NodeClient | WebClient
 export async function onActivate(
     context: ExtensionContext,
-    createClient: (options: NodeOptions | WebOptions) => NodeClient | WebClient
+    createClient: (options: NodeOptions | WebOptions) => NodeClient | WebClient,
 ) {
     // See: https://github.com/microsoft/vscode/issues/160585
     const htmlExtension = extensions.getExtension('vscode.html-language-features')
@@ -32,7 +33,7 @@ export async function onActivate(
                 client = createClient(clientOptions)
                 return client.start()
             }
-        })
+        }),
     )
 }
 

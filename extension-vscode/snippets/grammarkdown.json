@@ -1,0 +1,38 @@
+{
+    "Yield, Await": {
+        "prefix": "[Yield, Await]",
+        "body": "[Yield, Await]"
+    },
+    "?Yield, ?Await": {
+        "prefix": "[?Yield, ?Await]",
+        "body": "[?Yield, ?Await]"
+    },
+    ">": {
+        "prefix": "gt",
+        "body": "&gt; "
+    },
+    ">=": {
+        "prefix": "gteq",
+        "body": "&ge; "
+    },
+    "<": {
+        "prefix": "lt",
+        "body": "&lt; "
+    },
+    "<=": {
+        "prefix": "lteq",
+        "body": "&le; "
+    },
+    "&": {
+        "prefix": "and",
+        "body": "&amp;"
+    },
+    "∉": {
+        "prefix": "not belongs to",
+        "body": "&notin;"
+    },
+    "∈": {
+        "prefix": "belongs to",
+        "body": "&in;"
+    }
+}

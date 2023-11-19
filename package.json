@@ -1,7 +1,8 @@
 {
     "name": "ecmarkup-language-server",
     "private": true,
-    "packageManager": "pnpm@7.17.1",
+    "type": "module",
+    "packageManager": "pnpm@8.10.5",
     "description": "Language server and editor plugins for ecmarkup",
     "author": "Jack Works",
     "license": "MIT",
@@ -11,25 +12,8 @@
         "build": "tsc -b ."
     },
     "devDependencies": {
-        "@changesets/cli": "^2.25.2",
-        "prettier": "^2.8.1",
-        "typescript": "5.0.0-dev.20221210"
-    },
-    "pnpm": {
-        "overrides": {
-            "typescript": "5.0.0-dev.20221210",
-            "grammarkdown": "workspace:*"
-        },
-        "packageExtensions": {
-            "grammarkdown": {
-                "dependencies": {
-                    "@esfx/disposable": "*",
-                    "jest-matcher-utils": "*"
-                }
-            }
-        },
-        "patchedDependencies": {
-            "com.matheusds365.vscode.yamlsyntax2json@1.0.5": "patches/com.matheusds365.vscode.yamlsyntax2json@1.0.5.patch"
-        }
+        "@changesets/cli": "^2.26.2",
+        "prettier": "^3.1.0",
+        "typescript": "^5.2.2"
     }
 }

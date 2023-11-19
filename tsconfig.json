@@ -1,10 +1,5 @@
 {
-    "references": [
-        { "path": "./tsconfig-ecmarkup.json" },
-        { "path": "./tsconfig-grammarkdown.json" },
-        { "path": "./language-server" },
-        { "path": "./extension-vscode" }
-    ],
+    "references": [{ "path": "./language-server" }, { "path": "./extension-vscode" }],
     "files": [],
     "compilerOptions": {
         // Classification follows https://www.typescriptlang.org/tsconfig
@@ -30,9 +25,8 @@
         // Emit
         "declaration": true,
         "declarationMap": true,
-        "importsNotUsedAsValues": "error",
+        "verbatimModuleSyntax": true,
         "noEmitOnError": true,
-        "preserveValueImports": true,
         "sourceMap": true,
         "stripInternal": true,
 

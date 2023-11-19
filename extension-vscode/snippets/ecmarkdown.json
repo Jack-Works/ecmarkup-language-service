@@ -1,0 +1,254 @@
+{
+    ">": {
+        "prefix": "gt",
+        "body": "&gt; "
+    },
+    ">=": {
+        "prefix": "gteq",
+        "body": "&ge; "
+    },
+    "<": {
+        "prefix": "lt",
+        "body": "&lt; "
+    },
+    "<=": {
+        "prefix": "lteq",
+        "body": "&le; "
+    },
+    "true": {
+        "prefix": "true",
+        "body": "*true*"
+    },
+    "false": {
+        "prefix": "false",
+        "body": "*false*"
+    },
+    "null": {
+        "prefix": "null",
+        "body": "*null*"
+    },
+    "undefined": {
+        "prefix": "undefined",
+        "body": "*undefined*"
+    },
+    "𝔽 (Floating point number)": {
+        "prefix": ["float", "F"],
+        "body": "𝔽"
+    },
+    "ℝ (Mathematical number)": {
+        "prefix": ["real", "R"],
+        "body": "ℝ"
+    },
+    "ℤ (Bigint)": {
+        "prefix": ["bigint", "Z"],
+        "body": "ℤ"
+    },
+    "∞": {
+        "prefix": "Infinity",
+        "body": "∞"
+    },
+
+    "Abstract Closure": {
+        "prefix": "abstract closure",
+        "body": [
+            "Let _${1:closure}_ be a new Abstract Closure with no parameters that captures _${2:something}_ and performs the following steps when called:",
+            "    1. ${4:Return _${2}_.}",
+            "1. Let _${3:f}_ be CreateBuiltinFunction(${1}, 0, *\"\"*, « »)."
+        ],
+        "description": "Create a new Abstract Closure and a coresponding ECMAScript function."
+    },
+    "Throw an exception": {
+        "prefix": "throw",
+        "body": "throw a *${1:TypeError}* exception.${0}",
+        "description": "Throw an exception"
+    },
+
+    "If else": {
+        "prefix": "if",
+        "body": ["If ${1:condition}, then", "    1. ${2}", "1. Else,", "    1. ${3}"]
+    },
+    "If else if": {
+        "prefix": "if",
+        "body": ["If ${1:condition}, then", "    1. ${2}", "1. Else if ${3},", "    1. ${4}", "1. Else,", "    1. ${5}"]
+    },
+    "Evaluation": {
+        "prefix": "evaluation",
+        "body": "Let _${1:rhs}_ be ? Evaluation of |${2:Expression}|."
+    },
+    "For each element": {
+        "prefix": "for each",
+        "body": ["For each element _${1:e}_ of _${2:list}_, do", "    1. "]
+    },
+    "Repeat": {
+        "prefix": "repeat",
+        "body": "Repeat,\n    1."
+    },
+    "Perform": {
+        "prefix": "perform",
+        "body": "Perform ? "
+    },
+    "Return": {
+        "prefix": "return",
+        "body": "Return "
+    },
+    "Set": {
+        "prefix": "set",
+        "body": "Set _${1:var}_ to _${2:var}_."
+    },
+    "Let": {
+        "prefix": "let",
+        "body": "Let _${1:var}_ be _${2:var}_."
+    },
+    "Append": {
+        "prefix": "append",
+        "body": "Append _${1:var}_ to _${2:var}_."
+    },
+    "List": {
+        "prefix": ["list", "a new empty List", "a new List containing"],
+        "body": "« ${1} »"
+    },
+    "List concatenation": {
+        "prefix": ["the list-concatenation of"],
+        "body": "the list-concatenation of _${1:list}_ and _${2:list}_."
+    },
+    "Symbol.asyncIterator": {
+        "prefix": ["Symbol.asyncIterator", "@@asyncIterator"],
+        "body": "@@asyncIterator"
+    },
+    "Symbol.hasInstance": {
+        "prefix": ["Symbol.hasInstance", "@@hasInstance"],
+        "body": "@@hasInstance"
+    },
+    "Symbol.isConcatSpreadable": {
+        "prefix": ["Symbol.isConcatSpreadable", "@@isConcatSpreadable"],
+        "body": "@@isConcatSpreadable"
+    },
+    "Symbol.iterator": {
+        "prefix": ["Symbol.iterator", "@@iterator"],
+        "body": "@@iterator"
+    },
+    "Symbol.match": {
+        "prefix": ["Symbol.match", "@@match"],
+        "body": "@@match"
+    },
+    "Symbol.matchAll": {
+        "prefix": ["Symbol.matchAll", "@@matchAll"],
+        "body": "@@matchAll"
+    },
+    "Symbol.replace": {
+        "prefix": ["Symbol.replace", "@@replace"],
+        "body": "@@replace"
+    },
+    "Symbol.search": {
+        "prefix": ["Symbol.search", "@@search"],
+        "body": "@@search"
+    },
+    "Symbol.species": {
+        "prefix": ["Symbol.species", "@@species"],
+        "body": "@@species"
+    },
+    "Symbol.split": {
+        "prefix": ["Symbol.split", "@@split"],
+        "body": "@@split"
+    },
+    "Symbol.toPrimitive": {
+        "prefix": ["Symbol.toPrimitive", "@@toPrimitive"],
+        "body": "@@toPrimitive"
+    },
+    "Symbol.toStringTag": {
+        "prefix": ["Symbol.toStringTag", "@@toStringTag"],
+        "body": "@@toStringTag"
+    },
+    "Symbol.unscopables": {
+        "prefix": ["Symbol.unscopables", "@@unscopables"],
+        "body": "@@unscopables"
+    },
+    "Is an Object": {
+        "prefix": ["is an Object"],
+        "body": "is an Object, "
+    },
+    "Is a String": {
+        "prefix": ["is a String"],
+        "body": "is a String, "
+    },
+    "Is a Symbol": {
+        "prefix": ["is a Symbol"],
+        "body": "is a Symbol, "
+    },
+    "Is a BigInt": {
+        "prefix": ["is a BigInt"],
+        "body": "is a BigInt, "
+    },
+    "Is a Number": {
+        "prefix": ["is a Number"],
+        "body": "is a Number, "
+    },
+    "Is a Boolean": {
+        "prefix": ["is a Boolean"],
+        "body": "is a Boolean, "
+    },
+    "Is a Function": {
+        "prefix": ["IsCallable", "is a Function"],
+        "body": "IsCallable($1) is *true*, "
+    },
+    "Is an Array": {
+        "prefix": ["IsArray", "is an Array"],
+        "body": "IsArray($1) is *true*, "
+    },
+    "Is undefined": {
+        "prefix": ["is undefined"],
+        "body": "is *undefined*, "
+    },
+    "Is null": {
+        "prefix": ["is null"],
+        "body": "is *null*, "
+    },
+    "Is true": {
+        "prefix": ["is true"],
+        "body": "is *true*, "
+    },
+    "Is false": {
+        "prefix": ["is false"],
+        "body": "is *false*, "
+    },
+    "Is not an Object": {
+        "prefix": ["is not an Object"],
+        "body": "is not an Object, "
+    },
+    "Is not a String": {
+        "prefix": ["is not a String"],
+        "body": "is not a String, "
+    },
+    "Is not a Symbol": {
+        "prefix": ["is not a Symbol"],
+        "body": "is not a Symbol, "
+    },
+    "Is not a BigInt": {
+        "prefix": ["is a BigInt"],
+        "body": "is not a BigInt, "
+    },
+    "Is not a Number": {
+        "prefix": ["is a Number"],
+        "body": "is not a Number, "
+    },
+    "Is not a Boolean": {
+        "prefix": ["is a Boolean"],
+        "body": "is not a Boolean, "
+    },
+    "Is not a Function": {
+        "prefix": ["IsCallable", "is not a Function"],
+        "body": "IsCallable($1) is *false*, "
+    },
+    "Is not an Array": {
+        "prefix": ["IsArray", "is an Array"],
+        "body": "IsArray($1) is *false*, "
+    },
+    "Is not undefined": {
+        "prefix": ["is not undefined"],
+        "body": "is not *undefined*, "
+    },
+    "Is not null": {
+        "prefix": ["is not null"],
+        "body": "is not *null*, "
+    }
+}

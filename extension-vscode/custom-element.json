@@ -150,6 +150,14 @@
                     "name": "aoid",
                     "description": "Abstract operation ID. A unique name identifying this clause as an abstract operation. Algorithm steps will auto-link calls to this abstract operation to this clause. If left blank, the aoid will be set to the id of this clause.",
                     "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-annex" }]
+                },
+                {
+                    "name": "number",
+                    "description": {
+                        "kind": "markdown",
+                        "value": "Optional: An explicit clause number, overriding the default auto-incrementing number. Can be a nested number, as in `number=\"2.1\"`."
+                    },
+                    "references": [{ "name": "Ecmarkup reference", "url": "https://tc39.es/ecmarkup/#emu-clause" }]
                 }
             ]
         },
