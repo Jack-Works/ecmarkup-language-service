@@ -1,6 +1,7 @@
 import { TextDocuments, type InitializeResult, type Connection, TextDocumentSyncKind } from 'vscode-languageserver'
 import { SourceFile } from './utils/document.js'
 import { completionProvider } from './features/completion.js'
+import { hoverProvider } from './features/hover.js'
 
 const documents: TextDocuments<SourceFile> = new TextDocuments(SourceFile)
 export function initialize(connection: Connection) {
@@ -9,6 +10,7 @@ export function initialize(connection: Connection) {
             capabilities: {
                 textDocumentSync: TextDocumentSyncKind.Incremental,
                 completionProvider: completionProvider(connection, documents)!,
+                hoverProvider: hoverProvider(connection, documents)!,
             },
             serverInfo: {
                 name: 'ecmarkup language server',

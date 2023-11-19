@@ -17,8 +17,9 @@ import type {
     SpecOperations,
     SpecValue,
 } from '@tc39/ecma262-biblio'
+import { findWholeWord } from '../utils/text.js'
+import { formatDocument, formatSignature } from '../utils/format.js'
 
-const IsText = /[\w%@|#-_]/
 const never: never = undefined!
 
 enum CompletionItemPriority {
@@ -105,113 +106,44 @@ export function completionProvider(
 }
 
 function findReg(entry: BiblioClause, fullText: string): CompletionItem {
-    const url = biblio.location + '#' + entry.id
     return {
         label: '#' + entry.id,
         kind: CompletionItemKind.Reference,
-        documentation: { kind: MarkupKind.Markdown, value: `${entry.title}\n\n[${url}](${url})` },
-        detail: entry.title,
+        documentation: formatDocument(entry)!,
+        detail: '(clause) ' + entry.title,
         sortText: getPriority(fullText, entry.id),
     }
 }
 function findProduction(entry: BiblioProduction, isInGrammarMode: boolean, fullText: string): CompletionItem {
-    const url = biblio.location + '#' + entry.id
     return {
         label: entry.name,
         insertText: isInGrammarMode ? entry.name : `|${entry.name}|`,
-        detail: entry.name,
+        detail: '(grammar) ' + entry.name,
         kind: CompletionItemKind.Interface,
-        documentation: { kind: MarkupKind.Markdown, value: `[${url}](${url})` },
+        documentation: formatDocument(entry)!,
         sortText: getPriority(fullText, entry.name),
     }
 }
 function findTerm(entry: BiblioTerm, fullText: string): CompletionItem[] {
-    const url =
-        entry.refId ? biblio.location + '#' + entry.refId
-        : entry.id ? biblio.location + '#' + entry.id
-        : undefined
     return (entry.variants?.length ? entry.variants : [entry.term]).map((term) => ({
         label: entry.term.startsWith('@@') ? entry.term.slice(2) : entry.term,
         kind:
             entry.term.startsWith('%') || entry.term.startsWith('@@') ?
                 CompletionItemKind.Value
             :   CompletionItemKind.Keyword,
-        detail: term,
-        documentation: url ? { kind: MarkupKind.Markdown, value: `[${url}](${url})` } : '',
+        detail: '(term) ' + term,
+        documentation: formatDocument(entry)!,
         sortText: getPriority(fullText, entry.term),
     }))
 }
 function findOperation(entry: BiblioOp, fullText: string): CompletionItem {
-    let document = ''
-    const url = entry.refId ? biblio.location + '#' + entry.refId : undefined
-    if (url) document += `[${url}](${url})`
-    if (entry.effects) document += (document.length ? '\n\n' : '') + 'This abstract operation may triggers user code.'
-    const signature = formatSignature(entry)
     return {
         label: entry.aoid,
         kind: CompletionItemKind.Function,
-        // detail: signature.replaceAll('\n', '').replaceAll(/\s+/g, ' '),
-        documentation: {
-            kind: MarkupKind.Markdown,
-            value: '```ts\n' + signature + '\n```\n\n' + document,
-        },
+        detail: '(method) ' + entry.aoid,
+        documentation: formatDocument(entry)!,
         sortText: getPriority(fullText, entry.aoid),
     }
-}
-function formatSignature({ aoid, signature }: BiblioOp): string {
-    if (!signature) return aoid
-    let str = aoid + '('
-    if (signature.parameters.length || signature.optionalParameters.length) {
-        str += '\n  '
-        str += [...signature.parameters, ...signature.optionalParameters]
-            .map((x) => formatParameter(x, signature.optionalParameters.includes(x)))
-            .join(',\n  ')
-        str += '\n'
-    }
-    str += '): ' + formatSpecValue(signature.return, 0)
-    return str
-}
-function formatParameter(value: SpecOperations.Parameter, optional: boolean): string {
-    let str = value.name.slice(1, -1)
-    if (optional) str += '?'
-    if (value.type) str += ': ' + formatSpecValue(value.type, 2)
-    return str
-}
-function formatSpecValue(value: SpecValue.SpecDataType, identLevel: number): string {
-    if (value.kind === 'completion') {
-        if (!value.typeOfValueIfNormal) return Cap(value.completionType) + 'Completion'
-        return `Completion<${formatSpecValue(value.typeOfValueIfNormal, identLevel)}>`
-    } else if (value.kind === 'list') {
-        return `List<${formatSpecValue(value.elements, identLevel)}>`
-    } else if (value.kind === 'opaque') {
-        return value.type
-            .replace(/^an? /, '')
-            .replace('ECMAScript language value', 'Value')
-            .replace('ECMAScript ', '')
-            .replace('function object', 'Function')
-            .replace(/(\w+) Record/, '$1')
-            .replace('*undefined*', 'undefined')
-            .replace('property key', 'PropertyKey')
-    } else if (value.kind === 'unused') {
-        return `unused`
-    } else if (value.kind === 'union') {
-        return value.types.map(formatSpecValue).join(' | ')
-    } else if (value.kind === 'record') {
-        return `Record { ${Object.entries(value.fields)
-            .map(([key, value]) => `${key}: ${formatSpecValue(value, identLevel)}`)
-            .join(', ')} }`
-    }
-    throw new Error(`Unknown SpecValue: ${JSON.stringify(value)}`)
-}
-function Cap(x: string): string {
-    return x[0]!.toUpperCase() + x.slice(1)
-}
-function findWholeWord(fullText: string, offset: number): [string, string, string] {
-    let from = offset
-    let to = offset
-    while (from > 0 && IsText.test(fullText[from - 1]!)) from--
-    while (to < fullText.length && IsText.test(fullText[to]!)) to++
-    return [fullText.slice(from, offset), fullText.slice(offset, to), fullText.slice(from, to)]
 }
 function isInGrammarMode(beforeText: string) {
     let index = beforeText.lastIndexOf('<emu-grammar')
