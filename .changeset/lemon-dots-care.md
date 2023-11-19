@@ -1,5 +1,5 @@
 ---
-'ecmarkup-vscode': minor
+'ecmarkup-language-extension-vscode': minor
 'ecmarkup-language-server': minor
 ---
 
