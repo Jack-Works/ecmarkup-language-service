@@ -1,5 +1,5 @@
 import type { BiblioEntry, BiblioOp, SpecOperations, SpecValue } from '@tc39/ecma262-biblio'
-import { biblio } from './biblio.js'
+import { getURL } from './biblio.js'
 import { MarkupKind, type MarkupContent } from 'vscode-languageserver-types'
 
 export function formatSignature({ aoid, signature }: BiblioOp): string {
@@ -52,15 +52,13 @@ function Cap(x: string): string {
     return x[0]!.toUpperCase() + x.slice(1)
 }
 export function formatDocument(entry: BiblioEntry): MarkupContent | undefined {
+    const url = getURL(entry)
     if (entry.type === 'clause') {
-        const url = biblio.location + '#' + entry.id
         return { kind: MarkupKind.Markdown, value: `${entry.title}\n\n[${url}](${url})` }
     } else if (entry.type === 'production') {
-        const url = biblio.location + '#' + entry.id
         return { kind: MarkupKind.Markdown, value: `[${url}](${url})` }
     } else if (entry.type === 'op') {
         let document = ''
-        const url = entry.refId ? biblio.location + '#' + entry.refId : undefined
         if (url) document += `[${url}](${url})`
         if (entry.effects)
             document += (document.length ? '\n\n' : '') + 'This abstract operation may triggers user code.'
@@ -70,10 +68,6 @@ export function formatDocument(entry: BiblioEntry): MarkupContent | undefined {
             value: '```ts\n' + signature + '\n```\n\n' + document,
         }
     } else if (entry.type === 'term') {
-        const url =
-            entry.refId ? biblio.location + '#' + entry.refId
-            : entry.id ? biblio.location + '#' + entry.id
-            : undefined
         return url ? { kind: MarkupKind.Markdown, value: `[${url}](${url})` } : undefined
     }
     return undefined

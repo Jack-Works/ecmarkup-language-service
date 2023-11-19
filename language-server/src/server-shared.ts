@@ -11,6 +11,8 @@ export function initialize(connection: Connection) {
                 textDocumentSync: TextDocumentSyncKind.Incremental,
                 completionProvider: completionProvider(connection, documents)!,
                 hoverProvider: hoverProvider(connection, documents)!,
+                // Not enabled for now due to performance problem.
+                // documentLinkProvider: definitionProvider(connection, documents)!,
             },
             serverInfo: {
                 name: 'ecmarkup language server',

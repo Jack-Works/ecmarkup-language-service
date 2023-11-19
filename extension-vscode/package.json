@@ -150,9 +150,9 @@
         "vsce": "vsce package",
         "vsce-publish": "vsce publish",
         "vscode:prepublish": "npm run build-web-extension && npm run build-node-extension && npm run build-node-server",
-        "build-web-extension": " esbuild ./src/web.ts                                               --bundle --platform=browser  --outfile=lib/web.js                  --minify --target=chrome102 --external:vscode --define:process.env.NODE_ENV='production'                                    --format=esm --sourcemap",
-        "build-web-server": "    esbuild ./node_modules/ecmarkup-language-server/src/server-web.ts  --bundle --platform=browser  --outfile=lib/language-server-web.js  --minify --target=chrome102                   --define:process.env.NODE_ENV='production'                                    --format=esm --sourcemap",
-        "build-node-extension": "esbuild ./src/node.ts                                              --bundle --platform=node     --outfile=lib/node.js                 --minify --target=node16.14 --external:vscode --define:process.env.NODE_ENV='production'                                    --format=esm --sourcemap",
-        "build-node-server": "   esbuild ./node_modules/ecmarkup-language-server/src/server-node.ts --bundle --platform=node     --outfile=lib/language-server-node.js --minify --target=node16.14 --external:canvas --define:process.env.NODE_ENV='production' --define:require.resolve=undefined --format=esm --sourcemap"
+        "build-web-extension": " esbuild ./src/web.ts                                               --bundle --platform=browser  --outfile=lib/web.js                  --minify --target=chrome102 --external:vscode --define:process.env.NODE_ENV='\"production\"'                                    --format=esm --sourcemap",
+        "build-web-server": "    esbuild ./node_modules/ecmarkup-language-server/src/server-web.ts  --bundle --platform=browser  --outfile=lib/language-server-web.js  --minify --target=chrome102                   --define:process.env.NODE_ENV='\"production\"'                                    --format=esm --sourcemap",
+        "build-node-extension": "esbuild ./src/node.ts                                              --bundle --platform=node     --outfile=lib/node.js                 --minify --target=node16.14 --external:vscode --define:process.env.NODE_ENV='\"production\"'                                    --format=esm --sourcemap",
+        "build-node-server": "   esbuild ./node_modules/ecmarkup-language-server/src/server-node.ts --bundle --platform=node     --outfile=lib/language-server-node.js --minify --target=node16.14 --external:canvas --define:process.env.NODE_ENV='\"production\"' --define:require.resolve=undefined --format=esm --sourcemap"
     }
 }
