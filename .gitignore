@@ -1,4 +1,7 @@
 lib
+*/lib-esm/*.js
+*/lib-esm/*.map
+*/lib-esm/*.ts
 
 # Logs
 logs
