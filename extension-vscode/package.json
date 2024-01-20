@@ -135,7 +135,7 @@
     "devDependencies": {
         "@tc39/ecma262-biblio": "^2.1.2672",
         "@types/node": "^20.11.5",
-        "@types/vscode": "^1.85.0",
+        "@types/vscode": "1.84.1",
         "@vscode/vsce": "^2.22.0",
         "ecmarkup-language-server": "workspace:^",
         "js-yaml": "^4.1.0",

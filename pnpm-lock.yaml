@@ -27,8 +27,8 @@ importers:
         specifier: ^20.11.5
         version: 20.11.5
       '@types/vscode':
-        specifier: ^1.85.0
-        version: 1.85.0
+        specifier: 1.84.1
+        version: 1.84.1
       '@vscode/vsce':
         specifier: ^2.22.0
         version: 2.22.0
@@ -561,8 +561,8 @@ packages:
     resolution: {integrity: sha512-dn1l8LaMea/IjDoHNd9J52uBbInB796CDffS6VdIxvqYCPSG0V0DzHp76GpaWnlhg88uYyPbXCDIowa86ybd5A==}
     dev: true
 
-  /@types/vscode@1.85.0:
-    resolution: {integrity: sha512-CF/RBon/GXwdfmnjZj0WTUMZN5H6YITOfBCP4iEZlOtVQXuzw6t7Le7+cR+7JzdMrnlm7Mfp49Oj2TuSXIWo3g==}
+  /@types/vscode@1.84.1:
+    resolution: {integrity: sha512-DB10vBRLEPA/us7p3gQilU2Tq5HDu6JWTyCpD9qtb7MKWIvJS5In9HU3YgVGCXf/miwHJiY62aXwjtUSMpT8HA==}
     dev: true
 
   /@vscode/l10n@0.0.16:
