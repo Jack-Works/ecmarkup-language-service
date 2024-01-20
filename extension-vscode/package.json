@@ -17,7 +17,7 @@
     "author": "Jack Works",
     "publisher": "MagicWorks",
     "license": "MIT",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "main": "./index.js",
     "enableProposedApis": false,
     "activationEvents": [],
