@@ -10,84 +10,16 @@
             "include": "#MultiLineComment"
         },
         {
-            "include": "#NewProduction"
-        },
-        {
-            "include": "#RemovedProduction"
-        },
-        {
             "include": "#Production"
         }
     ],
     "repository": {
-        "NewProduction": {
-            "begin": "(<)(ins)(>)",
-            "end": "(</)(ins)(>)",
-            "patterns": [
-                {
-                    "include": "#Production"
-                }
-            ],
-            "beginCaptures": {
-                "1": {
-                    "name": "punctuation.definition.tag.begin.html"
-                },
-                "2": {
-                    "name": "entity.name.tag.html"
-                },
-                "3": {
-                    "name": "punctuation.definition.tag.end.html"
-                }
-            },
-            "endCaptures": {
-                "1": {
-                    "name": "punctuation.definition.tag.begin.html"
-                },
-                "2": {
-                    "name": "entity.name.tag.html"
-                },
-                "3": {
-                    "name": "punctuation.definition.tag.end.html"
-                }
-            }
-        },
-        "RemovedProduction": {
-            "begin": "(<)(del)(>)",
-            "end": "(</)(del)(>)",
-            "patterns": [
-                {
-                    "include": "#Production"
-                }
-            ],
-            "beginCaptures": {
-                "1": {
-                    "name": "punctuation.definition.tag.begin.html"
-                },
-                "2": {
-                    "name": "entity.name.tag.html"
-                },
-                "3": {
-                    "name": "punctuation.definition.tag.end.html"
-                }
-            },
-            "endCaptures": {
-                "1": {
-                    "name": "punctuation.definition.tag.begin.html"
-                },
-                "2": {
-                    "name": "entity.name.tag.html"
-                },
-                "3": {
-                    "name": "punctuation.definition.tag.end.html"
-                }
-            }
-        },
         "SingleLineComment": {
-            "name": "comment.line.double-slash",
+            "name": "comment.line.double-slash.grammarkdown",
             "match": "//.*$"
         },
         "MultiLineComment": {
-            "name": "comment.block",
+            "name": "comment.block.grammarkdown",
             "begin": "/\\*",
             "end": "\\*/"
         },
@@ -101,25 +33,28 @@
             "match": "U\\+[a-fA-F0-9]+"
         },
         "Terminal": {
-            "name": "string.template",
+            "name": "string.template.grammarkdown",
             "begin": "(`)",
-            "end": "(``|`)",
+            "end": "(?:(`)(`)|(`))",
             "patterns": [
                 {
-                    "match": ".+?"
+                    "match": "[^`]+"
                 }
             ],
             "beginCaptures": {
                 "1": {
-                    "name": "punctuation.definition.string.template.begin"
+                    "name": "punctuation.definition.string.template.begin.grammarkdown"
                 }
             },
             "endCaptures": {
                 "1": {
-                    "name": "punctuation.definition.string.template.end"
+                    "name": "string.template.grammarkdown"
                 },
                 "2": {
-                    "name": "punctuation.definition.string.template.end"
+                    "name": "punctuation.definition.string.template.end.grammarkdown"
+                },
+                "3": {
+                    "name": "punctuation.definition.string.template.end.grammarkdown"
                 }
             }
         },
@@ -198,7 +133,7 @@
         "Nonterminal": {
             "patterns": [
                 {
-                    "name": "entity.name.type.class.syntax",
+                    "name": "entity.name.class.non-terminal.grammarkdown",
                     "match": "\\b(?!\\bempty|lookahead|lexical|goal|not|here|one|of|or|but|no|through\\b)\\w+\\b"
                 },
                 {
@@ -600,9 +535,6 @@
         "Production": {
             "patterns": [
                 {
-                    "include": "#SingleLineComment"
-                },
-                {
                     "include": "#Parameters"
                 },
                 {
@@ -616,8 +548,10 @@
                     "match": "::|:"
                 },
                 {
-                    "name": "entity.name.type.class.syntax",
-                    "match": "\\b(?!\\bempty|lookahead|lexical|goal|not|here|one|of|or|but|no|through\\b)\\w+\\b"
+                    "include": "#NonTerminal"
+                },
+                {
+                    "include": "#LinkingID"
                 },
                 {
                     "include": "#Keyword"
@@ -627,6 +561,10 @@
         "Keyword": {
             "name": "keyword",
             "match": "empty|lookahead|lexical|goal|not|here|one|of|or|but|no|through"
+        },
+        "LinkingID": {
+            "name": "entity.name.namespace.grammarkdown markup.underline",
+            "match": "(#)([\\w\\d_-]+)"
         }
     }
 }

@@ -10,42 +10,14 @@ variables:
 patterns:
 - include: '#SingleLineComment'
 - include: '#MultiLineComment'
-- include: '#NewProduction'
-- include: '#RemovedProduction'
 - include: '#Production'
 
 repository:
-  NewProduction:
-    begin: '(<)(ins)(>)'
-    beginCaptures:
-      1: { name: punctuation.definition.tag.begin.html }
-      2: { name: entity.name.tag.html }
-      3: { name: punctuation.definition.tag.end.html }
-    end: '(</)(ins)(>)'
-    endCaptures:
-      1: { name: punctuation.definition.tag.begin.html }
-      2: { name: entity.name.tag.html }
-      3: { name: punctuation.definition.tag.end.html }
-    patterns:
-    - include: '#Production'
-  RemovedProduction:
-    begin: '(<)(del)(>)'
-    beginCaptures:
-      1: { name: punctuation.definition.tag.begin.html }
-      2: { name: entity.name.tag.html }
-      3: { name: punctuation.definition.tag.end.html }
-    end: '(</)(del)(>)'
-    endCaptures:
-      1: { name: punctuation.definition.tag.begin.html }
-      2: { name: entity.name.tag.html }
-      3: { name: punctuation.definition.tag.end.html }
-    patterns:
-    - include: '#Production'
   SingleLineComment:
-    name: comment.line.double-slash
+    name: comment.line.double-slash.grammarkdown
     match: '//.*$'
   MultiLineComment:
-    name: comment.block
+    name: comment.block.grammarkdown
     begin: '/\*'
     end: '\*/'
   UnicodeCharacterLiteral:
@@ -56,16 +28,17 @@ repository:
     name: constant.character.escape
     match: 'U\+[a-fA-F0-9]+'
   Terminal:
-    name: string.template
+    name: string.template.grammarkdown
     begin: '(`)'
     beginCaptures:
-      1: { name: punctuation.definition.string.template.begin }
-    end: '(``|`)'
+      1: { name: punctuation.definition.string.template.begin.grammarkdown }
+    end: '(?:(`)(`)|(`))'
     endCaptures:
-      1: { name: punctuation.definition.string.template.end }
-      2: { name: punctuation.definition.string.template.end }
+      1: { name: string.template.grammarkdown }
+      2: { name: punctuation.definition.string.template.end.grammarkdown }
+      3: { name: punctuation.definition.string.template.end.grammarkdown }
     patterns:
-    - match: '.+?'
+    - match: '[^`]+'
   ProseFragment:
     name: meta.paragraph
     patterns:
@@ -103,7 +76,7 @@ repository:
     - include: '#Nonterminal'
   Nonterminal:
     patterns:
-    - name: entity.name.type.class.syntax
+    - name: entity.name.class.non-terminal.grammarkdown
       match: '{{Identifier}}'
     - include: '#Arguments'
   OptionalSymbol:
@@ -293,15 +266,17 @@ repository:
       name: variable.parameter
   Production:
     patterns:
-    - include: '#SingleLineComment'
     - include: '#Parameters'
     - include: '#OneOfList'
     - include: '#RightHandSide'
     - match: '::|:'
       name: punctuation.separator
-    - match: '{{Identifier}}'
-      name: entity.name.type.class.syntax
+    - include: '#NonTerminal'
+    - include: '#LinkingID'
     - include: '#Keyword'
   Keyword:
     match: '{{Keyword}}'
     name: keyword
+  LinkingID:
+    match: '(#)([\w\d_-]+)'
+    name: 'entity.name.namespace.grammarkdown markup.underline'

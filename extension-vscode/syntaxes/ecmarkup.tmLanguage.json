@@ -5,13 +5,21 @@
     "patterns": [{ "include": "#emu-grammar" }, { "include": "#emu-alg" }, { "include": "#code" }],
     "repository": {
         "emu-grammar": {
-            "comment": "I want to use a zero-width version, but VSCode does not work for the single-line item. To make it work, I have to consume some character. Assume the first token must be an Identifier, this is usually true.",
-            "begin": "(?<=(<emu-grammar(?:[\\sa-zA-Z=\"])*>))(\\w+|\\s*|$)",
+            "comment": "I have to consume at least 1 token. See https://github.com/microsoft/vscode-textmate/issues/12",
+            "begin": "(?<=<emu-grammar(?:[\\sa-zA-Z=\"])*>)(?:(<)(ins|del)(>)|(\\w+|\\s*|$))",
             "beginCaptures": {
-                "2": { "name": "entity.name.type.class.syntax" }
+                "1": { "name": "punctuation.definition.tag.begin.html" },
+                "2": { "name": "entity.name.tag.html" },
+                "3": { "name": "punctuation.definition.tag.end.html" },
+                "4": { "name": "entity.name.type.class.syntax" }
             },
-            "end": "(?=</emu-grammar>)",
-            "patterns": [{ "include": "text.html.basic#comment" }, { "include": "source.grammarkdown" }],
+            "end": "(?:(</)(ins|del)(>))?(?=</emu-grammar>)",
+            "endCaptures": {
+                "1": { "name": "punctuation.definition.tag.begin.html" },
+                "2": { "name": "entity.name.tag.html" },
+                "3": { "name": "punctuation.definition.tag.end.html" }
+            },
+            "patterns": [{ "include": "text.html.basic#comment" }, { "include": "text.html.derivative" }, { "include": "source.grammarkdown" }],
             "contentName": "meta.embedded.block.grammarkdown source.grammarkdown"
         },
         "emu-alg": {

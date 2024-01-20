@@ -4,7 +4,7 @@
     "private": true,
     "type": "module",
     "dependencies": {
-        "@tc39/ecma262-biblio": "^2.1.2657",
+        "@tc39/ecma262-biblio": "^2.1.2672",
         "fuse.js": "^7.0.0",
         "vscode-languageserver": "^9.0.1",
         "vscode-languageserver-textdocument": "^1.0.11",
@@ -15,6 +15,5 @@
         "lib",
         "!lib/.tsbuildinfo",
         "ecmarkup/lib"
-    ],
-    "devDependencies": {}
+    ]
 }

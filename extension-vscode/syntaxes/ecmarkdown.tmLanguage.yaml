@@ -3,23 +3,36 @@
 name: ecmarkdown
 scopeName: text.html.markdown.ecmarkdown
 
-# Run node ./extension-vscode/gen-biblio.mjs to update it from @tc39/ecma262-biblio
+# Run node ../scripts/generate-tmLanguage.mjs to update it from @tc39/ecma262-biblio
 variables:
   aoid: generated
   term: generated
 
 patterns:
-- include: '#Sentence'
+- include: '#OrderedListItem'
+- include: '#UnorderedListItem'
 
 repository:
-  Sentence:
+  OrderedListItem:
+    name: markup.list.numbered.markdown.ecmarkdown
     begin: (\d+\.)
     beginCaptures:
-      1: { name: punctuation.definition.list.begin.markdown }
+      1: { name: punctuation.definition.list.begin.markdown.ecmarkdown }
     end: '$'
     patterns:
     - include: '#AttributeList'
     - include: '#Pattern'
+    - include: 'text.html.derivative'
+  UnorderedListItem:
+    name: markup.list.unnumbered.markdown.ecmarkdown
+    begin: (\*)
+    beginCaptures:
+      1: { name: punctuation.definition.list.begin.markdown.ecmarkdown }
+    end: '$'
+    patterns:
+    - include: '#AttributeList'
+    - include: '#Pattern'
+    - include: 'text.html.derivative'
   AttributeList:
     begin: '(\[)(?!\[)'
     beginCaptures:
@@ -35,7 +48,7 @@ repository:
       name: punctuation.separator.key-value
     - match: ','
       name: punctuation.separator.list.pair
-    - match: '.+?'
+    - match: '\w+'
       name: entity.other.attribute-name
   Pattern:
     patterns:
@@ -83,7 +96,7 @@ repository:
     name: variable.language
   SpecValue:
     match: '~[\w-]+~'
-    name: markup.italic
+    name: 'constant.language markup.italic'
   Code:
     begin: '`'
     end: '`'

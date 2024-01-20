@@ -12,8 +12,8 @@
         "build": "tsc -b ."
     },
     "devDependencies": {
-        "@changesets/cli": "^2.26.2",
-        "prettier": "^3.1.0",
-        "typescript": "^5.2.2"
+        "@changesets/cli": "^2.27.1",
+        "prettier": "^3.2.4",
+        "typescript": "^5.3.3"
     }
 }

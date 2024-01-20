@@ -133,14 +133,14 @@
         "vscode": "^1.84.1"
     },
     "devDependencies": {
-        "@tc39/ecma262-biblio": "^2.1.2657",
-        "@types/node": "^20.9.2",
-        "@types/vscode": "^1.84.1",
+        "@tc39/ecma262-biblio": "^2.1.2672",
+        "@types/node": "^20.11.5",
+        "@types/vscode": "^1.85.0",
         "@vscode/vsce": "^2.22.0",
         "ecmarkup-language-server": "workspace:^",
-        "esbuild": "^0.19.5",
+        "esbuild": "^0.19.11",
         "js-yaml": "^4.1.0",
-        "rollup": "^4.5.0",
+        "rollup": "^4.9.5",
         "vscode-languageclient": "^9.0.1",
         "vscode-test": "^1.6.1"
     },
