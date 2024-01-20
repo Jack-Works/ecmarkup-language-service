@@ -138,14 +138,17 @@
         "@types/vscode": "^1.85.0",
         "@vscode/vsce": "^2.22.0",
         "ecmarkup-language-server": "workspace:^",
-        "esbuild": "^0.19.11",
         "js-yaml": "^4.1.0",
         "rollup": "^4.9.5",
+        "ts-loader": "^9.5.1",
         "vscode-languageclient": "^9.0.1",
-        "vscode-test": "^1.6.1"
+        "vscode-test": "^1.6.1",
+        "webpack": "^5",
+        "webpack-cli": "^5.1.4"
     },
     "scripts": {
         "tmlang": "node ./scripts/generate-tmLanguage.mjs",
+        "build": "webpack",
         "vsce": "vsce package",
         "vsce-publish": "vsce publish",
         "vscode:prepublish": "./build.sh"

@@ -5,8 +5,9 @@ import { onActivate } from './main.js'
 
 export async function activate(context: ExtensionContext) {
     onActivate(context, (clientOptions) => {
+        const isProd = true
         const serverModule = context.asAbsolutePath(
-            process.env.NODE_ENV === 'production' ?
+            isProd ?
                 join('lib', 'language-server-node.js')
             :   join('node_modules', 'ecmarkup-language-server', 'lib', 'server-node.js'),
         )
@@ -15,7 +16,7 @@ export async function activate(context: ExtensionContext) {
             debug: {
                 module: serverModule,
                 transport: TransportKind.ipc,
-                options: { execArgv: process.env.NODE_ENV === 'production' ? [] : ['--nolazy', '--inspect=29381'] },
+                options: { execArgv: isProd ? [] : ['--nolazy', '--inspect=29381'] },
             },
         }
         return new LanguageClient(

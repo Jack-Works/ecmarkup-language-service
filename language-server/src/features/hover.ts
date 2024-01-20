@@ -1,27 +1,39 @@
-import { type Connection, type TextDocuments, type ServerCapabilities } from 'vscode-languageserver'
-import type { SourceFile } from '../utils/document.js'
+import { type Connection, type TextDocuments, type ServerCapabilities, MarkupKind } from 'vscode-languageserver'
+import { TextDocument } from '../lib.js'
 import { biblio, getText } from '../utils/biblio.js'
-import { findWholeWord } from '../utils/text.js'
+import { expandWord } from '../utils/text.js'
 import { formatDocument } from '../utils/format.js'
+import { getSourceFile } from '../utils/parse.js'
 
 export function hoverProvider(
     connection: Connection,
-    documents: TextDocuments<SourceFile>,
-): ServerCapabilities['hoverProvider'] {
+    documents: TextDocuments<TextDocument>,
+): NonNullable<ServerCapabilities['hoverProvider']> {
     connection.onHover(async (params, token, workDoneProgress, resultProgress) => {
-        const file = documents.get(params.textDocument.uri)
-        if (!file) return undefined
+        const document = documents.get(params.textDocument.uri)
+        if (!document) return undefined
 
-        const fullText = file.text.getText()
-        const offset = file.text.offsetAt(params.position)
-        let [before, after, all] = findWholeWord(fullText, offset)
-        if (all.startsWith('|') && all.endsWith('|')) all = all.slice(1, -1)
+        const fullText = document.getText()
+        const offset = document.offsetAt(params.position)
+        const sourceFile = getSourceFile.get(document)
 
-        const item = biblio.entries.find((f) => all === getText(f))
-        if (!item) return
-        const contents = formatDocument(item)
-        if (!contents) return undefined
-        return { contents }
+        const { word, isGrammar } = expandWord(fullText, offset)
+
+        const entry = biblio.entries.find((entry) => {
+            if (isGrammar) return entry.type === 'production' && word === entry.name
+            return word === getText(entry)
+        })
+        if (entry) {
+            const contents = formatDocument(entry)
+            if (!contents) return undefined
+            return { contents }
+        }
+
+        const local = sourceFile.getGrammarDefinition(word)
+        if (local[0]) {
+            return { contents: { kind: MarkupKind.PlainText, language: 'grammarkdown', value: local[0][0].summary } }
+        }
+        return undefined
     })
     return {}
 }

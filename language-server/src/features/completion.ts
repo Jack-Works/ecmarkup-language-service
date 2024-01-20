@@ -4,21 +4,14 @@ import {
     type ServerCapabilities,
     CompletionItem,
     CompletionItemKind,
-    MarkupKind,
 } from 'vscode-languageserver'
-import type { SourceFile } from '../utils/document.js'
-import Fuse from 'fuse.js'
+import { TextDocument } from '../lib.js'
+import Fuse, { type FuseResult } from 'fuse.js'
 import { biblio, productions } from '../utils/biblio.js'
-import type {
-    BiblioClause,
-    BiblioOp,
-    BiblioProduction,
-    BiblioTerm,
-    SpecOperations,
-    SpecValue,
-} from '@tc39/ecma262-biblio'
-import { findWholeWord } from '../utils/text.js'
-import { formatDocument, formatSignature } from '../utils/format.js'
+import type { BiblioClause, BiblioOp, BiblioProduction, BiblioTerm } from '@tc39/ecma262-biblio'
+import { expandWord } from '../utils/text.js'
+import { formatDocument, type MaybeLocalEntry } from '../utils/format.js'
+import { EcmarkupDocument, getSourceFile } from '../utils/parse.js'
 
 const never: never = undefined!
 
@@ -33,8 +26,8 @@ function getPriority(fullText: string, text: string) {
 }
 export function completionProvider(
     connection: Connection,
-    documents: TextDocuments<SourceFile>,
-): ServerCapabilities['completionProvider'] {
+    documents: TextDocuments<TextDocument>,
+): NonNullable<ServerCapabilities['completionProvider']> {
     const fuse = new Fuse(biblio.entries, {
         // includeScore: true,
         findAllMatches: true,
@@ -49,52 +42,68 @@ export function completionProvider(
     })
 
     connection.onCompletion(async (params, token, workDoneProgress, resultProgress) => {
-        const file = documents.get(params.textDocument.uri)
-        if (!file) return []
+        const document = documents.get(params.textDocument.uri)
+        if (!document) return []
+        const sourceFile = getSourceFile.get(document)
+        const fullText = document.getText()
+        const offset = document.offsetAt(params.position)
 
-        const fullText = file.text.getText()
-        const offset = file.text.offsetAt(params.position)
-        const [before, after, all] = findWholeWord(fullText, offset)
+        let { isHash, isGrammar, isGrammarLeading, isVariableLeading, word, isWellKnownSymbol, isIntrinsicLeading } =
+            expandWord(fullText, offset)
 
-        if (!all) return []
-        if (before.startsWith('#sec-')) {
-            const wholeLine = file.text.getText({
+        if (isHash) {
+            const wholeLine = document.getText({
                 start: { line: params.position.line, character: 0 },
                 end: params.position,
             })
             if (wholeLine.includes('emu-clause')) return []
+            const searchWord = word.replace('sec-', '')
+            if (!searchWord)
+                return biblio.entries
+                    .filter((x): x is BiblioClause => x.type === 'clause')
+                    .map((x) => findReference(x, fullText))
             const result = fuse
-                .search(all.replace('#sec-', ''))
-                .map((x) => {
-                    if (x.item.type === 'clause') return findReg(x.item, fullText)
-                    return null!
-                })
-                .filter(Boolean)
+                .search(searchWord)
+                .filter((x): x is FuseResult<BiblioClause> => x.item.type === 'clause')
+                .map(({ item }) => findReference(item, fullText))
             return result
         }
 
-        if (before.startsWith('|')) {
-            // |something|^
-            if (before.length > 1 && before.startsWith('|') && before.endsWith('|')) return []
-            // |^ or |^|
-            if (all === '|' || all == '||') return productions.map((x) => findProduction(x, true, fullText))
+        const node = sourceFile.findNodeAt(offset)
+        const inGrammarTag = node.tag === 'emu-grammar'
+
+        if (isVariableLeading) return findVariables(sourceFile, word, offset)
+
+        fuse.setCollection([
+            ...biblio.entries,
+            ...sourceFile
+                .getLocalDefinedGrammars()
+                .map(
+                    (name): MaybeLocalEntry<BiblioProduction> => ({ id: name, name, type: 'production', local: true }),
+                ),
+        ])
+
+        if ((isGrammarLeading || inGrammarTag) && word === '') {
+            // |^ or |^| when not in emu-grammar
+            const completionMode = isGrammar || inGrammarTag ? 'no' : 'end'
+            return productions.map((x) => findProduction(x, completionMode, fullText))
+        }
+        if (isGrammarLeading) {
+            const completionMode = isGrammar ? 'no' : 'end'
             // |search^item|
             return fuse
-                .search({ production: all.replaceAll('|', '') })
-                .map((prod) => findProduction(prod.item as BiblioProduction, true, fullText))
-        }
+                .search({ production: word })
+                .map((prod) => findProduction(prod.item as BiblioProduction, completionMode, fullText))
+        } else if (isIntrinsicLeading) word = '%' + word
+        else if (isWellKnownSymbol) word = '@@' + word
 
-        const allCodeBefore = fullText.slice(0, offset)
-        if (all.startsWith('_')) return getAllLocalParameters(allCodeBefore, fullText, all, offset)
-
-        const grammarMode = isInGrammarMode(allCodeBefore)
         return {
             isIncomplete: true,
-            items: getAllLocalParameters(allCodeBefore, fullText, all, offset).concat(
-                fuse.search(grammarMode ? { production: all } : all).flatMap((x) => {
+            items: findVariables(sourceFile, word, offset).concat(
+                fuse.search(inGrammarTag ? { production: word } : word).flatMap((x) => {
                     if (x.item.type === 'term') return findTerm(x.item, fullText)
                     else if (x.item.type === 'op') return findOperation(x.item, fullText)
-                    else if (x.item.type === 'production') return findProduction(x.item, grammarMode, fullText)
+                    else if (x.item.type === 'production') return findProduction(x.item, 'both', fullText)
                     return []
                 }),
             ),
@@ -105,7 +114,7 @@ export function completionProvider(
     }
 }
 
-function findReg(entry: BiblioClause, fullText: string): CompletionItem {
+function findReference(entry: BiblioClause, fullText: string): CompletionItem {
     return {
         label: '#' + entry.id,
         kind: CompletionItemKind.Reference,
@@ -114,10 +123,17 @@ function findReg(entry: BiblioClause, fullText: string): CompletionItem {
         sortText: getPriority(fullText, entry.id),
     }
 }
-function findProduction(entry: BiblioProduction, isInGrammarMode: boolean, fullText: string): CompletionItem {
+function findProduction(
+    entry: MaybeLocalEntry<BiblioProduction>,
+    grammarMode: 'both' | 'end' | 'no',
+    fullText: string,
+): CompletionItem {
     return {
         label: entry.name,
-        insertText: isInGrammarMode ? entry.name : `|${entry.name}|`,
+        insertText:
+            grammarMode === 'both' ? `|${entry.name}|`
+            : grammarMode === 'end' ? entry.name + '|'
+            : entry.name,
         detail: '(grammar) ' + entry.name,
         kind: CompletionItemKind.Interface,
         documentation: formatDocument(entry)!,
@@ -145,30 +161,13 @@ function findOperation(entry: BiblioOp, fullText: string): CompletionItem {
         sortText: getPriority(fullText, entry.aoid),
     }
 }
-function isInGrammarMode(beforeText: string) {
-    let index = beforeText.lastIndexOf('<emu-grammar')
-    if (index === -1) return false
-    beforeText = beforeText.slice(index)
-    if (beforeText.includes('</emu-grammar>')) return false
-    return true
-}
-function getAllLocalParameters(
-    beforeText: string,
-    fullText: string,
-    wholeWord: string,
-    offset: number,
-): CompletionItem[] {
-    let index = beforeText.lastIndexOf('<emu-alg>')
-    if (index === -1) return []
-    beforeText = beforeText.slice(index)
-    if (beforeText.includes('</emu-alg>')) return []
+function findVariables(ecmarkup: EcmarkupDocument, word: string, offset: number): CompletionItem[] {
+    const nodeText = ecmarkup.getNodeText(ecmarkup.findNodeAt(offset))
+    const headerText = ecmarkup.getNodeText(ecmarkup.getAlgHeader(offset))
 
-    const endIndex = fullText.indexOf('</emu-alg>', offset)
-    const block = fullText.slice(index, endIndex)
-    const vars = block.match(/(_\w+_)/g)
-    if (!vars) return []
-    const has_Before = wholeWord.startsWith('_')
-    const has_After = wholeWord.endsWith('_')
+    const vars = (headerText + nodeText).match(/(_\w+_)/g)
+    const has_Before = word.startsWith('_')
+    const has_After = word.endsWith('_')
     return [...new Set(vars)].map((x): CompletionItem => {
         const word = x.slice(1, -1)
         return {
