@@ -151,6 +151,6 @@
         "build": "webpack",
         "vsce": "vsce package",
         "vsce-publish": "vsce publish",
-        "vscode:prepublish": "./build.sh"
+        "vscode:prepublish": "webpack"
     }
 }
