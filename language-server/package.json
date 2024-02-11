@@ -4,10 +4,10 @@
     "private": true,
     "type": "module",
     "dependencies": {
-        "@tc39/ecma262-biblio": "^2.1.2672",
+        "@tc39/ecma262-biblio": "^2.1.2682",
         "fuse.js": "^7.0.0",
         "grammarkdown": "^3.3.2",
-        "vscode-html-languageservice": "^5.1.1",
+        "vscode-html-languageservice": "^5.1.2",
         "vscode-languageserver": "^9.0.1",
         "vscode-languageserver-textdocument": "^1.0.11",
         "vscode-languageserver-types": "^3.17.5"

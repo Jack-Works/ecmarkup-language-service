@@ -2,7 +2,7 @@
     "name": "ecmarkup-language-server",
     "private": true,
     "type": "module",
-    "packageManager": "pnpm@8.10.5",
+    "packageManager": "pnpm@8.15.1",
     "description": "Language server and editor plugins for ecmarkup",
     "author": "Jack Works",
     "license": "MIT",
@@ -13,7 +13,7 @@
     },
     "devDependencies": {
         "@changesets/cli": "^2.27.1",
-        "prettier": "^3.2.4",
+        "prettier": "^3.2.5",
         "typescript": "^5.3.3"
     }
 }

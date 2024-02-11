@@ -53,7 +53,7 @@ export class EcmarkupDocument {
         if (!node.parent) return undefined
         const index = node.parent.children.findIndex((x) => x.tag === 'h1')
         const next = node.parent.children[index + 1]
-        if (next?.tag === 'dl') return node.parent.children[index]
+        if (next?.tag === 'dl' || next?.tag === 'p') return node.parent.children[index]
         return undefined
     }
     findNodeAt(offset: number) {

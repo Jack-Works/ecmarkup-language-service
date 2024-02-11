@@ -133,17 +133,17 @@
         "vscode": "^1.84.1"
     },
     "devDependencies": {
-        "@tc39/ecma262-biblio": "^2.1.2672",
-        "@types/node": "^20.11.5",
-        "@types/vscode": "1.84.1",
-        "@vscode/vsce": "^2.22.0",
+        "@tc39/ecma262-biblio": "^2.1.2682",
+        "@types/node": "^20.11.17",
+        "@types/vscode": "1.86.0",
+        "@vscode/vsce": "^2.23.0",
         "ecmarkup-language-server": "workspace:^",
         "js-yaml": "^4.1.0",
-        "rollup": "^4.9.5",
+        "rollup": "^4.10.0",
         "ts-loader": "^9.5.1",
         "vscode-languageclient": "^9.0.1",
         "vscode-test": "^1.6.1",
-        "webpack": "^5",
+        "webpack": "^5.90.1",
         "webpack-cli": "^5.1.4"
     },
     "scripts": {
