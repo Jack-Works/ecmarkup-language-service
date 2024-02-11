@@ -1,5 +1,11 @@
 # ecmarkup-language-server
 
+## 0.3.1
+
+### Patch Changes
+
+- 3a36f92: count p tag into alg header
+
 ## 0.3.0
 
 ### Minor Changes
