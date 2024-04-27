@@ -1,11 +1,15 @@
-import type { Biblio, BiblioEntry, BiblioProduction } from '@tc39/ecma262-biblio'
+import type { Biblio, BiblioEntry, BiblioOp, BiblioProduction } from '@tc39/ecma262-biblio'
 import b from '@tc39/ecma262-biblio' assert { type: 'json' }
 
 export const biblio = b as Biblio
 export const productions = biblio.entries.filter(isProduction)
+export const op = biblio.entries.filter(isOp)
 
 function isProduction(e: BiblioEntry): e is BiblioProduction {
     return e.type === 'production'
+}
+function isOp(e: BiblioEntry): e is BiblioOp {
+    return e.type === 'op'
 }
 export function getText(f: BiblioEntry) {
     if (f.type === 'clause') return f.aoid || f.title

@@ -2,17 +2,8 @@
     "name": "ecmarkup-language-extension-vscode",
     "displayName": "ecmarkup",
     "description": "ecmarkup language support",
-    "categories": [
-        "Formatters",
-        "Linters",
-        "Programming Languages",
-        "Snippets"
-    ],
-    "keywords": [
-        "tc39",
-        "ecmarkup",
-        "specification"
-    ],
+    "categories": ["Formatters", "Linters", "Programming Languages", "Snippets"],
+    "keywords": ["tc39", "ecmarkup", "specification"],
     "preview": true,
     "author": "Jack Works",
     "publisher": "MagicWorks",
@@ -23,9 +14,7 @@
     "activationEvents": [],
     "contributes": {
         "html": {
-            "customData": [
-                "./custom-element.json"
-            ]
+            "customData": ["./custom-element.json"]
         },
         "commands": [
             {
@@ -43,15 +32,9 @@
             {
                 "id": "ecmarkup",
                 "configuration": "./syntaxes/ecmarkup.language-configuration.json",
-                "aliases": [
-                    "emu"
-                ],
-                "filenames": [
-                    "spec.html"
-                ],
-                "extensions": [
-                    ".emu"
-                ]
+                "aliases": ["emu"],
+                "filenames": ["spec.html"],
+                "extensions": [".emu"]
             },
             {
                 "id": "grammarkdown",
@@ -66,9 +49,7 @@
             {
                 "path": "./syntaxes/ecmarkup.tmLanguage.json",
                 "scopeName": "text.html.ecmarkup.injection",
-                "injectTo": [
-                    "text.html"
-                ],
+                "injectTo": ["text.html"],
                 "embeddedLanguages": {
                     "meta.embedded.block.grammarkdown": "grammarkdown",
                     "meta.embedded.block.ecmarkdown": "ecmarkdown"
@@ -95,6 +76,14 @@
                 "embeddedLanguages": {
                     "meta.embedded.block.html": "html",
                     "source.js": "js"
+                }
+            }
+        ],
+        "semanticTokenScopes": [
+            {
+                "language": "ecmarkup",
+                "scopes": {
+                    "*.mutable": ["markup.underline"]
                 }
             }
         ],

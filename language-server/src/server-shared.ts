@@ -4,10 +4,11 @@ import { definitionProvider } from './features/gotoDefinition.js'
 import { hoverProvider } from './features/hover.js'
 import { TextDocument } from './lib.js'
 import { getSourceFile } from './utils/parse.js'
+import { semanticTokensProvider } from './features/semanticTokens.js'
 
 const documents = new TextDocuments(TextDocument)
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_implementation
-export function initialize(connection: Connection) {
+export function initialize(connection: Connection, version: string) {
     connection.onInitialize((params) => {
         const features: InitializeResult<never> = {
             capabilities: {
@@ -16,30 +17,11 @@ export function initialize(connection: Connection) {
                 completionProvider: completionProvider(connection, documents),
                 definitionProvider: definitionProvider(connection, documents),
                 hoverProvider: hoverProvider(connection, documents),
-
-                // callHierarchyProvider,
-                // codeActionProvider,
-                // codeLensProvider,
-                // colorProvider,
-                // declarationProvider,
-                // diagnosticProvider,
-                // documentFormattingProvider,
-                // documentHighlightProvider,
-                // documentLinkProvider,
-                // documentOnTypeFormattingProvider,
-                // documentRangeFormattingProvider,
-                // documentSymbolProvider,
-                // executeCommandProvider,
-                // foldingRangeProvider,
-                // implementationProvider,
-                // inlayHintProvider,
-                // inlineCompletionProvider,
-                // inlineValueProvider,
-                // linkedEditingRangeProvider,
+                semanticTokensProvider: semanticTokensProvider(connection, documents),
             },
             serverInfo: {
                 name: 'ecmarkup language server',
-                version: '0.2.0',
+                version,
             },
         }
         return features

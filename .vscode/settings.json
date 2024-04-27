@@ -1,3 +1,7 @@
 {
-    "cSpell.words": ["aoid", "biblio", "ecmarkup", "unscopables"]
+    "cSpell.words": ["aoid", "biblio", "ecmarkup", "unscopables"],
+    "editor.defaultFormatter": "biomejs.biome",
+    "[typescript]": {
+        "editor.defaultFormatter": "biomejs.biome"
+    }
 }

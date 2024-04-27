@@ -1,5 +1,5 @@
 import type { Nonterminal, Production, SourceFile } from 'grammarkdown'
-import { type LanguageService, type Node, getLanguageService } from 'vscode-html-languageservice'
+import { type HTMLDocument, type LanguageService, type Node, getLanguageService } from 'vscode-html-languageservice'
 import type { Range } from 'vscode-languageserver-textdocument'
 import { NodeVisitor, Parser, type TextDocument } from '../lib.js'
 import { getLanguageModelCache } from './parseCache.js'
@@ -14,7 +14,7 @@ export class EcmarkupDocument {
         ls ??= getLanguageService()
         this.html = ls.parseHTMLDocument(text)
     }
-    private html
+    public html: HTMLDocument
     private parseGrammar() {
         const result: GrammarkdownInfo[] = []
         const fullText = this.text.getText()
