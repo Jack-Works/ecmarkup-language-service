@@ -1,5 +1,15 @@
 # ecmarkup-language-server
 
+## 0.4.0
+
+### Minor Changes
+
+- 127cb23: Support semantic tokens for User Code mark in biblio
+
+### Patch Changes
+
+- 3a36f92: count p tag into alg header
+
 ## 0.3.0
 
 ### Minor Changes

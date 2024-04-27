@@ -1,5 +1,11 @@
 # ecmarkup-language-extension-vscode
 
+## 0.4.0
+
+### Minor Changes
+
+- 127cb23: Support semantic tokens for User Code mark in biblio
+
 ## 0.3.1
 
 ### Patch Changes
