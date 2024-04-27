@@ -1,5 +1,5 @@
-import { spawnSync } from 'child_process'
-import { readFileSync, writeFileSync } from 'fs'
+import { spawnSync } from 'node:child_process'
+import { readFileSync, writeFileSync } from 'node:fs'
 
 const repoName = 'ecmarkup-language-extension-vscode'
 const publishName = 'ecmarkup'

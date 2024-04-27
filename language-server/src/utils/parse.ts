@@ -1,9 +1,9 @@
-import { getLanguageService, type HTMLDocument, type LanguageService, type Node } from 'vscode-html-languageservice'
-import { getLanguageModelCache } from './parseCache.js'
-import { type TextDocument, Parser, NodeVisitor } from '../lib.js'
-import { createRange } from './utils.js'
-import type { Range } from 'vscode-languageserver-textdocument'
 import type { Nonterminal, Production, SourceFile } from 'grammarkdown'
+import { type LanguageService, type Node, getLanguageService } from 'vscode-html-languageservice'
+import type { Range } from 'vscode-languageserver-textdocument'
+import { NodeVisitor, Parser, type TextDocument } from '../lib.js'
+import { getLanguageModelCache } from './parseCache.js'
+import { createRange } from './utils.js'
 
 let ls: LanguageService
 let parser: Parser
@@ -11,7 +11,8 @@ export const getSourceFile = getLanguageModelCache(10, 60, (doc) => new Ecmarkup
 
 export class EcmarkupDocument {
     constructor(public readonly text: TextDocument) {
-        this.html = (ls ??= getLanguageService()).parseHTMLDocument(text)
+        ls ??= getLanguageService()
+        this.html = ls.parseHTMLDocument(text)
     }
     private html
     private parseGrammar() {
@@ -30,7 +31,8 @@ export class EcmarkupDocument {
     }
     private info: GrammarkdownInfo[] | undefined
     getGrammarDefinition(name: string) {
-        const info = (this.info ??= this.parseGrammar())
+        this.info ??= this.parseGrammar()
+        const { info } = this
         const result: [GrammarkdownDefine, Range][] = []
         for (const def of info) {
             if (def.type !== 'define' || def.name !== name) continue
@@ -87,7 +89,7 @@ function parseGrammarkdown(node: Node, isDefinition: boolean, fullText: string):
     if (!node.startTagEnd) return []
     parser ??= new Parser()
 
-    const info = [] as GrammarkdownInfo[]
+    const info: GrammarkdownInfo[] = []
 
     const textContent = fullText.slice(node.startTagEnd, node.endTagStart)
 
@@ -114,7 +116,7 @@ export interface GrammarkdownReference extends GrammarkdownInfoBase {
 
 class Visitor extends NodeVisitor {
     constructor(
-        private info: GrammarkdownInfo[] = [],
+        private info: GrammarkdownInfo[],
         private isDefinitionSite: boolean,
         private node: Node,
         private sourceFile: SourceFile,

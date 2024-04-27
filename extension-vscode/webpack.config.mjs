@@ -1,4 +1,4 @@
-import { fileURLToPath } from 'url'
+import { fileURLToPath } from 'node:url'
 
 /** @type {import('webpack').Configuration} */
 const config = {

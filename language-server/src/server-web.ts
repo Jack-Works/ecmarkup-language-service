@@ -1,4 +1,4 @@
-import { createConnection, BrowserMessageReader, BrowserMessageWriter } from 'vscode-languageserver/browser.js'
+import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser.js'
 import { initialize } from './server-shared.js'
 
 const messageReader = new BrowserMessageReader(self)

@@ -1,4 +1,4 @@
-import { Uri, type ExtensionContext } from 'vscode'
+import { type ExtensionContext, Uri } from 'vscode'
 import { LanguageClient, type LanguageClientOptions } from 'vscode-languageclient/browser.js'
 import { onActivate } from './main.js'
 

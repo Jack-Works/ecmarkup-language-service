@@ -26,11 +26,11 @@ const term =
 await transform(
     new URL('../syntaxes/ecmarkdown.tmLanguage.yaml', import.meta.url),
     new URL('../syntaxes/ecmarkdown.tmLanguage.json', import.meta.url),
-    (data) => data.replace(/  aoid: .+/, `  aoid: ${aoid}`).replace(/  term: .+/, `  term: ${term}`)
+    (data) => data.replace(/  aoid: .+/, `  aoid: ${aoid}`).replace(/  term: .+/, `  term: ${term}`),
 )
 await transform(
     new URL('../syntaxes/grammarkdown.tmLanguage.yaml', import.meta.url),
-    new URL('../syntaxes/grammarkdown.tmLanguage.json', import.meta.url)
+    new URL('../syntaxes/grammarkdown.tmLanguage.json', import.meta.url),
 )
 
 /**
@@ -54,30 +54,30 @@ function generateJSON(file) {
     output['$schema'] = parsedInput['$schema']
     output['name'] = parsedInput['name']
     output['scopeName'] = parsedInput['scopeName']
-    if (typeof parsedInput['foldingStartMarker'] == 'string')
+    if (typeof parsedInput['foldingStartMarker'] === 'string')
         output['foldingStartMarker'] = applyRegExpVariables(parsedInput['foldingStartMarker'])
-    if (typeof parsedInput['foldingStopMarker'] == 'string')
+    if (typeof parsedInput['foldingStopMarker'] === 'string')
         output['foldingStopMarker'] = applyRegExpVariables(parsedInput['foldingStopMarker'])
-    if (typeof parsedInput['firstLineMatch'] == 'string')
+    if (typeof parsedInput['firstLineMatch'] === 'string')
         output['firstLineMatch'] = applyRegExpVariables(parsedInput['firstLineMatch'])
-    let origRules = parsedInput['patterns']
-    output['patterns'] = origRules instanceof Array ? origRules.map((p) => parseRule(p)) : null
-    let origRepository = parsedInput['repository']
-    output['repository'] = typeof origRepository == 'object' ? parseRepository(origRepository) : {}
+    const origRules = parsedInput['patterns']
+    output['patterns'] = Array.isArray(origRules) ? origRules.map((p) => parseRule(p)) : null
+    const origRepository = parsedInput['repository']
+    output['repository'] = typeof origRepository === 'object' ? parseRepository(origRepository) : {}
     return JSON.stringify(output, null, 4)
 
     function parseVariables() {
         const vars = parsedInput.variables
-        for (let name in vars) {
+        for (const name in vars) {
             variables.set(name, applyRegExpVariables(String(vars[name])))
         }
     }
 
     function parseRepository(orig) {
-        let r = {}
-        for (let k in orig) {
-            let origR = orig[k]
-            if (typeof origR != 'object') {
+        const r = {}
+        for (const k in orig) {
+            const origR = orig[k]
+            if (typeof origR !== 'object') {
                 continue
             }
             r[k] = parseRule(origR)
@@ -86,18 +86,18 @@ function generateJSON(file) {
     }
 
     function parseRule(orig) {
-        let r = {
+        const r = {
             ['name']: orig.name,
         }
-        if (typeof orig['match'] == 'string') r['match'] = applyRegExpVariables(orig['match'])
-        if (typeof orig['begin'] == 'string') r['begin'] = applyRegExpVariables(orig['begin'])
-        if (typeof orig['end'] == 'string') r['end'] = applyRegExpVariables(orig['end'])
-        if (orig['patterns'] instanceof Array) r['patterns'] = orig['patterns'].map((r) => parseRule(r))
-        if (typeof orig['contentName'] == 'string') r['contentName'] = orig['contentName']
-        if (typeof orig['include'] == 'string') r['include'] = orig['include']
-        if (typeof orig['captures'] == 'object') r['captures'] = orig['captures']
-        if (typeof orig['beginCaptures'] == 'object') r['beginCaptures'] = orig['beginCaptures']
-        if (typeof orig['endCaptures'] == 'object') r['endCaptures'] = orig['endCaptures']
+        if (typeof orig['match'] === 'string') r['match'] = applyRegExpVariables(orig['match'])
+        if (typeof orig['begin'] === 'string') r['begin'] = applyRegExpVariables(orig['begin'])
+        if (typeof orig['end'] === 'string') r['end'] = applyRegExpVariables(orig['end'])
+        if (Array.isArray(orig['patterns'])) r['patterns'] = orig['patterns'].map((r) => parseRule(r))
+        if (typeof orig['contentName'] === 'string') r['contentName'] = orig['contentName']
+        if (typeof orig['include'] === 'string') r['include'] = orig['include']
+        if (typeof orig['captures'] === 'object') r['captures'] = orig['captures']
+        if (typeof orig['beginCaptures'] === 'object') r['beginCaptures'] = orig['beginCaptures']
+        if (typeof orig['endCaptures'] === 'object') r['endCaptures'] = orig['endCaptures']
         return r
     }
 

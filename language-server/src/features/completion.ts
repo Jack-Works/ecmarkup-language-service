@@ -1,17 +1,17 @@
-import {
-    type Connection,
-    type TextDocuments,
-    type ServerCapabilities,
-    CompletionItem,
-    CompletionItemKind,
-} from 'vscode-languageserver'
-import { TextDocument } from '../lib.js'
-import Fuse, { type FuseResult } from 'fuse.js'
-import { biblio, productions } from '../utils/biblio.js'
 import type { BiblioClause, BiblioOp, BiblioProduction, BiblioTerm } from '@tc39/ecma262-biblio'
+import Fuse, { type FuseResult } from 'fuse.js'
+import {
+    type CompletionItem,
+    CompletionItemKind,
+    type Connection,
+    type ServerCapabilities,
+    type TextDocuments,
+} from 'vscode-languageserver'
+import type { TextDocument } from '../lib.js'
+import { biblio, productions } from '../utils/biblio.js'
+import { type MaybeLocalEntry, formatDocument } from '../utils/format.js'
+import { type EcmarkupDocument, getSourceFile } from '../utils/parse.js'
 import { expandWord } from '../utils/text.js'
-import { formatDocument, type MaybeLocalEntry } from '../utils/format.js'
-import { EcmarkupDocument, getSourceFile } from '../utils/parse.js'
 
 const never: never = undefined!
 
@@ -130,10 +130,7 @@ function findProduction(
 ): CompletionItem {
     return {
         label: entry.name,
-        insertText:
-            grammarMode === 'both' ? `|${entry.name}|`
-            : grammarMode === 'end' ? entry.name + '|'
-            : entry.name,
+        insertText: grammarMode === 'both' ? `|${entry.name}|` : grammarMode === 'end' ? entry.name + '|' : entry.name,
         detail: '(grammar) ' + entry.name,
         kind: CompletionItemKind.Interface,
         documentation: formatDocument(entry)!,
@@ -144,9 +141,9 @@ function findTerm(entry: BiblioTerm, fullText: string): CompletionItem[] {
     return (entry.variants?.length ? entry.variants : [entry.term]).map((term) => ({
         label: entry.term.startsWith('@@') ? entry.term.slice(2) : entry.term,
         kind:
-            entry.term.startsWith('%') || entry.term.startsWith('@@') ?
-                CompletionItemKind.Value
-            :   CompletionItemKind.Keyword,
+            entry.term.startsWith('%') || entry.term.startsWith('@@')
+                ? CompletionItemKind.Value
+                : CompletionItemKind.Keyword,
         detail: '(term) ' + term,
         documentation: formatDocument(entry)!,
         sortText: getPriority(fullText, entry.term),

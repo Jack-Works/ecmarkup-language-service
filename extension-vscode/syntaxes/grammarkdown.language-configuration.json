@@ -3,23 +3,9 @@
         "blockComment": ["/*", "*/"],
         "lineComment": "//"
     },
-    "brackets": [
-        ["(", ")"],
-        ["[", "]"],
-        ["{", "}"]
-    ],
-    "autoClosingPairs": [
-        ["{", "}"],
-        ["[", "]"],
-        ["(", ")"],
-        ["`", "`"]
-    ],
-    "surroundingPairs": [
-        ["(", ")"],
-        ["[", "]"],
-        ["{", "}"],
-        ["`", "`"]
-    ],
+    "brackets": [["(", ")"], ["[", "]"], ["{", "}"]],
+    "autoClosingPairs": [["{", "}"], ["[", "]"], ["(", ")"], ["`", "`"]],
+    "surroundingPairs": [["(", ")"], ["[", "]"], ["{", "}"], ["`", "`"]],
     "indentationRules": {
         "increaseIndentPattern": "^(?!\\/\\/).*:\\s*(one of)?\\s*$",
         "decreaseIndentPattern": "^this_never_matches$"

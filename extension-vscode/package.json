@@ -133,7 +133,7 @@
         "vscode": "^1.84.1"
     },
     "devDependencies": {
-        "@tc39/ecma262-biblio": "^2.1.2682",
+        "@tc39/ecma262-biblio": "^2.1.2722",
         "@types/node": "^20.11.17",
         "@types/vscode": "1.86.0",
         "@vscode/vsce": "^2.23.0",

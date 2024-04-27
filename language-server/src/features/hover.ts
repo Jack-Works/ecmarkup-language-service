@@ -1,9 +1,9 @@
-import { type Connection, type TextDocuments, type ServerCapabilities, MarkupKind } from 'vscode-languageserver'
-import { TextDocument } from '../lib.js'
+import { type Connection, MarkupKind, type ServerCapabilities, type TextDocuments } from 'vscode-languageserver'
+import type { TextDocument } from '../lib.js'
 import { biblio, getText } from '../utils/biblio.js'
-import { expandWord } from '../utils/text.js'
 import { formatDocument } from '../utils/format.js'
 import { getSourceFile } from '../utils/parse.js'
+import { expandWord } from '../utils/text.js'
 
 export function hoverProvider(
     connection: Connection,

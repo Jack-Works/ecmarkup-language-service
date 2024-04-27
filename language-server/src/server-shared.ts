@@ -1,8 +1,8 @@
-import { TextDocuments, type InitializeResult, type Connection, TextDocumentSyncKind } from 'vscode-languageserver'
-import { TextDocument } from './lib.js'
+import { type Connection, type InitializeResult, TextDocumentSyncKind, TextDocuments } from 'vscode-languageserver'
 import { completionProvider } from './features/completion.js'
-import { hoverProvider } from './features/hover.js'
 import { definitionProvider } from './features/gotoDefinition.js'
+import { hoverProvider } from './features/hover.js'
+import { TextDocument } from './lib.js'
 import { getSourceFile } from './utils/parse.js'
 
 const documents = new TextDocuments(TextDocument)

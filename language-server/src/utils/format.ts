@@ -1,6 +1,6 @@
-import type { BiblioEntry, BiblioOp, BiblioProduction, SpecOperations, SpecValue } from '@tc39/ecma262-biblio'
+import type { BiblioEntry, BiblioOp, SpecOperations, SpecValue } from '@tc39/ecma262-biblio'
+import { type MarkupContent, MarkupKind } from 'vscode-languageserver-types'
 import { getURL } from './biblio.js'
-import { MarkupContent, MarkupKind } from 'vscode-languageserver-types'
 
 export function formatSignature({ aoid, signature }: BiblioOp): string {
     if (!signature) return aoid
@@ -38,7 +38,7 @@ function formatSpecValue(value: SpecValue.SpecDataType, identLevel: number): str
             .replace('*false*', 'false')
             .replace('property key', 'PropertyKey')
     } else if (value.kind === 'unused') {
-        return `unused`
+        return 'unused'
     } else if (value.kind === 'union') {
         return value.types.map(formatSpecValue).join(' | ')
     } else if (value.kind === 'record') {

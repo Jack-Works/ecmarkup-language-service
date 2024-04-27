@@ -4,7 +4,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { TextDocument } from '../lib.js'
+import type { TextDocument } from '../lib.js'
 
 export interface LanguageModelCache<T> {
     get(document: TextDocument): T
@@ -80,7 +80,7 @@ export function getLanguageModelCache<T>(
         },
         dispose() {
             if (typeof cleanupInterval !== 'undefined') {
-                clearInterval(cleanupInterval as any)
+                clearInterval(Number(cleanupInterval))
                 cleanupInterval = undefined
                 languageModels = {}
                 nModels = 0

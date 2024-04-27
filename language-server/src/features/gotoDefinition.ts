@@ -1,5 +1,5 @@
-import { type Connection, type TextDocuments, type ServerCapabilities, Location } from 'vscode-languageserver'
-import { TextDocument } from '../lib.js'
+import type { Connection, Location, ServerCapabilities, TextDocuments } from 'vscode-languageserver'
+import type { TextDocument } from '../lib.js'
 import { getSourceFile } from '../utils/parse.js'
 import { expandWord } from '../utils/text.js'
 import { createRange } from '../utils/utils.js'
@@ -14,7 +14,7 @@ export function definitionProvider(
         const sourceFile = getSourceFile.get(document)
 
         const offset = document.offsetAt(params.position)
-        let { word, isGrammarLeading, isVariableLeading } = expandWord(document.getText(), offset)
+        const { word, isGrammarLeading, isVariableLeading } = expandWord(document.getText(), offset)
 
         const node = sourceFile.findNodeAt(offset)
         if (node.tag === 'emu-grammar' || isGrammarLeading) {

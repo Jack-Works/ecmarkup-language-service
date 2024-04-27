@@ -4,7 +4,7 @@
     "private": true,
     "type": "module",
     "dependencies": {
-        "@tc39/ecma262-biblio": "^2.1.2682",
+        "@tc39/ecma262-biblio": "^2.1.2722",
         "fuse.js": "^7.0.0",
         "grammarkdown": "^3.3.2",
         "vscode-html-languageservice": "^5.1.2",

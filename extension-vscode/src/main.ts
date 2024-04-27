@@ -1,7 +1,7 @@
 import type { ExtensionContext } from 'vscode'
-import { commands, extensions, workspace } from './vscode.js'
-import type { LanguageClient as NodeClient, LanguageClientOptions as NodeOptions } from 'vscode-languageclient/node.js'
 import type { LanguageClient as WebClient, LanguageClientOptions as WebOptions } from 'vscode-languageclient/browser.js'
+import type { LanguageClient as NodeClient, LanguageClientOptions as NodeOptions } from 'vscode-languageclient/node.js'
+import { commands, extensions, workspace } from './vscode.js'
 
 let client: NodeClient | WebClient
 export async function onActivate(
