@@ -18,8 +18,8 @@ export function definitionProvider(
 
         const node = sourceFile.findNodeAt(offset)
         if (node.tag === 'emu-grammar' || isGrammarLeading) {
-            const result = sourceFile.getGrammarDefinition(word)
-            return result.map((range): Location => ({ uri: document.uri, range: range[1] }))
+            const result = sourceFile.localDefinedGrammars.filter((x) => x.name === word)
+            return result.map((ref): Location => ({ uri: document.uri, range: sourceFile.getEntryRange(ref) }))
         } else if (node.tag === 'emu-alg') {
             if (isVariableLeading) {
                 const header = sourceFile.getAlgHeader(offset)
@@ -54,6 +54,9 @@ export function definitionProvider(
                         sourceFile.text.positionAt((node.startTagEnd || node.start) + nodeDefine + word.length + 6),
                     ),
                 }
+            } else {
+                const operation = sourceFile.localDefinedAbstractOperations.find((x) => x.name === word)
+                if (operation) return { uri: document.uri, range: sourceFile.getEntryRange(operation) }
             }
         }
 

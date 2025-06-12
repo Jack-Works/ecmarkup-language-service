@@ -1,9 +1,19 @@
 {
     "name": "ecmarkup-language-extension-vscode",
     "displayName": "ecmarkup",
+    "type": "module",
     "description": "ecmarkup language support",
-    "categories": ["Formatters", "Linters", "Programming Languages", "Snippets"],
-    "keywords": ["tc39", "ecmarkup", "specification"],
+    "categories": [
+        "Formatters",
+        "Linters",
+        "Programming Languages",
+        "Snippets"
+    ],
+    "keywords": [
+        "tc39",
+        "ecmarkup",
+        "specification"
+    ],
     "preview": true,
     "author": "Jack Works",
     "publisher": "MagicWorks",
@@ -14,7 +24,9 @@
     "activationEvents": [],
     "contributes": {
         "html": {
-            "customData": ["./custom-element.json"]
+            "customData": [
+                "./custom-element.json"
+            ]
         },
         "commands": [
             {
@@ -32,9 +44,15 @@
             {
                 "id": "ecmarkup",
                 "configuration": "./syntaxes/ecmarkup.language-configuration.json",
-                "aliases": ["emu"],
-                "filenames": ["spec.html"],
-                "extensions": [".emu"]
+                "aliases": [
+                    "emu"
+                ],
+                "filenames": [
+                    "spec.html"
+                ],
+                "extensions": [
+                    ".emu"
+                ]
             },
             {
                 "id": "grammarkdown",
@@ -49,7 +67,9 @@
             {
                 "path": "./syntaxes/ecmarkup.tmLanguage.json",
                 "scopeName": "text.html.ecmarkup.injection",
-                "injectTo": ["text.html"],
+                "injectTo": [
+                    "text.html"
+                ],
                 "embeddedLanguages": {
                     "meta.embedded.block.grammarkdown": "grammarkdown",
                     "meta.embedded.block.ecmarkdown": "ecmarkdown"
@@ -83,7 +103,9 @@
             {
                 "language": "ecmarkup",
                 "scopes": {
-                    "*.mutable": ["markup.underline"]
+                    "*.mutable": [
+                        "markup.underline"
+                    ]
                 }
             }
         ],
@@ -122,18 +144,17 @@
         "vscode": "^1.84.1"
     },
     "devDependencies": {
-        "@tc39/ecma262-biblio": "^2.1.2722",
-        "@types/node": "^20.11.17",
-        "@types/vscode": "1.86.0",
-        "@vscode/vsce": "^2.23.0",
+        "@tc39/ecma262-biblio": "^2.1.2887",
+        "@types/node": "^22.15.17",
+        "@types/vscode": "1.99.1",
+        "@vscode/vsce": "^3.3.2",
         "ecmarkup-language-server": "workspace:^",
         "js-yaml": "^4.1.0",
-        "rollup": "^4.10.0",
-        "ts-loader": "^9.5.1",
+        "ts-loader": "^9.5.2",
         "vscode-languageclient": "^9.0.1",
         "vscode-test": "^1.6.1",
-        "webpack": "^5.90.1",
-        "webpack-cli": "^5.1.4"
+        "webpack": "^5.99.8",
+        "webpack-cli": "^6.0.1"
     },
     "scripts": {
         "tmlang": "node ./scripts/generate-tmLanguage.mjs",

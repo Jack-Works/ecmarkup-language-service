@@ -74,15 +74,19 @@ export function completionProvider(
 
         if (isVariableLeading) return findVariables(sourceFile, word, offset)
 
-        fuse.setCollection([
-            ...biblio.entries,
-            ...sourceFile
-                .getLocalDefinedGrammars()
-                .map(
-                    (name): MaybeLocalEntry<BiblioProduction> => ({ id: name, name, type: 'production', local: true }),
+        if (inGrammarTag || isGrammarLeading) {
+            fuse.setCollection([
+                ...biblio.entries,
+                ...sourceFile.localDefinedGrammars.map(
+                    (grammar): MaybeLocalEntry<BiblioProduction> => ({
+                        id: grammar.name,
+                        name: grammar.name,
+                        type: 'production',
+                        local: true,
+                    }),
                 ),
-        ])
-
+            ])
+        }
         if ((isGrammarLeading || inGrammarTag) && word === '') {
             // |^ or |^| when not in emu-grammar
             const completionMode = isGrammar || inGrammarTag ? 'no' : 'end'
@@ -103,7 +107,8 @@ export function completionProvider(
                 fuse.search(inGrammarTag ? { production: word } : word).flatMap((x) => {
                     if (x.item.type === 'term') return findTerm(x.item, fullText)
                     else if (x.item.type === 'op') return findOperation(x.item, fullText)
-                    else if (x.item.type === 'production') return findProduction(x.item, 'both', fullText)
+                    else if (x.item.type === 'production')
+                        return findProduction(x.item, inGrammarTag ? 'no' : 'both', fullText)
                     return []
                 }),
             ),

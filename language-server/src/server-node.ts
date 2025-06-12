@@ -1,5 +1,5 @@
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node.js'
 import { initialize } from './server-shared.js'
-import pkg from '../package.json' assert { type: 'json' }
+import pkg from '../package.json' with { type: 'json' }
 
 initialize(createConnection(ProposedFeatures.all), pkg.version)

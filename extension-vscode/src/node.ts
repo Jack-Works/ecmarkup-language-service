@@ -5,7 +5,8 @@ import { onActivate } from './main.js'
 
 export async function activate(context: ExtensionContext) {
     onActivate(context, (clientOptions) => {
-        const isProd = true
+        // if you want to debug, set the variable to false
+        const isProd = false
         const serverModule = context.asAbsolutePath(
             isProd
                 ? join('lib', 'language-server-node.js')

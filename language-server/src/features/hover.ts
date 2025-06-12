@@ -29,9 +29,9 @@ export function hoverProvider(
             return { contents }
         }
 
-        const local = sourceFile.getGrammarDefinition(word)
+        const local = sourceFile.localDefinedGrammars.filter((x) => x.name === word)
         if (local[0]) {
-            return { contents: { kind: MarkupKind.PlainText, language: 'grammarkdown', value: local[0][0].summary } }
+            return { contents: { kind: MarkupKind.PlainText, language: 'grammarkdown', value: local[0].summary } }
         }
         return undefined
     })

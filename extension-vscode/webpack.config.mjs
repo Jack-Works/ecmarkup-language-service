@@ -6,11 +6,11 @@ const config = {
     devtool: 'source-map',
     entry: {
         node: './src/node.ts',
-        ['language-server-node']: './node_modules/ecmarkup-language-server/src/server-node.ts',
+        'language-server-node': './node_modules/ecmarkup-language-server/src/server-node.ts',
     },
     output: {
         path: fileURLToPath(new URL('./lib', import.meta.url)),
-        library: { type: 'commonjs' },
+        library: { type: 'module' },
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js'],
@@ -20,7 +20,7 @@ const config = {
             '.mjs': ['.mjs', '.mts'],
         },
     },
-    externals: { vscode: 'commonjs vscode' },
+    externals: { vscode: 'vscode' },
     module: {
         rules: [
             { test: /\.([cm]?ts|tsx)$/, loader: 'ts-loader', options: { transpileOnly: true } },
@@ -31,5 +31,8 @@ const config = {
         minimize: false,
     },
     target: 'node',
+    experiments: {
+        outputModule: true,
+    }
 }
 export default config

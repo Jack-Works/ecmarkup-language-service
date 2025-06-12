@@ -1,9 +1,9 @@
 import type { Nonterminal, Production, SourceFile } from 'grammarkdown'
 import { type HTMLDocument, type LanguageService, type Node, getLanguageService } from 'vscode-html-languageservice'
-import type { Range } from 'vscode-languageserver-textdocument'
 import { NodeVisitor, Parser, type TextDocument } from '../lib.js'
 import { getLanguageModelCache } from './parseCache.js'
 import { createRange } from './utils.js'
+import { lazy } from './lazy.js'
 
 let ls: LanguageService
 let parser: Parser
@@ -15,12 +15,13 @@ export class EcmarkupDocument {
         this.html = ls.parseHTMLDocument(text)
     }
     public html: HTMLDocument
-    private parseGrammar() {
-        const result: GrammarkdownInfo[] = []
+    @lazy accessor grammars: readonly EntryInfo[] = lazy.of(() => {
+        const result: EntryInfo[] = []
         const fullText = this.text.getText()
         function visit(node: Node) {
             if (node.tag === 'emu-grammar') {
-                result.push(...parseGrammarkdown(node, !!node.attributes?.['type']?.includes('definition'), fullText))
+                const isDefinition = !!node.attributes?.['type']?.includes('definition')
+                result.push(...parseGrammarkdown(node, isDefinition, fullText))
             } else if (node.tag !== 'script' && node.tag !== 'style') {
                 result.push(...parseNormalText(node, fullText))
                 node.children.forEach(visit)
@@ -28,27 +29,18 @@ export class EcmarkupDocument {
         }
         this.html.roots.forEach(visit)
         return result
-    }
-    private info: GrammarkdownInfo[] | undefined
-    getGrammarDefinition(name: string) {
-        this.info ??= this.parseGrammar()
-        const { info } = this
-        const result: [GrammarkdownDefine, Range][] = []
-        for (const def of info) {
-            if (def.type !== 'define' || def.name !== name) continue
-            result.push([
-                def,
-                createRange(
-                    this.text.positionAt(def.node.startTagEnd! + def.pos),
-                    this.text.positionAt(def.node.startTagEnd! + def.pos + def.name.length),
-                ),
-            ])
-        }
-        return result
-    }
-    getLocalDefinedGrammars() {
-        this.info ??= this.parseGrammar()
-        return this.info.filter((x) => x.type === 'define').map((x) => x.name)
+    })
+    @lazy accessor localDefinedGrammars: readonly EntryDefinition[] = lazy.of(() =>
+        this.grammars.filter((x): x is EntryDefinition => x.type === 'define'),
+    )
+    getEntryRange(entry: EntryInfo) {
+        const realPos = entry.node.startTagEnd! + entry.pos
+        const offset = this.text.getText()[realPos] === '|' ? 1 : 0
+        const start = this.text.positionAt(realPos + offset)
+        return createRange(
+            start,
+            this.text.positionAt(entry.node.startTagEnd! + entry.pos + entry.name.length + offset),
+        )
     }
     getAlgHeader(offset: number) {
         const node = this.findNodeAt(offset)
@@ -58,6 +50,39 @@ export class EcmarkupDocument {
         if (next?.tag === 'dl' || next?.tag === 'p') return node.parent.children[index]
         return undefined
     }
+
+    @lazy accessor localDefinedAbstractOperations: readonly EntryDefinition[] = lazy.of(() => {
+        const result: EntryDefinition[] = []
+        const fullText = this.text.getText()
+        function visit(node: Node) {
+            if (node.tag === 'emu-clause' && node.attributes?.['type']) {
+                const h1 = node.children.findIndex((x) => x.tag === 'h1')
+                const next = node.children[h1 + 1]
+                if (h1 !== -1 && (next?.tag === 'dl' || next?.tag === 'p')) {
+                    const header = node.children[h1]!
+                    const text = fullText.slice(header.startTagEnd, header.endTagStart)
+                    const regex = /(\w+) \(/
+                    const nameLike = regex.exec(text)
+                    if (nameLike) {
+                        result.push({
+                            type: 'define',
+                            name: nameLike[1]!,
+                            node: header,
+                            pos: nameLike.index,
+                            summary: text.trim(),
+                        })
+                        // AO defines should not nest with each other
+                        return
+                    }
+                }
+            }
+            if (node.tag !== 'script' && node.tag !== 'style') {
+                node.children.forEach(visit)
+            }
+        }
+        this.html.roots.forEach(visit)
+        return result
+    })
     findNodeAt(offset: number) {
         const node = this.html.findNodeAt(offset)
         if (node.tag === 'ins' || node.tag === 'del') return node.parent || node
@@ -71,8 +96,8 @@ export class EcmarkupDocument {
     }
 }
 
-function parseNormalText(node: Node, fullText: string): GrammarkdownInfo[] {
-    const info: GrammarkdownInfo[] = []
+function parseNormalText(node: Node, fullText: string): EntryInfo[] {
+    const info: EntryInfo[] = []
     if (!node.startTagEnd) return info
     const textContent = fullText.slice(node.startTagEnd, node.endTagStart)
     for (const match of textContent.matchAll(/\|\w+\|/g)) {
@@ -85,11 +110,11 @@ function parseNormalText(node: Node, fullText: string): GrammarkdownInfo[] {
     }
     return info
 }
-function parseGrammarkdown(node: Node, isDefinition: boolean, fullText: string): GrammarkdownInfo[] {
+function parseGrammarkdown(node: Node, isDefinition: boolean, fullText: string): EntryInfo[] {
     if (!node.startTagEnd) return []
     parser ??= new Parser()
 
-    const info: GrammarkdownInfo[] = []
+    const info: EntryInfo[] = []
 
     const textContent = fullText.slice(node.startTagEnd, node.endTagStart)
 
@@ -100,23 +125,23 @@ function parseGrammarkdown(node: Node, isDefinition: boolean, fullText: string):
     return info
 }
 
-export type GrammarkdownInfo = GrammarkdownDefine | GrammarkdownReference
-export interface GrammarkdownInfoBase {
+export type EntryInfo = EntryDefinition | EntryReference
+export interface EntryInfoBase {
     name: string
     pos: number
     node: Node
 }
-export interface GrammarkdownDefine extends GrammarkdownInfoBase {
+export interface EntryDefinition extends EntryInfoBase {
     type: 'define'
     summary: string
 }
-export interface GrammarkdownReference extends GrammarkdownInfoBase {
+export interface EntryReference extends EntryInfoBase {
     type: 'reference'
 }
 
 class Visitor extends NodeVisitor {
     constructor(
-        private info: GrammarkdownInfo[],
+        private info: EntryInfo[],
         private isDefinitionSite: boolean,
         private node: Node,
         private sourceFile: SourceFile,

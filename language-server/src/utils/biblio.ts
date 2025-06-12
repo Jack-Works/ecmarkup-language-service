@@ -1,5 +1,5 @@
 import type { Biblio, BiblioEntry, BiblioOp, BiblioProduction } from '@tc39/ecma262-biblio'
-import b from '@tc39/ecma262-biblio' assert { type: 'json' }
+import b from '@tc39/ecma262-biblio' with { type: 'json' }
 
 export const biblio = b as Biblio
 export const productions = biblio.entries.filter(isProduction)
