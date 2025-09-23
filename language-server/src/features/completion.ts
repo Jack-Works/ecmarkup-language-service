@@ -1,4 +1,4 @@
-import type { BiblioClause, BiblioOp, BiblioProduction, BiblioTerm } from '@tc39/ecma262-biblio'
+import type { BiblioClause, BiblioEntry, BiblioOp, BiblioProduction, BiblioTerm } from '@tc39/ecma262-biblio'
 import Fuse, { type FuseResult } from 'fuse.js'
 import {
     type CompletionItem,
@@ -8,7 +8,7 @@ import {
     type TextDocuments,
 } from 'vscode-languageserver'
 import type { TextDocument } from '../lib.js'
-import { biblio, productions } from '../utils/biblio.js'
+import { isProduction, resolve_biblio } from '../utils/biblio.js'
 import { type MaybeLocalEntry, formatDocument } from '../utils/format.js'
 import { type EcmarkupDocument, getSourceFile } from '../utils/parse.js'
 import { expandWord } from '../utils/text.js'
@@ -26,9 +26,9 @@ function getPriority(fullText: string, text: string) {
 }
 export function completionProvider(
     connection: Connection,
-    documents: TextDocuments<TextDocument>,
+    documents: TextDocuments<TextDocument>
 ): NonNullable<ServerCapabilities['completionProvider']> {
-    const fuse = new Fuse(biblio.entries, {
+    const fuse = new Fuse<BiblioEntry>([], {
         // includeScore: true,
         findAllMatches: true,
         keys: [
@@ -41,8 +41,9 @@ export function completionProvider(
         ],
     })
 
-    connection.onCompletion(async (params, token, workDoneProgress, resultProgress) => {
+    connection.onCompletion(async (params, _token, _workDoneProgress, _resultProgress) => {
         const document = documents.get(params.textDocument.uri)
+        const resolved_biblio = await resolve_biblio(connection, params.textDocument.uri)
         if (!document) return []
         const sourceFile = getSourceFile.get(document)
         const fullText = document.getText()
@@ -59,7 +60,7 @@ export function completionProvider(
             if (wholeLine.includes('emu-clause')) return []
             const searchWord = word.replace('sec-', '')
             if (!searchWord)
-                return biblio.entries
+                return resolved_biblio.entries
                     .filter((x): x is BiblioClause => x.type === 'clause')
                     .map((x) => findReference(x, fullText))
             const result = fuse
@@ -74,19 +75,20 @@ export function completionProvider(
 
         if (isVariableLeading) return findVariables(sourceFile, word, offset)
 
-        fuse.setCollection([
-            ...biblio.entries,
+        const combined_biblio = [
+            ...resolved_biblio.entries,
             ...sourceFile
                 .getLocalDefinedGrammars()
                 .map(
-                    (name): MaybeLocalEntry<BiblioProduction> => ({ id: name, name, type: 'production', local: true }),
+                    (name): MaybeLocalEntry<BiblioProduction> => ({ id: name, name, type: 'production', local: true })
                 ),
-        ])
+        ]
+        fuse.setCollection(combined_biblio)
 
         if ((isGrammarLeading || inGrammarTag) && word === '') {
             // |^ or |^| when not in emu-grammar
             const completionMode = isGrammar || inGrammarTag ? 'no' : 'end'
-            return productions.map((x) => findProduction(x, completionMode, fullText))
+            return combined_biblio.filter(isProduction).map((x) => findProduction(x, completionMode, fullText))
         }
         if (isGrammarLeading) {
             const completionMode = isGrammar ? 'no' : 'end'
@@ -105,7 +107,7 @@ export function completionProvider(
                     else if (x.item.type === 'op') return findOperation(x.item, fullText)
                     else if (x.item.type === 'production') return findProduction(x.item, 'both', fullText)
                     return []
-                }),
+                })
             ),
         }
     })
@@ -126,7 +128,7 @@ function findReference(entry: BiblioClause, fullText: string): CompletionItem {
 function findProduction(
     entry: MaybeLocalEntry<BiblioProduction>,
     grammarMode: 'both' | 'end' | 'no',
-    fullText: string,
+    fullText: string
 ): CompletionItem {
     return {
         label: entry.name,

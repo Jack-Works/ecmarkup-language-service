@@ -6,17 +6,18 @@ import type {
     TextDocuments,
 } from 'vscode-languageserver'
 import type { TextDocument } from '../lib.js'
-import { op } from '../utils/biblio.js'
+import { isOp, resolve_biblio } from '../utils/biblio.js'
 import { getSourceFile } from '../utils/parse.js'
 import type { Node } from 'vscode-html-languageservice'
 
 export function semanticTokensProvider(
     connection: Connection,
-    documents: TextDocuments<TextDocument>,
+    documents: TextDocuments<TextDocument>
 ): NonNullable<ServerCapabilities['semanticTokensProvider']> {
-    function getTokens(params: SemanticTokensParams | SemanticTokensRangeParams) {
+    async function getTokens(params: SemanticTokensParams | SemanticTokensRangeParams) {
         const document = documents.get(params.textDocument.uri)
         if (!document) return { data: [] }
+        const resolved_biblio = await resolve_biblio(connection, params.textDocument.uri)
         const sourceFile = getSourceFile.get(document)
         const data: number[] = []
         let lastLine: number
@@ -26,7 +27,7 @@ export function semanticTokensProvider(
             offset: number,
             length: number,
             tokenType: SemanticTokenTypes,
-            modifier: SemanticTokenModifiers[],
+            modifier: SemanticTokenModifiers[]
         ) {
             const { line, character } = document!.positionAt(offset)
             if (data.length === 0) {
@@ -40,7 +41,7 @@ export function semanticTokensProvider(
                     line === lastLine ? character - lastChar : character,
                     length,
                     tokenType,
-                    modifierToArray(modifier),
+                    modifierToArray(modifier)
                 )
             }
             lastLine = line
@@ -55,7 +56,12 @@ export function semanticTokensProvider(
             }
             if (node.tag === 'emu-alg') {
                 for (const { index, 1: word } of sourceFile.getNodeText(node).matchAll(/(\b\w+\b)\(/g)) {
-                    if (op.find((x) => x.aoid === word)?.effects.includes('user-code')) {
+                    if (
+                        resolved_biblio.entries
+                            .filter(isOp)
+                            .find((x) => x.aoid === word)
+                            ?.effects.includes('user-code')
+                    ) {
                         insertToken(node.startTagEnd! + index!, word!.length, SemanticTokenTypes.variable, [
                             SemanticTokenModifiers.mutable,
                         ])
@@ -90,14 +96,11 @@ function modifierToArray(modifiers: readonly SemanticTokenModifiers[]) {
     return bitflag
 }
 
-
-// biome-ignore lint/style/useEnumInitializers: not public API
 enum SemanticTokenTypes {
     function,
     variable,
 }
 
-// biome-ignore lint/style/useEnumInitializers: not public API
 enum SemanticTokenModifiers {
     mutable,
     underline,

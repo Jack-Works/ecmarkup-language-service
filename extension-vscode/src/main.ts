@@ -2,6 +2,7 @@ import type { ExtensionContext } from 'vscode'
 import type { LanguageClient as WebClient, LanguageClientOptions as WebOptions } from 'vscode-languageclient/browser.js'
 import type { LanguageClient as NodeClient, LanguageClientOptions as NodeOptions } from 'vscode-languageclient/node.js'
 import { commands, extensions, workspace } from './vscode.js'
+import { io } from './io.js'
 
 let client: NodeClient | WebClient
 export async function onActivate(
@@ -21,6 +22,13 @@ export async function onActivate(
         },
     }
     client = createClient(clientOptions)
+    Object.entries(io).forEach(([key, f]) => {
+        context.subscriptions.push(
+            client!.onRequest(`io/${key}`, async (params) => {
+                return await f(...params)
+            }),
+        )
+    })
     client.start()
 
     context.subscriptions.push(

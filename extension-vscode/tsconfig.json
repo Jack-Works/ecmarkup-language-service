@@ -9,5 +9,6 @@
         "declaration": false,
         "declarationMap": false
     },
+    "references": [{ "path": "../language-server" }],
     "include": ["./src/"]
 }

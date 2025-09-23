@@ -2,7 +2,7 @@
     "name": "ecmarkup-language-server",
     "private": true,
     "type": "module",
-    "packageManager": "pnpm@9.0.6+sha256.0624e30eff866cdeb363b15061bdb7fd9425b17bc1bb42c22f5f4efdea21f6b3",
+    "packageManager": "pnpm@9.15.9",
     "description": "Language server and editor plugins for ecmarkup",
     "author": "Jack Works",
     "license": "MIT",
@@ -12,8 +12,8 @@
         "build": "tsc -b ."
     },
     "devDependencies": {
-        "@biomejs/biome": "1.7.1",
-        "@changesets/cli": "^2.27.1",
-        "typescript": "^5.4.5"
+        "@biomejs/biome": "2.2.4",
+        "@changesets/cli": "^2.29.7",
+        "typescript": "^5.9.2"
     }
 }

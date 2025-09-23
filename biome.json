@@ -9,20 +9,18 @@
         "lineWidth": 120,
         "attributePosition": "auto"
     },
-    "organizeImports": { "enabled": true },
     "linter": {
         "enabled": true,
         "rules": {
             "recommended": true,
             "style": { "useTemplate": "off", "noUselessElse": "off", "noNonNullAssertion": "off" },
-            "complexity": { "noMultipleSpacesInRegularExpressionLiterals": "off", "useLiteralKeys": "off" },
+            "complexity": { "useLiteralKeys": "off" },
             "correctness": { "noUnusedImports": "error" }
         }
     },
     "javascript": {
         "formatter": {
             "quoteProperties": "asNeeded",
-            "trailingComma": "all",
             "semicolons": "asNeeded",
             "arrowParentheses": "always",
             "bracketSpacing": true,
@@ -30,11 +28,5 @@
             "quoteStyle": "single",
             "attributePosition": "auto"
         }
-    },
-    "overrides": [
-        {
-            "include": ["ecmarkup.language-configuration.json"],
-            "json": { "parser": { "allowComments": true, "allowTrailingCommas": true } }
-        }
-    ]
+    }
 }
