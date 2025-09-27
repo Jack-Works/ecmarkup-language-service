@@ -1,9 +1,12 @@
-import { Uri, workspace } from 'vscode'
+import { Uri, window, workspace } from 'vscode'
 import type { IO } from '../../../language-server/src/workspace/io.js'
 
 export const io: IO = {
     async warn(...message) {
         console.warn(...message)
+    },
+    async getEditorCursorCount() {
+        return window.activeTextEditor?.selections.length ?? 0
     },
     async resolveBiblio(base: string) {
         const specifier = '@tc39/ecma262-biblio/biblio.json'

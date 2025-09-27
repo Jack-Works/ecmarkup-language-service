@@ -11,6 +11,7 @@ export interface Program {
     dispose(): void
 
     resolveBiblio(base: string): Promise<readonly BiblioEntry[]>
+    getEditorCursorCount(): Promise<number>
     warn(...message: unknown[]): Promise<void>
 }
 
@@ -29,6 +30,7 @@ export function createProgram(io: IO): Program {
             fileCache.dispose()
         },
         warn: io.warn,
+        getEditorCursorCount: io.getEditorCursorCount,
         resolveBiblio(base) {
             if (biblioCache.has(base)) return biblioCache.get(base)!
             const promise = new Promise<readonly BiblioEntry[]>((resolve, reject) => {

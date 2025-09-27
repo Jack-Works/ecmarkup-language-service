@@ -138,6 +138,10 @@ export class Completer {
                         .toLowerCase()
                         .replace(/[^a-z0-9]+/g, '-')
                         .replace(/^-+|-+$/g, '')
+                // To workaround the conflict with the snippet
+                if ((await program.getEditorCursorCount().catch(() => 1)) > 1) {
+                    return { isIncomplete: false, items: [] }
+                }
                 return {
                     isIncomplete: false,
                     items: [{ label: suggestedId, kind: CompletionItemKind.Reference }],

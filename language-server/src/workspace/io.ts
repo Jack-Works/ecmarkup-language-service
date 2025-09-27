@@ -8,6 +8,8 @@ export interface IO {
      */
     resolveBiblio(base: string): Promise<{ entries: BiblioEntry[]; location?: string; source?: string } | undefined>
 
+    getEditorCursorCount(): Promise<number>
+
     warn(...message: unknown[]): Promise<void>
 }
 

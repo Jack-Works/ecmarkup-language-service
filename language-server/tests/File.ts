@@ -80,6 +80,9 @@ export function mockIO(io: Partial<IO>): IO {
         async warn(...message) {
             console.warn(...message)
         },
+        async getEditorCursorCount() {
+            return 1
+        },
         ...io,
     }
 }
