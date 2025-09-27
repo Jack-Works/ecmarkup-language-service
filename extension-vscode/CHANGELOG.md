@@ -1,5 +1,14 @@
 # ecmarkup-language-extension-vscode
 
+## 0.4.0
+
+### Minor Changes
+
+- ac07899: Drop the @@wellKnownSymbol in the output, switched to the new convention %Symbol.wellKnownSymbol%
+- ac07899: Switched to ESM, requires VSCode 1.100
+- 127cb23: Support semantic tokens for User Code mark in biblio
+- ac07899: Support reading local installed @tc39/ecma262-biblio
+
 ## 0.3.1
 
 ### Patch Changes
