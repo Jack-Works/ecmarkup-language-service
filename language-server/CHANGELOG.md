@@ -1,5 +1,21 @@
 # ecmarkup-language-server
 
+## 0.4.0
+
+### Minor Changes
+
+- ac07899: Add findAllReference for variables
+- ac07899: Drop the @@wellKnownSymbol in the output, switched to the new convention %Symbol.wellKnownSymbol%
+- 127cb23: Support semantic tokens for User Code mark in biblio
+- ac07899: Support reading local installed @tc39/ecma262-biblio
+- ac07899: Improved the completion result, goto definition and semantic token result.
+- ac07899: Add basic support of find all references
+
+### Patch Changes
+
+- 3a36f92: count p tag into alg header
+- ac07899: Add basic support for local defined Abstract Operations
+
 ## 0.3.0
 
 ### Minor Changes
