@@ -111,58 +111,6 @@
         "prefix": ["the list-concatenation of"],
         "body": "the list-concatenation of _${1:list}_ and _${2:list}_."
     },
-    "Symbol.asyncIterator": {
-        "prefix": ["Symbol.asyncIterator", "@@asyncIterator"],
-        "body": "@@asyncIterator"
-    },
-    "Symbol.hasInstance": {
-        "prefix": ["Symbol.hasInstance", "@@hasInstance"],
-        "body": "@@hasInstance"
-    },
-    "Symbol.isConcatSpreadable": {
-        "prefix": ["Symbol.isConcatSpreadable", "@@isConcatSpreadable"],
-        "body": "@@isConcatSpreadable"
-    },
-    "Symbol.iterator": {
-        "prefix": ["Symbol.iterator", "@@iterator"],
-        "body": "@@iterator"
-    },
-    "Symbol.match": {
-        "prefix": ["Symbol.match", "@@match"],
-        "body": "@@match"
-    },
-    "Symbol.matchAll": {
-        "prefix": ["Symbol.matchAll", "@@matchAll"],
-        "body": "@@matchAll"
-    },
-    "Symbol.replace": {
-        "prefix": ["Symbol.replace", "@@replace"],
-        "body": "@@replace"
-    },
-    "Symbol.search": {
-        "prefix": ["Symbol.search", "@@search"],
-        "body": "@@search"
-    },
-    "Symbol.species": {
-        "prefix": ["Symbol.species", "@@species"],
-        "body": "@@species"
-    },
-    "Symbol.split": {
-        "prefix": ["Symbol.split", "@@split"],
-        "body": "@@split"
-    },
-    "Symbol.toPrimitive": {
-        "prefix": ["Symbol.toPrimitive", "@@toPrimitive"],
-        "body": "@@toPrimitive"
-    },
-    "Symbol.toStringTag": {
-        "prefix": ["Symbol.toStringTag", "@@toStringTag"],
-        "body": "@@toStringTag"
-    },
-    "Symbol.unscopables": {
-        "prefix": ["Symbol.unscopables", "@@unscopables"],
-        "body": "@@unscopables"
-    },
     "Is an Object": {
         "prefix": ["is an Object"],
         "body": "is an Object, "

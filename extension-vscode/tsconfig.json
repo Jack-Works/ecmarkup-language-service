@@ -1,13 +1,14 @@
 {
     "extends": "../tsconfig.json",
     "compilerOptions": {
-        "outDir": "./lib-esm/",
-        "tsBuildInfoFile": "./lib-esm/.tsbuildinfo",
+        "outDir": "./lib/",
+        "tsBuildInfoFile": "./lib/.tsbuildinfo",
         "rootDir": "./src/",
         "lib": ["ES2022", "DOM", "DOM.Iterable"],
         "composite": false,
         "declaration": false,
         "declarationMap": false
     },
-    "include": ["./src/"]
+    "include": ["./src/"],
+    "references": [{"path": "../language-server/tsconfig.json"}]
 }

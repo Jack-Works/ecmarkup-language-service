@@ -34,5 +34,9 @@
     "∈": {
         "prefix": "belongs to",
         "body": "&in;"
+    },
+    "[no LineTerminator here]": {
+        "prefix": "[no LineTerminator here]",
+        "body": "[no LineTerminator here]"
     }
 }

@@ -2,7 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
     "scopeName": "text.html.ecmarkup.injection",
     "injectionSelector": "L:text.html",
-    "patterns": [{ "include": "#emu-grammar" }, { "include": "#emu-alg" }, { "include": "#code" }],
+    "patterns": [{ "include": "#emu-grammar" }, { "include": "#emu-clause-head" }, { "include": "#emu-alg" }, { "include": "#code" }],
     "repository": {
         "emu-grammar": {
             "comment": "I have to consume at least 1 token. See https://github.com/microsoft/vscode-textmate/issues/12",

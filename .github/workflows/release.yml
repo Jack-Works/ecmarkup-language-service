@@ -12,19 +12,18 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
         with:
           submodules: 'true'
           fetch-depth: 0
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v5
         with:
-          node-version: "21"
-          cache: "pnpm"
-      - run: pnpm install
+          node-version: "24"
+          cache: "yarn"
+      - run: yarn install
       - uses: changesets/action@v1
         with:
-          publish: pnpm run release
+          publish: yarn run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VSCE_PAT: ${{ secrets.VSCE_PAT }}

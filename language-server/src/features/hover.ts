@@ -1,26 +1,48 @@
-import { type Connection, MarkupKind, type ServerCapabilities, type TextDocuments } from 'vscode-languageserver'
+import {
+    type CancellationToken,
+    type Connection,
+    type HandlerResult,
+    type Hover,
+    type HoverParams,
+    MarkupKind,
+    type ServerCapabilities,
+    type TextDocuments,
+    type WorkDoneProgressReporter,
+} from 'vscode-languageserver'
 import type { TextDocument } from '../lib.js'
-import { biblio, getText } from '../utils/biblio.js'
+import { getText } from '../utils/biblio.js'
 import { formatDocument } from '../utils/format.js'
-import { getSourceFile } from '../utils/parse.js'
-import { expandWord } from '../utils/text.js'
+import { word_at_cursor } from '../utils/text.js'
+import type { Program } from '../workspace/program.js'
 
 export function hoverProvider(
     connection: Connection,
+    program: Program,
     documents: TextDocuments<TextDocument>,
 ): NonNullable<ServerCapabilities['hoverProvider']> {
-    connection.onHover(async (params, token, workDoneProgress, resultProgress) => {
-        const document = documents.get(params.textDocument.uri)
-        if (!document) return undefined
+    const hover = new HoverProvider()
+    connection.onHover(hover.handler(documents, program))
+    return {}
+}
 
+export class HoverProvider {
+    async hover(
+        document: TextDocument,
+        program: Program,
+        params: HoverParams,
+        _token?: CancellationToken,
+        _workDoneProgress?: WorkDoneProgressReporter,
+    ): Promise<Hover | undefined> {
         const fullText = document.getText()
         const offset = document.offsetAt(params.position)
-        const sourceFile = getSourceFile.get(document)
+        const sourceFile = program.getSourceFile(document)
+        const biblio = await program.resolveBiblio(document.uri)
 
-        const { word, isGrammar } = expandWord(fullText, offset)
+        const { word, isGrammar, isIntrinsic } = word_at_cursor(fullText, offset)
 
-        const entry = biblio.entries.find((entry) => {
+        const entry = biblio.find((entry) => {
             if (isGrammar) return entry.type === 'production' && word === entry.name
+            else if (isIntrinsic) return entry.type === 'term' && word === entry.term.slice(1, -1)
             return word === getText(entry)
         })
         if (entry) {
@@ -29,11 +51,30 @@ export function hoverProvider(
             return { contents }
         }
 
-        const local = sourceFile.getGrammarDefinition(word)
-        if (local[0]) {
-            return { contents: { kind: MarkupKind.PlainText, language: 'grammarkdown', value: local[0][0].summary } }
+        {
+            const local = sourceFile.localDefinedGrammars.filter((define) => define.name === word)
+            if (local[0]) {
+                return { contents: { kind: MarkupKind.PlainText, language: 'grammarkdown', value: local[0].summary } }
+            }
+        }
+        {
+            const local = sourceFile.localDefinedAbstractOperations.filter((define) => define.name === word)
+            if (local[0]) {
+                return { contents: { kind: MarkupKind.PlainText, language: 'ecmarkup', value: local[0].summary } }
+            }
         }
         return undefined
-    })
-    return {}
+    }
+
+    handler(documents: TextDocuments<TextDocument>, program: Program) {
+        return (
+            params: HoverParams,
+            _token?: CancellationToken,
+            _workDoneProgress?: WorkDoneProgressReporter,
+        ): HandlerResult<Hover | null | undefined, void> => {
+            const document = documents.get(params.textDocument.uri)
+            if (!document) return null
+            return this.hover(document, program, params, _token, _workDoneProgress)
+        }
+    }
 }
