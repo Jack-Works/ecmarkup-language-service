@@ -1,4 +1,3 @@
-// @ts-check
 /// <reference path="../../language-server/src/biblio.d.ts" />
 import biblio from '@tc39/ecma262-biblio' with { type: 'json' }
 // op, term, table, clause, production, step, figure, note
@@ -17,8 +16,8 @@ const term =
     '\\b(' +
     biblio.entries
         .map((x) => x.type === 'term' && x.term)
-        .filter(Boolean)
-        .filter((x) => !x.match(/%.+%/) && !x.startsWith('@@'))
+        .filter((x): x is string => !!x)
+        .filter((x) => !x.match(/%.+%/))
         .map((x) => ` ${x} `)
         .join('|') +
     ')\\b'
@@ -33,12 +32,7 @@ await transform(
     new URL('../syntaxes/grammarkdown.tmLanguage.json', import.meta.url),
 )
 
-/**
- * @param {URL} input
- * @param {URL} output
- * @param {(x: string) => string} [transformer]
- */
-async function transform(input, output, transformer = (x) => x) {
+async function transform(input: URL, output: URL, transformer = (x: string) => x) {
     const file = await readFile(input, 'utf8')
     await writeFile(output, generateJSON(transformer(file)))
 }
@@ -46,10 +40,10 @@ async function transform(input, output, transformer = (x) => x) {
 /**
  * Copied from https://www.jsdelivr.com/package/npm/com.matheusds365.vscode.yamlsyntax2json
  */
-function generateJSON(file) {
+function generateJSON(file: string): string {
     const variables = new Map()
-    const parsedInput = YAML.load(file)
-    const output = {}
+    const parsedInput: any = YAML.load(file)
+    const output: any = {}
     parseVariables()
     output['$schema'] = parsedInput['$schema']
     output['name'] = parsedInput['name']
@@ -64,7 +58,7 @@ function generateJSON(file) {
     output['patterns'] = Array.isArray(origRules) ? origRules.map((p) => parseRule(p)) : null
     const origRepository = parsedInput['repository']
     output['repository'] = typeof origRepository === 'object' ? parseRepository(origRepository) : {}
-    return JSON.stringify(output, null, 4)
+    return JSON.stringify(output, null, 4) + '\n'
 
     function parseVariables() {
         const vars = parsedInput.variables
@@ -73,8 +67,8 @@ function generateJSON(file) {
         }
     }
 
-    function parseRepository(orig) {
-        const r = {}
+    function parseRepository(orig: any) {
+        const r: any = {}
         for (const k in orig) {
             const origR = orig[k]
             if (typeof origR !== 'object') {
@@ -85,8 +79,8 @@ function generateJSON(file) {
         return r
     }
 
-    function parseRule(orig) {
-        const r = {
+    function parseRule(orig: any) {
+        const r: any = {
             ['name']: orig.name,
         }
         if (typeof orig['match'] === 'string') r['match'] = applyRegExpVariables(orig['match'])
@@ -101,7 +95,7 @@ function generateJSON(file) {
         return r
     }
 
-    function applyRegExpVariables(r) {
+    function applyRegExpVariables(r: string) {
         return r.replace(/\{\{([a-zA-Z0-9_\-\$]+)\}\}/g, (_, s) => {
             let replacement = variables.get(s)
             if (replacement === undefined) {

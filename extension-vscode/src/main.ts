@@ -1,7 +1,8 @@
 import type { ExtensionContext } from 'vscode'
+import { commands, extensions, workspace } from 'vscode'
 import type { LanguageClient as WebClient, LanguageClientOptions as WebOptions } from 'vscode-languageclient/browser.js'
 import type { LanguageClient as NodeClient, LanguageClientOptions as NodeOptions } from 'vscode-languageclient/node.js'
-import { commands, extensions, workspace } from './vscode.js'
+import { io } from './io/general.js'
 
 let client: NodeClient | WebClient
 export async function onActivate(
@@ -22,6 +23,10 @@ export async function onActivate(
     }
     client = createClient(clientOptions)
     client.start()
+
+    Object.entries(io).forEach(([key, f]) => {
+        context.subscriptions.push(client!.onRequest(`io/${key}`, (params) => f(...params)))
+    })
 
     context.subscriptions.push(
         commands.registerCommand('ecmarkup.restart', async () => {

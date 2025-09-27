@@ -3,7 +3,7 @@
 name: ecmarkdown
 scopeName: text.html.markdown.ecmarkdown
 
-# Run node ../scripts/generate-tmLanguage.mjs to update it from @tc39/ecma262-biblio
+# Run node ../scripts/generate-tmLanguage.ts to update it from @tc39/ecma262-biblio
 variables:
   aoid: generated
   term: generated

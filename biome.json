@@ -1,5 +1,8 @@
 {
-    "$schema": "https://biomejs.dev/schemas/1.7.1/schema.json",
+    "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
+    "files": {
+        "includes": ["**/src/**/*.ts", "**/tests/**/*.ts"]
+    },
     "formatter": {
         "enabled": true,
         "formatWithErrors": false,
@@ -9,20 +12,20 @@
         "lineWidth": 120,
         "attributePosition": "auto"
     },
-    "organizeImports": { "enabled": true },
+    "assist": { "actions": { "source": { "organizeImports": "on" } } },
     "linter": {
         "enabled": true,
         "rules": {
             "recommended": true,
             "style": { "useTemplate": "off", "noUselessElse": "off", "noNonNullAssertion": "off" },
-            "complexity": { "noMultipleSpacesInRegularExpressionLiterals": "off", "useLiteralKeys": "off" },
+            "complexity": { "useLiteralKeys": "off", "noAdjacentSpacesInRegex": "off" },
             "correctness": { "noUnusedImports": "error" }
         }
     },
     "javascript": {
         "formatter": {
             "quoteProperties": "asNeeded",
-            "trailingComma": "all",
+            "trailingCommas": "all",
             "semicolons": "asNeeded",
             "arrowParentheses": "always",
             "bracketSpacing": true,
@@ -33,7 +36,7 @@
     },
     "overrides": [
         {
-            "include": ["ecmarkup.language-configuration.json"],
+            "includes": ["**/ecmarkup.language-configuration.json"],
             "json": { "parser": { "allowComments": true, "allowTrailingCommas": true } }
         }
     ]

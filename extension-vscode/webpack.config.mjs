@@ -6,12 +6,15 @@ const config = {
     devtool: 'source-map',
     entry: {
         node: './src/node.ts',
-        ['language-server-node']: './node_modules/ecmarkup-language-server/src/server-node.ts',
+        'language-server-node': './node_modules/ecmarkup-language-server/src/server-node.ts',
     },
     output: {
         path: fileURLToPath(new URL('./lib', import.meta.url)),
-        library: { type: 'commonjs' },
+        filename: '[name].js',
+        library: { type: 'module' },
+        module: true,
     },
+    experiments: { outputModule: true },
     resolve: {
         extensions: ['.ts', '.tsx', '.js'],
         extensionAlias: {
@@ -20,7 +23,7 @@ const config = {
             '.mjs': ['.mjs', '.mts'],
         },
     },
-    externals: { vscode: 'commonjs vscode' },
+    externals: { vscode: 'module vscode', child_process: 'module child_process' },
     module: {
         rules: [
             { test: /\.([cm]?ts|tsx)$/, loader: 'ts-loader', options: { transpileOnly: true } },
@@ -29,7 +32,14 @@ const config = {
     },
     optimization: {
         minimize: false,
+        moduleIds: 'named',
     },
     target: 'node',
 }
+;['crypto', 'child_process', 'fs', 'net', 'os', 'path', 'util', 'fs/promises', 'perf_hooks', 'url'].forEach((mod) => {
+    // @ts-ignore
+    config.externals[mod] = `module node:${mod}`
+    // @ts-ignore
+    config.externals[`node:${mod}`] = `module node:${mod}`
+})
 export default config

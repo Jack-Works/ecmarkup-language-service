@@ -51,17 +51,17 @@ function formatSpecValue(value: SpecValue.SpecDataType, identLevel: number): str
 function Cap(x: string): string {
     return x[0]!.toUpperCase() + x.slice(1)
 }
-export function formatDocument(entry: MaybeLocalEntry<BiblioEntry>): MarkupContent | undefined {
+export function formatDocument(entry: BiblioEntry): MarkupContent | undefined {
     const url = getURL(entry)
     if (entry.type === 'clause') {
         return { kind: MarkupKind.Markdown, value: `${entry.title}\n\n[${url}](${url})` }
     } else if (entry.type === 'production') {
-        if ('local' in entry) return { kind: MarkupKind.PlainText, value: entry.name }
+        if (entry.local) return { kind: MarkupKind.PlainText, value: entry.name }
         return { kind: MarkupKind.Markdown, value: `[${url}](${url})` }
     } else if (entry.type === 'op') {
         let document = ''
         if (url) document += `[${url}](${url})`
-        if (entry.effects)
+        if (entry.effects.includes('user-code'))
             document += (document.length ? '\n\n' : '') + 'This abstract operation may triggers user code.'
         const signature = formatSignature(entry)
         return {
@@ -73,4 +73,3 @@ export function formatDocument(entry: MaybeLocalEntry<BiblioEntry>): MarkupConte
     }
     return undefined
 }
-export type MaybeLocalEntry<T extends BiblioEntry> = T | (T & { local: true })

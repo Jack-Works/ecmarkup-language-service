@@ -1,0 +1,1406 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`complete AOs in emu-alg > ! with no space 1`] = `
+{
+  "around": "1. Set _other_ to !🔽",
+  "examples": [
+    {
+      "commitCharacters": [
+        "(",
+      ],
+      "detail": "(method) Completion",
+      "documentation": {
+        "kind": "markdown",
+        "value": "\`\`\`ts
+Completion(
+  completionRecord: MixedCompletion
+): MixedCompletion
+\`\`\`
+
+[https://tc39.es/ecma262/#sec-completion-ao](https://tc39.es/ecma262/#sec-completion-ao)",
+      },
+      "filterText": "!Completion",
+      "insertText": undefined,
+      "insertTextFormat": 2,
+      "kind": 3,
+      "label": "Completion",
+      "sortText": "0",
+      "textEdit": {
+        "newText": "! Completion( $1 )",
+        "range": {
+          "end": {
+            "character": 35,
+            "line": 14,
+          },
+          "start": {
+            "character": 34,
+            "line": 14,
+          },
+        },
+      },
+    },
+  ],
+  "high5": [
+    "Completion",
+    "ReturnIfAbrupt",
+    "𝔽",
+    "ℤ",
+    "ℝ",
+  ],
+  "kinds": {
+    "(method)": 687,
+  },
+}
+`;
+
+exports[`complete AOs in emu-alg > ! with space 1`] = `
+{
+  "around": "1. Set _other_ to ! 🔽",
+  "examples": [
+    {
+      "commitCharacters": [
+        "(",
+      ],
+      "detail": "(method) Completion",
+      "documentation": {
+        "kind": "markdown",
+        "value": "\`\`\`ts
+Completion(
+  completionRecord: MixedCompletion
+): MixedCompletion
+\`\`\`
+
+[https://tc39.es/ecma262/#sec-completion-ao](https://tc39.es/ecma262/#sec-completion-ao)",
+      },
+      "filterText": undefined,
+      "insertText": "Completion( $1 )",
+      "insertTextFormat": 2,
+      "kind": 3,
+      "label": "Completion",
+      "sortText": "0",
+      "textEdit": undefined,
+    },
+  ],
+  "high5": [
+    "Completion",
+    "ReturnIfAbrupt",
+    "𝔽",
+    "ℤ",
+    "ℝ",
+  ],
+  "kinds": {
+    "(method)": 687,
+  },
+}
+`;
+
+exports[`complete AOs in emu-alg > ? with no space 1`] = `
+{
+  "around": "1. Set _other_ to ?🔽",
+  "examples": [
+    {
+      "commitCharacters": [
+        "(",
+      ],
+      "detail": "(method) Completion",
+      "documentation": {
+        "kind": "markdown",
+        "value": "\`\`\`ts
+Completion(
+  completionRecord: MixedCompletion
+): MixedCompletion
+\`\`\`
+
+[https://tc39.es/ecma262/#sec-completion-ao](https://tc39.es/ecma262/#sec-completion-ao)",
+      },
+      "filterText": "?Completion",
+      "insertText": undefined,
+      "insertTextFormat": 2,
+      "kind": 3,
+      "label": "Completion",
+      "sortText": "0",
+      "textEdit": {
+        "newText": "? Completion( $1 )",
+        "range": {
+          "end": {
+            "character": 35,
+            "line": 12,
+          },
+          "start": {
+            "character": 34,
+            "line": 12,
+          },
+        },
+      },
+    },
+  ],
+  "high5": [
+    "Completion",
+    "ReturnIfAbrupt",
+    "𝔽",
+    "ℤ",
+    "ℝ",
+  ],
+  "kinds": {
+    "(method)": 687,
+  },
+}
+`;
+
+exports[`complete AOs in emu-alg > ? with space 1`] = `
+{
+  "around": "1. Let _other_ be ? 🔽",
+  "examples": [
+    {
+      "commitCharacters": [
+        "(",
+      ],
+      "detail": "(method) Completion",
+      "documentation": {
+        "kind": "markdown",
+        "value": "\`\`\`ts
+Completion(
+  completionRecord: MixedCompletion
+): MixedCompletion
+\`\`\`
+
+[https://tc39.es/ecma262/#sec-completion-ao](https://tc39.es/ecma262/#sec-completion-ao)",
+      },
+      "filterText": undefined,
+      "insertText": "Completion( $1 )",
+      "insertTextFormat": 2,
+      "kind": 3,
+      "label": "Completion",
+      "sortText": "0",
+      "textEdit": undefined,
+    },
+  ],
+  "high5": [
+    "Completion",
+    "ReturnIfAbrupt",
+    "𝔽",
+    "ℤ",
+    "ℝ",
+  ],
+  "kinds": {
+    "(method)": 687,
+  },
+}
+`;
+
+exports[`complete AOs in emu-alg > local defined AO 1`] = `
+{
+  "around": "1. Perform ? StartGen🔽",
+  "examples": [
+    {
+      "commitCharacters": [
+        "(",
+      ],
+      "detail": "(method) StartGenshin",
+      "documentation": {
+        "kind": "markdown",
+        "value": "\`\`\`ts
+StartGenshin
+\`\`\`
+
+",
+      },
+      "filterText": undefined,
+      "insertText": "StartGenshin( $1 )",
+      "insertTextFormat": 2,
+      "kind": 3,
+      "label": "StartGenshin",
+      "sortText": "0.001",
+      "textEdit": undefined,
+    },
+  ],
+  "high5": [
+    "StartGenshin",
+    "IsConstantDeclaration",
+    "GetNewTarget",
+    "AssignmentTargetType",
+    "GeneratorStart",
+  ],
+  "kinds": {
+    "(method)": 108,
+  },
+}
+`;
+
+exports[`complete AOs in emu-alg > perform 1`] = `
+{
+  "around": "1. Perform 🔽",
+  "examples": [
+    {
+      "commitCharacters": [
+        "(",
+      ],
+      "detail": "(method) Completion",
+      "documentation": {
+        "kind": "markdown",
+        "value": "\`\`\`ts
+Completion(
+  completionRecord: MixedCompletion
+): MixedCompletion
+\`\`\`
+
+[https://tc39.es/ecma262/#sec-completion-ao](https://tc39.es/ecma262/#sec-completion-ao)",
+      },
+      "filterText": undefined,
+      "insertText": "Completion( $1 )",
+      "insertTextFormat": 2,
+      "kind": 3,
+      "label": "Completion",
+      "sortText": "0",
+      "textEdit": undefined,
+    },
+  ],
+  "high5": [
+    "Completion",
+    "ReturnIfAbrupt",
+    "𝔽",
+    "ℤ",
+    "ℝ",
+  ],
+  "kinds": {
+    "(method)": 687,
+  },
+}
+`;
+
+exports[`complete clauses (#sec-...) > suggest 1`] = `
+{
+  "around": "<a href="🔽"></a>",
+  "examples": [
+    {
+      "additionalTextEdits": [
+        {
+          "newText": "Introduction",
+          "range": {
+            "end": {
+              "character": 19,
+              "line": 1,
+            },
+            "start": {
+              "character": 19,
+              "line": 1,
+            },
+          },
+        },
+      ],
+      "detail": "(clause) Introduction",
+      "documentation": {
+        "kind": "markdown",
+        "value": "Introduction
+
+[https://tc39.es/ecma262/#sec-intro](https://tc39.es/ecma262/#sec-intro)",
+      },
+      "insertText": "https://tc39.es/ecma262/#sec-intro",
+      "kind": 18,
+      "label": "#sec-intro",
+      "sortText": "0",
+    },
+  ],
+  "high5": [
+    "#sec-intro",
+    "#sec-scope",
+    "#sec-conformance-normative-optional",
+    "#sec-conformance-legacy",
+    "#sec-conformance-legacy-normative-optional",
+  ],
+  "kinds": {
+    "(clause)": 2234,
+  },
+}
+`;
+
+exports[`complete clauses (#sec-...) > suggest but not replacing children 1`] = `
+{
+  "around": "<a href="#🔽">Text</a>",
+  "examples": [
+    {
+      "additionalTextEdits": [],
+      "detail": "(clause) Introduction",
+      "documentation": {
+        "kind": "markdown",
+        "value": "Introduction
+
+[https://tc39.es/ecma262/#sec-intro](https://tc39.es/ecma262/#sec-intro)",
+      },
+      "insertText": "https://tc39.es/ecma262/#sec-intro",
+      "kind": 18,
+      "label": "#sec-intro",
+      "sortText": "0",
+    },
+  ],
+  "high5": [
+    "#sec-intro",
+    "#sec-scope",
+    "#sec-conformance-normative-optional",
+    "#sec-conformance-legacy",
+    "#sec-conformance-legacy-normative-optional",
+  ],
+  "kinds": {
+    "(clause)": 2234,
+  },
+}
+`;
+
+exports[`complete clauses (#sec-...) > suggest with host 1`] = `
+{
+  "around": "<a href="https://tc39.es/ecma262/#🔽">Text</a>",
+  "examples": [
+    {
+      "additionalTextEdits": [],
+      "detail": "(clause) Introduction",
+      "documentation": {
+        "kind": "markdown",
+        "value": "Introduction
+
+[https://tc39.es/ecma262/#sec-intro](https://tc39.es/ecma262/#sec-intro)",
+      },
+      "insertText": "#sec-intro",
+      "kind": 18,
+      "label": "#sec-intro",
+      "sortText": "0",
+    },
+  ],
+  "high5": [
+    "#sec-intro",
+    "#sec-scope",
+    "#sec-conformance-normative-optional",
+    "#sec-conformance-legacy",
+    "#sec-conformance-legacy-normative-optional",
+  ],
+  "kinds": {
+    "(clause)": 2234,
+  },
+}
+`;
+
+exports[`complete clauses (#sec-...) > suggest with no end tag 1`] = `
+{
+  "around": "<a href="#🔽">",
+  "examples": [
+    {
+      "additionalTextEdits": [
+        {
+          "newText": "Introduction",
+          "range": {
+            "end": {
+              "character": 20,
+              "line": 4,
+            },
+            "start": {
+              "character": 20,
+              "line": 4,
+            },
+          },
+        },
+      ],
+      "detail": "(clause) Introduction",
+      "documentation": {
+        "kind": "markdown",
+        "value": "Introduction
+
+[https://tc39.es/ecma262/#sec-intro](https://tc39.es/ecma262/#sec-intro)",
+      },
+      "insertText": "https://tc39.es/ecma262/#sec-intro",
+      "kind": 18,
+      "label": "#sec-intro",
+      "sortText": "0",
+    },
+  ],
+  "high5": [
+    "#sec-intro",
+    "#sec-scope",
+    "#sec-conformance-normative-optional",
+    "#sec-conformance-legacy",
+    "#sec-conformance-legacy-normative-optional",
+  ],
+  "kinds": {
+    "(clause)": 2234,
+  },
+}
+`;
+
+exports[`complete grammars > full syntax 1`] = `
+{
+  "around": "<p>|🔽|</p>",
+  "examples": [
+    {
+      "detail": "(grammar) StringNumericLiteral",
+      "documentation": {
+        "kind": "markdown",
+        "value": "[https://tc39.es/ecma262/#prod-StringNumericLiteral](https://tc39.es/ecma262/#prod-StringNumericLiteral)",
+      },
+      "filterText": "|StringNumericLiteral|",
+      "insertText": undefined,
+      "kind": 8,
+      "label": "StringNumericLiteral",
+      "sortText": "0.2",
+      "textEdit": {
+        "newText": "|StringNumericLiteral| ",
+        "range": {
+          "end": {
+            "character": 13,
+            "line": 9,
+          },
+          "start": {
+            "character": 11,
+            "line": 9,
+          },
+        },
+      },
+    },
+  ],
+  "high5": [
+    "MoreOneNight",
+    "StringNumericLiteral",
+    "StrWhiteSpace",
+    "StrWhiteSpaceChar",
+    "StrNumericLiteral",
+  ],
+  "kinds": {
+    "(grammar)": 379,
+  },
+}
+`;
+
+exports[`complete grammars > grammar 1`] = `
+{
+  "around": "More🔽",
+  "examples": [
+    {
+      "detail": "(grammar) MoreOneNight",
+      "documentation": {
+        "kind": "plaintext",
+        "value": "MoreOneNight",
+      },
+      "filterText": "MoreOneNight",
+      "insertText": "MoreOneNight ",
+      "kind": 8,
+      "label": "MoreOneNight",
+      "sortText": "0.31622776601683794",
+      "textEdit": undefined,
+    },
+  ],
+  "high5": [
+    "MoreOneNight",
+    "BitwiseORExpression",
+    "LogicalORExpression",
+    "GeneratorExpression",
+    "BitwiseXORExpression",
+  ],
+  "kinds": {
+    "(grammar)": 191,
+  },
+}
+`;
+
+exports[`complete grammars > grammar no filter 1`] = `
+{
+  "around": "🔽",
+  "examples": [
+    {
+      "detail": "(grammar) StringNumericLiteral",
+      "documentation": {
+        "kind": "markdown",
+        "value": "[https://tc39.es/ecma262/#prod-StringNumericLiteral](https://tc39.es/ecma262/#prod-StringNumericLiteral)",
+      },
+      "filterText": "StringNumericLiteral",
+      "insertText": "StringNumericLiteral ",
+      "kind": 8,
+      "label": "StringNumericLiteral",
+      "sortText": "0.2",
+      "textEdit": undefined,
+    },
+  ],
+  "high5": [
+    "MoreOneNight",
+    "StringNumericLiteral",
+    "StrWhiteSpace",
+    "StrWhiteSpaceChar",
+    "StrNumericLiteral",
+  ],
+  "kinds": {
+    "(grammar)": 379,
+  },
+}
+`;
+
+exports[`complete grammars > should suggest MoreOneNight (full syntax) 1`] = `
+{
+  "detail": "(grammar) MoreOneNight",
+  "documentation": {
+    "kind": "plaintext",
+    "value": "MoreOneNight",
+  },
+  "filterText": "|MoreOneNight|",
+  "insertText": undefined,
+  "kind": 8,
+  "label": "MoreOneNight",
+  "sortText": "0.1",
+  "textEdit": {
+    "newText": "|MoreOneNight| ",
+    "range": {
+      "end": {
+        "character": 13,
+        "line": 9,
+      },
+      "start": {
+        "character": 11,
+        "line": 9,
+      },
+    },
+  },
+}
+`;
+
+exports[`complete grammars > should suggest MoreOneNight (grammar no filter) 1`] = `
+{
+  "detail": "(grammar) MoreOneNight",
+  "documentation": {
+    "kind": "plaintext",
+    "value": "MoreOneNight",
+  },
+  "filterText": "MoreOneNight",
+  "insertText": "MoreOneNight ",
+  "kind": 8,
+  "label": "MoreOneNight",
+  "sortText": "0.1",
+  "textEdit": undefined,
+}
+`;
+
+exports[`complete grammars > should suggest MoreOneNight (grammar) 1`] = `
+{
+  "detail": "(grammar) MoreOneNight",
+  "documentation": {
+    "kind": "plaintext",
+    "value": "MoreOneNight",
+  },
+  "filterText": "MoreOneNight",
+  "insertText": "MoreOneNight ",
+  "kind": 8,
+  "label": "MoreOneNight",
+  "sortText": "0.31622776601683794",
+  "textEdit": undefined,
+}
+`;
+
+exports[`complete grammars > should suggest MoreOneNight (starting trigger char only) 1`] = `
+{
+  "detail": "(grammar) MoreOneNight",
+  "documentation": {
+    "kind": "plaintext",
+    "value": "MoreOneNight",
+  },
+  "filterText": "|MoreOneNight|",
+  "insertText": undefined,
+  "kind": 8,
+  "label": "MoreOneNight",
+  "sortText": "0.1",
+  "textEdit": {
+    "newText": "|MoreOneNight| ",
+    "range": {
+      "end": {
+        "character": 12,
+        "line": 8,
+      },
+      "start": {
+        "character": 11,
+        "line": 8,
+      },
+    },
+  },
+}
+`;
+
+exports[`complete grammars > starting trigger char only 1`] = `
+{
+  "around": "<p>|🔽</p>",
+  "examples": [
+    {
+      "detail": "(grammar) StringNumericLiteral",
+      "documentation": {
+        "kind": "markdown",
+        "value": "[https://tc39.es/ecma262/#prod-StringNumericLiteral](https://tc39.es/ecma262/#prod-StringNumericLiteral)",
+      },
+      "filterText": "|StringNumericLiteral|",
+      "insertText": undefined,
+      "kind": 8,
+      "label": "StringNumericLiteral",
+      "sortText": "0.2",
+      "textEdit": {
+        "newText": "|StringNumericLiteral| ",
+        "range": {
+          "end": {
+            "character": 12,
+            "line": 8,
+          },
+          "start": {
+            "character": 11,
+            "line": 8,
+          },
+        },
+      },
+    },
+  ],
+  "high5": [
+    "MoreOneNight",
+    "StringNumericLiteral",
+    "StrWhiteSpace",
+    "StrWhiteSpaceChar",
+    "StrNumericLiteral",
+  ],
+  "kinds": {
+    "(grammar)": 379,
+  },
+}
+`;
+
+exports[`complete intrinsics > intrinsic 1`] = `
+{
+  "around": "<p>%Array.proto🔽%</p>",
+  "examples": [
+    {
+      "detail": "(term) %Array.prototype%",
+      "documentation": {
+        "kind": "markdown",
+        "value": "[https://tc39.es/ecma262/#sec-properties-of-the-array-prototype-object](https://tc39.es/ecma262/#sec-properties-of-the-array-prototype-object)",
+      },
+      "filterText": undefined,
+      "insertText": undefined,
+      "kind": 12,
+      "label": "%Array.prototype%",
+      "sortText": "0.01",
+      "textEdit": {
+        "newText": "%Array.prototype% ",
+        "range": {
+          "end": {
+            "character": 24,
+            "line": 4,
+          },
+          "start": {
+            "character": 11,
+            "line": 4,
+          },
+        },
+      },
+    },
+  ],
+  "high5": [
+    "%Array.prototype%",
+    "%TypedArray.prototype%",
+    "%Error.prototype%",
+    "%WeakMap.prototype%",
+    "%WeakRef.prototype%",
+  ],
+  "kinds": {
+    "(term)": 42,
+  },
+}
+`;
+
+exports[`complete intrinsics > intrinsic no filter 1`] = `
+{
+  "around": "<p>%🔽%</p>",
+  "examples": [
+    {
+      "detail": "(term) %Symbol.asyncIterator%",
+      "documentation": {
+        "kind": "markdown",
+        "value": "[https://tc39.es/ecma262/#sec-well-known-symbols](https://tc39.es/ecma262/#sec-well-known-symbols)",
+      },
+      "filterText": undefined,
+      "insertText": undefined,
+      "kind": 12,
+      "label": "%Symbol.asyncIterator%",
+      "sortText": "0",
+      "textEdit": {
+        "newText": "%Symbol.asyncIterator% ",
+        "range": {
+          "end": {
+            "character": 13,
+            "line": 1,
+          },
+          "start": {
+            "character": 11,
+            "line": 1,
+          },
+        },
+      },
+    },
+  ],
+  "high5": [
+    "%Symbol.asyncIterator%",
+    "%Symbol.hasInstance%",
+    "%Symbol.isConcatSpreadable%",
+    "%Symbol.iterator%",
+    "%Symbol.match%",
+  ],
+  "kinds": {
+    "(term)": 115,
+  },
+}
+`;
+
+exports[`complete intrinsics > intrinsic no filter no closing 1`] = `
+{
+  "around": "<p>%🔽</p>",
+  "examples": [
+    {
+      "detail": "(term) %Symbol.asyncIterator%",
+      "documentation": {
+        "kind": "markdown",
+        "value": "[https://tc39.es/ecma262/#sec-well-known-symbols](https://tc39.es/ecma262/#sec-well-known-symbols)",
+      },
+      "filterText": undefined,
+      "insertText": undefined,
+      "kind": 12,
+      "label": "%Symbol.asyncIterator%",
+      "sortText": "0",
+      "textEdit": {
+        "newText": "%Symbol.asyncIterator% ",
+        "range": {
+          "end": {
+            "character": 12,
+            "line": 2,
+          },
+          "start": {
+            "character": 11,
+            "line": 2,
+          },
+        },
+      },
+    },
+  ],
+  "high5": [
+    "%Symbol.asyncIterator%",
+    "%Symbol.hasInstance%",
+    "%Symbol.isConcatSpreadable%",
+    "%Symbol.iterator%",
+    "%Symbol.match%",
+  ],
+  "kinds": {
+    "(term)": 115,
+  },
+}
+`;
+
+exports[`complete intrinsics > should suggest intrinsics (intrinsic no filter no closing) 1`] = `
+{
+  "detail": "(term) %Array.prototype%",
+  "documentation": {
+    "kind": "markdown",
+    "value": "[https://tc39.es/ecma262/#sec-properties-of-the-array-prototype-object](https://tc39.es/ecma262/#sec-properties-of-the-array-prototype-object)",
+  },
+  "filterText": undefined,
+  "insertText": undefined,
+  "kind": 12,
+  "label": "%Array.prototype%",
+  "sortText": "0",
+  "textEdit": {
+    "newText": "%Array.prototype% ",
+    "range": {
+      "end": {
+        "character": 12,
+        "line": 2,
+      },
+      "start": {
+        "character": 11,
+        "line": 2,
+      },
+    },
+  },
+}
+`;
+
+exports[`complete intrinsics > should suggest intrinsics (intrinsic no filter) 1`] = `
+{
+  "detail": "(term) %Array.prototype%",
+  "documentation": {
+    "kind": "markdown",
+    "value": "[https://tc39.es/ecma262/#sec-properties-of-the-array-prototype-object](https://tc39.es/ecma262/#sec-properties-of-the-array-prototype-object)",
+  },
+  "filterText": undefined,
+  "insertText": undefined,
+  "kind": 12,
+  "label": "%Array.prototype%",
+  "sortText": "0",
+  "textEdit": {
+    "newText": "%Array.prototype% ",
+    "range": {
+      "end": {
+        "character": 13,
+        "line": 1,
+      },
+      "start": {
+        "character": 11,
+        "line": 1,
+      },
+    },
+  },
+}
+`;
+
+exports[`complete intrinsics > should suggest intrinsics (intrinsic) 1`] = `
+{
+  "detail": "(term) %Array.prototype%",
+  "documentation": {
+    "kind": "markdown",
+    "value": "[https://tc39.es/ecma262/#sec-properties-of-the-array-prototype-object](https://tc39.es/ecma262/#sec-properties-of-the-array-prototype-object)",
+  },
+  "filterText": undefined,
+  "insertText": undefined,
+  "kind": 12,
+  "label": "%Array.prototype%",
+  "sortText": "0.01",
+  "textEdit": {
+    "newText": "%Array.prototype% ",
+    "range": {
+      "end": {
+        "character": 24,
+        "line": 4,
+      },
+      "start": {
+        "character": 11,
+        "line": 4,
+      },
+    },
+  },
+}
+`;
+
+exports[`complete variables in emu-alg > variable only (Let) 1`] = `
+[
+  {
+    "detail": "(variable) input",
+    "filterText": "input",
+    "insertText": "_input_ ",
+    "kind": 6,
+    "label": "input",
+    "sortText": "0",
+    "textEdit": undefined,
+  },
+  {
+    "detail": "(variable) result",
+    "filterText": "result",
+    "insertText": "_result_ ",
+    "kind": 6,
+    "label": "result",
+    "sortText": "0",
+    "textEdit": undefined,
+  },
+  {
+    "detail": "(variable) other",
+    "filterText": "other",
+    "insertText": "_other_ ",
+    "kind": 6,
+    "label": "other",
+    "sortText": "0",
+    "textEdit": undefined,
+  },
+]
+`;
+
+exports[`complete variables in emu-alg > variable only (Let) sample 1`] = `
+{
+  "around": "1. Let 🔽be ...",
+  "examples": [
+    {
+      "detail": "(variable) input",
+      "filterText": "input",
+      "insertText": "_input_ ",
+      "kind": 6,
+      "label": "input",
+      "sortText": "0",
+      "textEdit": undefined,
+    },
+  ],
+  "high5": [
+    "input",
+    "result",
+    "other",
+  ],
+  "kinds": {
+    "(variable)": 3,
+  },
+}
+`;
+
+exports[`complete variables in emu-alg > variable only (Set) 1`] = `
+[
+  {
+    "detail": "(variable) input",
+    "filterText": "input",
+    "insertText": "_input_ ",
+    "kind": 6,
+    "label": "input",
+    "sortText": "0",
+    "textEdit": undefined,
+  },
+  {
+    "detail": "(variable) result",
+    "filterText": "result",
+    "insertText": "_result_ ",
+    "kind": 6,
+    "label": "result",
+    "sortText": "0",
+    "textEdit": undefined,
+  },
+  {
+    "detail": "(variable) other",
+    "filterText": "other",
+    "insertText": "_other_ ",
+    "kind": 6,
+    "label": "other",
+    "sortText": "0",
+    "textEdit": undefined,
+  },
+]
+`;
+
+exports[`complete variables in emu-alg > variable only (Set) sample 1`] = `
+{
+  "around": "1. Set 🔽to ...",
+  "examples": [
+    {
+      "detail": "(variable) input",
+      "filterText": "input",
+      "insertText": "_input_ ",
+      "kind": 6,
+      "label": "input",
+      "sortText": "0",
+      "textEdit": undefined,
+    },
+  ],
+  "high5": [
+    "input",
+    "result",
+    "other",
+  ],
+  "kinds": {
+    "(variable)": 3,
+  },
+}
+`;
+
+exports[`complete variables in emu-alg > variable only 1`] = `
+[
+  {
+    "detail": "(variable) input",
+    "filterText": "_input",
+    "insertText": undefined,
+    "kind": 6,
+    "label": "input",
+    "sortText": "0",
+    "textEdit": {
+      "newText": "_input_ ",
+      "range": {
+        "end": {
+          "character": 21,
+          "line": 12,
+        },
+        "start": {
+          "character": 19,
+          "line": 12,
+        },
+      },
+    },
+  },
+  {
+    "detail": "(variable) result",
+    "filterText": "_result",
+    "insertText": undefined,
+    "kind": 6,
+    "label": "result",
+    "sortText": "0",
+    "textEdit": {
+      "newText": "_result_ ",
+      "range": {
+        "end": {
+          "character": 21,
+          "line": 12,
+        },
+        "start": {
+          "character": 19,
+          "line": 12,
+        },
+      },
+    },
+  },
+  {
+    "detail": "(variable) other",
+    "filterText": "_other",
+    "insertText": undefined,
+    "kind": 6,
+    "label": "other",
+    "sortText": "0",
+    "textEdit": {
+      "newText": "_other_ ",
+      "range": {
+        "end": {
+          "character": 21,
+          "line": 12,
+        },
+        "start": {
+          "character": 19,
+          "line": 12,
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`complete variables in emu-alg > variable only 2 1`] = `
+[
+  {
+    "detail": "(variable) input",
+    "filterText": "_input",
+    "insertText": undefined,
+    "kind": 6,
+    "label": "input",
+    "sortText": "0",
+    "textEdit": {
+      "newText": "_input_ ",
+      "range": {
+        "end": {
+          "character": 20,
+          "line": 13,
+        },
+        "start": {
+          "character": 19,
+          "line": 13,
+        },
+      },
+    },
+  },
+  {
+    "detail": "(variable) result",
+    "filterText": "_result",
+    "insertText": undefined,
+    "kind": 6,
+    "label": "result",
+    "sortText": "0",
+    "textEdit": {
+      "newText": "_result_ ",
+      "range": {
+        "end": {
+          "character": 20,
+          "line": 13,
+        },
+        "start": {
+          "character": 19,
+          "line": 13,
+        },
+      },
+    },
+  },
+  {
+    "detail": "(variable) other",
+    "filterText": "_other",
+    "insertText": undefined,
+    "kind": 6,
+    "label": "other",
+    "sortText": "0",
+    "textEdit": {
+      "newText": "_other_ ",
+      "range": {
+        "end": {
+          "character": 20,
+          "line": 13,
+        },
+        "start": {
+          "character": 19,
+          "line": 13,
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`complete variables in emu-alg > variable only 2 sample 1`] = `
+{
+  "around": "1. _🔽",
+  "examples": [
+    {
+      "detail": "(variable) input",
+      "filterText": "_input",
+      "insertText": undefined,
+      "kind": 6,
+      "label": "input",
+      "sortText": "0",
+      "textEdit": {
+        "newText": "_input_ ",
+        "range": {
+          "end": {
+            "character": 20,
+            "line": 13,
+          },
+          "start": {
+            "character": 19,
+            "line": 13,
+          },
+        },
+      },
+    },
+  ],
+  "high5": [
+    "input",
+    "result",
+    "other",
+  ],
+  "kinds": {
+    "(variable)": 3,
+  },
+}
+`;
+
+exports[`complete variables in emu-alg > variable only sample 1`] = `
+{
+  "around": "1. _🔽_",
+  "examples": [
+    {
+      "detail": "(variable) input",
+      "filterText": "_input",
+      "insertText": undefined,
+      "kind": 6,
+      "label": "input",
+      "sortText": "0",
+      "textEdit": {
+        "newText": "_input_ ",
+        "range": {
+          "end": {
+            "character": 21,
+            "line": 12,
+          },
+          "start": {
+            "character": 19,
+            "line": 12,
+          },
+        },
+      },
+    },
+  ],
+  "high5": [
+    "input",
+    "result",
+    "other",
+  ],
+  "kinds": {
+    "(variable)": 3,
+  },
+}
+`;
+
+exports[`complete well-known symbols > intrinsic 1`] = `
+{
+  "around": "<p>@@iter🔽</p>",
+  "examples": [
+    {
+      "detail": "(term) %Symbol.iterator%",
+      "documentation": {
+        "kind": "markdown",
+        "value": "[https://tc39.es/ecma262/#sec-well-known-symbols](https://tc39.es/ecma262/#sec-well-known-symbols)",
+      },
+      "filterText": "@@Symbol.iterator",
+      "insertText": undefined,
+      "kind": 12,
+      "label": "%Symbol.iterator%",
+      "sortText": "0.08",
+      "textEdit": {
+        "newText": "%Symbol.iterator% ",
+        "range": {
+          "end": {
+            "character": 13,
+            "line": 2,
+          },
+          "start": {
+            "character": 11,
+            "line": 2,
+          },
+        },
+      },
+    },
+  ],
+  "high5": [
+    "%Symbol.iterator%",
+    "%Symbol.asyncIterator%",
+    "%Symbol.toStringTag%",
+  ],
+  "kinds": {
+    "(term)": 3,
+  },
+}
+`;
+
+exports[`complete well-known symbols > intrinsic no filter 1`] = `
+{
+  "around": "<p>@@🔽</p>",
+  "examples": [
+    {
+      "detail": "(term) %Symbol.asyncIterator%",
+      "documentation": {
+        "kind": "markdown",
+        "value": "[https://tc39.es/ecma262/#sec-well-known-symbols](https://tc39.es/ecma262/#sec-well-known-symbols)",
+      },
+      "filterText": "@@Symbol.asyncIterator",
+      "insertText": undefined,
+      "kind": 12,
+      "label": "%Symbol.asyncIterator%",
+      "sortText": "0",
+      "textEdit": {
+        "newText": "%Symbol.asyncIterator% ",
+        "range": {
+          "end": {
+            "character": 13,
+            "line": 1,
+          },
+          "start": {
+            "character": 11,
+            "line": 1,
+          },
+        },
+      },
+    },
+  ],
+  "high5": [
+    "%Symbol.asyncIterator%",
+    "%Symbol.hasInstance%",
+    "%Symbol.isConcatSpreadable%",
+    "%Symbol.iterator%",
+    "%Symbol.match%",
+  ],
+  "kinds": {
+    "(term)": 14,
+  },
+}
+`;
+
+exports[`completion should read local installed biblio 1`] = `
+{
+  "around": "1. 🔽",
+  "examples": [
+    {
+      "commitCharacters": [
+        "(",
+      ],
+      "detail": "(method) MyFunction",
+      "documentation": {
+        "kind": "markdown",
+        "value": "\`\`\`ts
+MyFunction
+\`\`\`
+
+[https://tc39.es/proposal-my-function/#my-function](https://tc39.es/proposal-my-function/#my-function)",
+      },
+      "filterText": undefined,
+      "insertText": "MyFunction( $1 )",
+      "insertTextFormat": 2,
+      "kind": 3,
+      "label": "MyFunction",
+      "sortText": "0",
+      "textEdit": undefined,
+    },
+    {
+      "detail": "(term) Normative Optional",
+      "documentation": {
+        "kind": "markdown",
+        "value": "[https://tc39.es/ecma262/#sec-conformance](https://tc39.es/ecma262/#sec-conformance)",
+      },
+      "filterText": undefined,
+      "insertText": "Normative Optional ",
+      "kind": 14,
+      "label": "Normative Optional",
+      "sortText": "0",
+      "textEdit": undefined,
+    },
+    {
+      "detail": "(grammar) StringNumericLiteral",
+      "documentation": {
+        "kind": "markdown",
+        "value": "[https://tc39.es/ecma262/#prod-StringNumericLiteral](https://tc39.es/ecma262/#prod-StringNumericLiteral)",
+      },
+      "filterText": "|StringNumericLiteral|",
+      "insertText": "|StringNumericLiteral| ",
+      "kind": 8,
+      "label": "StringNumericLiteral",
+      "sortText": "0",
+      "textEdit": undefined,
+    },
+  ],
+  "high5": [
+    "MyFunction",
+    "Normative Optional",
+    "Legacy",
+    "implementation-defined",
+    "implementation-approximated",
+  ],
+  "kinds": {
+    "(grammar)": 378,
+    "(method)": 687,
+    "(term)": 413,
+  },
+}
+`;
+
+exports[`completion should take care of the tailing whitespace > a 1`] = `
+{
+  "around": "Call( _🔽 )",
+  "examples": [
+    {
+      "detail": "(variable) a",
+      "filterText": "_a",
+      "insertText": undefined,
+      "kind": 6,
+      "label": "a",
+      "sortText": "0",
+      "textEdit": {
+        "newText": "_a_",
+        "range": {
+          "end": {
+            "character": 19,
+            "line": 3,
+          },
+          "start": {
+            "character": 18,
+            "line": 3,
+          },
+        },
+      },
+    },
+  ],
+  "high5": [
+    "a",
+  ],
+  "kinds": {
+    "(variable)": 1,
+  },
+}
+`;
+
+exports[`suggest clause id (#sec-...) > suggest id: sec-function-properties-of-the-cute-object 1`] = `
+{
+  "around": "<emu-clause id="sec-🔽" type="abstract operation">",
+  "examples": [],
+  "high5": [
+    "sec-function-properties-of-the-cute-object",
+  ],
+  "kinds": {},
+}
+`;
+
+exports[`suggest clause id (#sec-...) > suggest id: sec-myfunction 1`] = `
+{
+  "around": "<emu-clause id="sec-🔽" type="abstract operation">",
+  "examples": [],
+  "high5": [
+    "sec-myfunction",
+  ],
+  "kinds": {},
+}
+`;

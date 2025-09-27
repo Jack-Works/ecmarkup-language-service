@@ -1,26 +1,47 @@
-import type { Connection, Location, ServerCapabilities, TextDocuments } from 'vscode-languageserver'
+import {
+    type CancellationToken,
+    type Connection,
+    type Definition,
+    type DefinitionLink,
+    type DefinitionParams,
+    type HandlerResult,
+    type Location,
+    Range,
+    type ServerCapabilities,
+    type TextDocuments,
+    type WorkDoneProgressReporter,
+} from 'vscode-languageserver'
 import type { TextDocument } from '../lib.js'
-import { getSourceFile } from '../utils/parse.js'
-import { expandWord } from '../utils/text.js'
-import { createRange } from '../utils/utils.js'
+import { word_at_cursor } from '../utils/text.js'
+import type { Program } from '../workspace/program.js'
 
 export function definitionProvider(
     connection: Connection,
+    program: Program,
     documents: TextDocuments<TextDocument>,
 ): NonNullable<ServerCapabilities['definitionProvider']> {
-    connection.onDefinition(async (params, token, workDoneProgress, resultProgress) => {
-        const document = documents.get(params.textDocument.uri)
-        if (!document) return undefined
-        const sourceFile = getSourceFile.get(document)
+    const goToDefinition = new GoToDefinition()
+    connection.onDefinition(goToDefinition.handler(documents, program))
+    return {}
+}
 
+export class GoToDefinition {
+    onDefinition(
+        document: TextDocument,
+        program: Program,
+        params: DefinitionParams,
+        _token?: CancellationToken,
+        _workDoneProgress?: WorkDoneProgressReporter,
+    ): Definition | DefinitionLink[] | undefined | null {
+        const sourceFile = program.getSourceFile(document)
         const offset = document.offsetAt(params.position)
-        const { word, isGrammarLeading, isVariableLeading } = expandWord(document.getText(), offset)
+        const { word, isGrammarLeading, isVariableLeading } = word_at_cursor(document.getText(), offset)
 
         const node = sourceFile.findNodeAt(offset)
         if (node.tag === 'emu-grammar' || isGrammarLeading) {
-            const result = sourceFile.getGrammarDefinition(word)
-            return result.map((range): Location => ({ uri: document.uri, range: range[1] }))
-        } else if (node.tag === 'emu-alg') {
+            const result = sourceFile.localDefinedGrammars.filter((define) => define.name === word)
+            return result.map((define): Location => ({ uri: document.uri, range: sourceFile.getEntryRange(define) }))
+        } else if (node.tag === 'emu-alg' || node.tag === 'h1') {
             if (isVariableLeading) {
                 const header = sourceFile.getAlgHeader(offset)
                 const headerText = sourceFile.getNodeText(header)
@@ -29,10 +50,10 @@ export function definitionProvider(
                     const headerStart = header.startTagEnd || header.start
                     return {
                         uri: document.uri,
-                        range: createRange(
-                            sourceFile.text.positionAt(headerStart + headerDefine),
+                        range: Range.create(
+                            sourceFile.text.positionAt(headerStart + headerDefine + 1),
                             sourceFile.text.positionAt(
-                                (header.startTagEnd || header.start) + headerDefine + word.length + 2,
+                                (header.startTagEnd || header.start) + headerDefine + word.length + 1,
                             ),
                         ),
                     }
@@ -49,15 +70,29 @@ export function definitionProvider(
                 if (nodeDefine === -1) return undefined
                 return {
                     uri: document.uri,
-                    range: createRange(
-                        sourceFile.text.positionAt((node.startTagEnd || node.start) + nodeDefine + 4),
-                        sourceFile.text.positionAt((node.startTagEnd || node.start) + nodeDefine + word.length + 6),
+                    range: Range.create(
+                        sourceFile.text.positionAt((node.startTagEnd || node.start) + nodeDefine + 5),
+                        sourceFile.text.positionAt((node.startTagEnd || node.start) + nodeDefine + word.length + 5),
                     ),
                 }
+            } else {
+                const operation = sourceFile.localDefinedAbstractOperations.find((entry) => entry.name === word)
+                if (operation) return { uri: document.uri, range: sourceFile.getEntryRange(operation) }
             }
         }
 
         return undefined
-    })
-    return {}
+    }
+
+    handler(documents: TextDocuments<TextDocument>, program: Program) {
+        return (
+            params: DefinitionParams,
+            _token?: CancellationToken,
+            _workDoneProgress?: WorkDoneProgressReporter,
+        ): HandlerResult<Definition | DefinitionLink[] | undefined | null, void> => {
+            const document = documents.get(params.textDocument.uri)
+            if (!document) return null
+            return this.onDefinition(document, program, params, _token, _workDoneProgress)
+        }
+    }
 }

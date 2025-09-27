@@ -1,0 +1,100 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`go to definition > AO 1`] = `
+[
+  "1. Perform ? SaveThe🔽World(  ).",
+  {
+    "range": {
+      "end": {
+        "character": 28,
+        "line": 12,
+      },
+      "start": {
+        "character": 16,
+        "line": 12,
+      },
+    },
+    "uri": "test://70ec82c78df54c1e7133b2d92765851f.emu",
+  },
+]
+`;
+
+exports[`go to definition > grammar 1`] = `
+[
+  "<p>A |MoreOneNight🔽| production.</p>",
+  [
+    {
+      "range": {
+        "end": {
+          "character": 24,
+          "line": 2,
+        },
+        "start": {
+          "character": 12,
+          "line": 2,
+        },
+      },
+      "uri": "test://70ec82c78df54c1e7133b2d92765851f.emu",
+    },
+  ],
+]
+`;
+
+exports[`go to definition > grammar in grammar 1`] = `
+[
+  "MoreOneNight🔽",
+  [
+    {
+      "range": {
+        "end": {
+          "character": 24,
+          "line": 2,
+        },
+        "start": {
+          "character": 12,
+          "line": 2,
+        },
+      },
+      "uri": "test://70ec82c78df54c1e7133b2d92765851f.emu",
+    },
+  ],
+]
+`;
+
+exports[`go to definition > local variable 1`] = `
+[
+  "1. Perform ? FinishSavingTheWorld(_obj_🔽).",
+  {
+    "range": {
+      "end": {
+        "character": 27,
+        "line": 19,
+      },
+      "start": {
+        "character": 24,
+        "line": 19,
+      },
+    },
+    "uri": "test://70ec82c78df54c1e7133b2d92765851f.emu",
+  },
+]
+`;
+
+exports[`go to definition > parameter 1`] = `
+[
+  "1. Let _obj_ be ! OrdinaryObjectCreate(_input_🔽).",
+  {
+    "range": {
+      "end": {
+        "character": 26,
+        "line": 13,
+      },
+      "start": {
+        "character": 21,
+        "line": 13,
+      },
+    },
+    "uri": "test://70ec82c78df54c1e7133b2d92765851f.emu",
+  },
+]
+`;

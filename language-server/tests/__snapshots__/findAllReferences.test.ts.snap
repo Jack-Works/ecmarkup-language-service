@@ -1,0 +1,131 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`find all references > AO 1`] = `
+"
+        <emu-grammar type="definition">
+            MoreOneNight ::= "more" "one" "night"
+        </emu-grammar>
+        <p>A |MoreOneNight| production.</p>
+        <emu-grammar>
+            Other
+                MoreOneNight
+        </emu-grammar>
+
+        <emu-clause id="sec-SaveTheWorld" type="abstract operation">
+                            ~~~~~~~~~~~~
+            <h1>
+                SaveTheWorld (
+                ~~~~~~~~~~~~
+                    _input_: an ECMAScript language value,
+                ): either a normal completion containing an Object or a throw completion
+            </h1>
+            <dl class="header">
+            </dl>
+            <emu-alg>
+                1. Let _obj_ be ! OrdinaryObjectCreate(_input_).
+                1. Perform ? FinishSavingTheWorld(_obj_).
+            </emu-alg>
+        </emu-clause>
+        <emu-alg>
+            1. Perform ? SaveTheWorld(  ).
+                         ~~~~~~~~~~~~
+        </emu-alg>
+    "
+`;
+
+exports[`find all references > grammar 1`] = `
+"
+        <emu-grammar type="definition">
+            MoreOneNight ::= "more" "one" "night"
+            ~~~~~~~~~~~~
+        </emu-grammar>
+        <p>A |MoreOneNight| production.</p>
+              ~~~~~~~~~~~~
+        <emu-grammar>
+            Other
+                MoreOneNight
+                ~~~~~~~~~~~~
+        </emu-grammar>
+
+        <emu-clause id="sec-SaveTheWorld" type="abstract operation">
+            <h1>
+                SaveTheWorld (
+                    _input_: an ECMAScript language value,
+                ): either a normal completion containing an Object or a throw completion
+            </h1>
+            <dl class="header">
+            </dl>
+            <emu-alg>
+                1. Let _obj_ be ! OrdinaryObjectCreate(_input_).
+                1. Perform ? FinishSavingTheWorld(_obj_).
+            </emu-alg>
+        </emu-clause>
+        <emu-alg>
+            1. Perform ? SaveTheWorld(  ).
+        </emu-alg>
+    "
+`;
+
+exports[`find all references > local variable 1`] = `
+"
+        <emu-grammar type="definition">
+            MoreOneNight ::= "more" "one" "night"
+        </emu-grammar>
+        <p>A |MoreOneNight| production.</p>
+        <emu-grammar>
+            Other
+                MoreOneNight
+        </emu-grammar>
+
+        <emu-clause id="sec-SaveTheWorld" type="abstract operation">
+            <h1>
+                SaveTheWorld (
+                    _input_: an ECMAScript language value,
+                ): either a normal completion containing an Object or a throw completion
+            </h1>
+            <dl class="header">
+            </dl>
+            <emu-alg>
+                1. Let _obj_ be ! OrdinaryObjectCreate(_input_).
+                        ~~~
+                1. Perform ? FinishSavingTheWorld(_obj_).
+                                                   ~~~
+            </emu-alg>
+        </emu-clause>
+        <emu-alg>
+            1. Perform ? SaveTheWorld(  ).
+        </emu-alg>
+    "
+`;
+
+exports[`find all references > parameter 1`] = `
+"
+        <emu-grammar type="definition">
+            MoreOneNight ::= "more" "one" "night"
+        </emu-grammar>
+        <p>A |MoreOneNight| production.</p>
+        <emu-grammar>
+            Other
+                MoreOneNight
+        </emu-grammar>
+
+        <emu-clause id="sec-SaveTheWorld" type="abstract operation">
+            <h1>
+                SaveTheWorld (
+                    _input_: an ECMAScript language value,
+                     ~~~~~
+                ): either a normal completion containing an Object or a throw completion
+            </h1>
+            <dl class="header">
+            </dl>
+            <emu-alg>
+                1. Let _obj_ be ! OrdinaryObjectCreate(_input_).
+                                                        ~~~~~
+                1. Perform ? FinishSavingTheWorld(_obj_).
+            </emu-alg>
+        </emu-clause>
+        <emu-alg>
+            1. Perform ? SaveTheWorld(  ).
+        </emu-alg>
+    "
+`;

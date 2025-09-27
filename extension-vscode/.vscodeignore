@@ -1,5 +1,8 @@
 src
 lib
+scripts
+tsconfig.json
+webpack.config.mjs
 !lib/node.js
 !lib/web.js
 !lib/language-server-node.js

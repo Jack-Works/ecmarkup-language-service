@@ -1,0 +1,113 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`hover on biblio entries > assert 1`] = `
+[
+  "Assert🔽",
+  {
+    "contents": {
+      "kind": "markdown",
+      "value": "[https://tc39.es/ecma262/#assert](https://tc39.es/ecma262/#assert)",
+    },
+  },
+]
+`;
+
+exports[`hover on biblio entries > asyncFunction 1`] = `
+[
+  "%AsyncFunction🔽%",
+  {
+    "contents": {
+      "kind": "markdown",
+      "value": "[https://tc39.es/ecma262/#sec-async-function-constructor](https://tc39.es/ecma262/#sec-async-function-constructor)",
+    },
+  },
+]
+`;
+
+exports[`hover on biblio entries > call 1`] = `
+[
+  "Call🔽",
+  {
+    "contents": {
+      "kind": "markdown",
+      "value": "\`\`\`ts
+Call(
+  F: Value,
+  V: Value,
+  argumentsList?: List<Values>
+): Completion<Value>
+\`\`\`
+
+[https://tc39.es/ecma262/#sec-call](https://tc39.es/ecma262/#sec-call)
+
+This abstract operation may triggers user code.",
+    },
+  },
+]
+`;
+
+exports[`hover on biblio entries > expression 1`] = `
+[
+  "Expression🔽",
+  {
+    "contents": {
+      "kind": "markdown",
+      "value": "[https://tc39.es/ecma262/#prod-Expression](https://tc39.es/ecma262/#prod-Expression)",
+    },
+  },
+]
+`;
+
+exports[`hover on local defined AO 1`] = `
+[
+  "1. Perform ? SaveThe🔽World(  ).",
+  {
+    "contents": {
+      "kind": "plaintext",
+      "language": "ecmarkup",
+      "value": "SaveTheWorld (
+    _input_: an ECMAScript language value,
+): either a normal completion containing an Object or a throw completion",
+    },
+  },
+]
+`;
+
+exports[`hover on local defined grammar > possible ref 1`] = `
+[
+  "MoreOneNight🔽",
+  {
+    "contents": {
+      "kind": "plaintext",
+      "language": "grammarkdown",
+      "value": "MoreOneNight :: "more" "one" "night"",
+    },
+  },
+]
+`;
+
+exports[`hover on local defined grammar > ref 1`] = `
+[
+  "|MoreOneNight🔽|",
+  {
+    "contents": {
+      "kind": "plaintext",
+      "language": "grammarkdown",
+      "value": "MoreOneNight :: "more" "one" "night"",
+    },
+  },
+]
+`;
+
+exports[`hover on local defined grammar > ref in grammar 1`] = `
+[
+  "MoreOneNight🔽",
+  {
+    "contents": {
+      "kind": "plaintext",
+      "language": "grammarkdown",
+      "value": "MoreOneNight :: "more" "one" "night"",
+    },
+  },
+]
+`;
