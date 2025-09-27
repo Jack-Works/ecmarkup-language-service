@@ -162,7 +162,7 @@
         "tmlang": "node ./scripts/generate-tmLanguage.mjs",
         "build": "webpack",
         "vsce": "vsce package --no-dependencies",
-        "vsce-publish": "vsce publish",
+        "vsce-publish": "vsce publish --no-dependencies",
         "vscode:prepublish": "webpack"
     }
 }
