@@ -13,7 +13,7 @@ export const io: IO = {
         const baseUri = Uri.parse(base)
         if (workspace.isTrusted && baseUri.scheme === 'file') {
             try {
-                const resolved = io_extra.resolve(baseUri.fsPath, specifier)
+                const resolved = io_extra.resolveBiblio(baseUri.fsPath, specifier)
                 if (resolved) {
                     const file = await workspace.fs.readFile(Uri.file(resolved))
                     return { ...JSON.parse(new TextDecoder().decode(file)), source: resolved }
@@ -43,7 +43,7 @@ export const io: IO = {
 type FsPath = string
 
 export const io_extra = {
-    resolve(_base: FsPath, _specifier: string): FsPath {
+    resolveBiblio(_base: FsPath, _specifier: string): FsPath {
         throw new Error('Not supported on this platform')
     },
 }

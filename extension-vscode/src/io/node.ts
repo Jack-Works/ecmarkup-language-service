@@ -2,8 +2,8 @@ import { createRequire } from 'node:module'
 import { io_extra } from './general.js'
 
 const io_extra_node: typeof io_extra = {
-    resolve(base, specifier) {
-        return createRequire(base).resolve(specifier)
+    resolveBiblio(base) {
+        return createRequire(base).resolve('@tc39/ecma262-biblio')
     },
 }
 
