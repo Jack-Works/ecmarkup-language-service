@@ -33,6 +33,8 @@ export function initialize(connection: Connection, version: string) {
                 semanticTokensProvider: semanticTokensProvider(connection, globalProgram, documents),
                 referencesProvider: referenceProvider(connection, globalProgram, documents),
                 documentHighlightProvider: documentHighlightProvider(connection, globalProgram, documents),
+                // It's kinda working for providing links for 262's AOs, but looks strange in IDE, let's skip it for now.
+                // documentLinkProvider: documentLinkProvider(connection, globalProgram, documents),
             },
             serverInfo: {
                 name: 'ecmarkup language server',
