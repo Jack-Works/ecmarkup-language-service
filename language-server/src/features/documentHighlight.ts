@@ -1,12 +1,13 @@
-import type {
-    CancellationToken,
-    Connection,
-    DocumentHighlightParams,
-    Location,
-    ResultProgressReporter,
-    ServerCapabilities,
-    TextDocuments,
-    WorkDoneProgressReporter,
+import {
+    type CancellationToken,
+    type Connection,
+    DocumentHighlightKind,
+    type DocumentHighlightParams,
+    type Location,
+    type ResultProgressReporter,
+    type ServerCapabilities,
+    type TextDocuments,
+    type WorkDoneProgressReporter,
 } from 'vscode-languageserver'
 import type { TextDocument } from '../lib.js'
 import type { Program } from '../workspace/program.js'
@@ -33,20 +34,33 @@ export class DocumentHighlightProvider {
     ) {
         const { position, textDocument, partialResultToken, workDoneToken } = params
         const ref = new ReferenceProvider()
-        return ref.findReferences(
-            document,
-            program,
-            {
-                position,
-                textDocument,
-                partialResultToken,
-                workDoneToken,
-                context: { includeDeclaration: true },
-            },
-            token,
-            workDoneProgress,
-            resultProgress,
-        )
+        return ref
+            .findReferences(
+                document,
+                program,
+                {
+                    position,
+                    textDocument,
+                    partialResultToken,
+                    workDoneToken,
+                    context: { includeDeclaration: true },
+                },
+                token,
+                workDoneProgress,
+                resultProgress,
+            )
+            ?.map((loc) => {
+                const start = document.offsetAt(loc.range.start)
+                return {
+                    range: loc.range,
+                    kind: document
+                        .getText()
+                        .slice(start - 5, start)
+                        .match(/let _|set _/i)
+                        ? DocumentHighlightKind.Write
+                        : DocumentHighlightKind.Text,
+                }
+            })
     }
 
     handler(documents: TextDocuments<TextDocument>, program: Program) {
