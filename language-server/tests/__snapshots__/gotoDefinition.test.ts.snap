@@ -3,19 +3,21 @@
 exports[`go to definition > AO 1`] = `
 [
   "1. Perform ? SaveThe🔽World(  ).",
-  {
-    "range": {
-      "end": {
-        "character": 28,
-        "line": 12,
+  [
+    {
+      "range": {
+        "end": {
+          "character": 28,
+          "line": 12,
+        },
+        "start": {
+          "character": 16,
+          "line": 12,
+        },
       },
-      "start": {
-        "character": 16,
-        "line": 12,
-      },
+      "uri": "test://70ec82c78df54c1e7133b2d92765851f.emu",
     },
-    "uri": "test://70ec82c78df54c1e7133b2d92765851f.emu",
-  },
+  ],
 ]
 `;
 
@@ -61,40 +63,249 @@ exports[`go to definition > grammar in grammar 1`] = `
 ]
 `;
 
+exports[`go to definition > linkSupport: AO 1`] = `
+[
+  "1. Perform ? SaveThe🔽World(  ).",
+  [
+    {
+      "originSelectionRange": {
+        "end": {
+          "character": 37,
+          "line": 24,
+        },
+        "start": {
+          "character": 25,
+          "line": 24,
+        },
+      },
+      "targetRange": {
+        "end": {
+          "character": 87,
+          "line": 14,
+        },
+        "start": {
+          "character": 16,
+          "line": 12,
+        },
+      },
+      "targetSelectionRange": {
+        "end": {
+          "character": 28,
+          "line": 12,
+        },
+        "start": {
+          "character": 16,
+          "line": 12,
+        },
+      },
+      "targetUri": "test://70ec82c78df54c1e7133b2d92765851f.emu",
+    },
+  ],
+]
+`;
+
+exports[`go to definition > linkSupport: grammar 1`] = `
+[
+  "<p>A |MoreOneNight🔽| production.</p>",
+  [
+    {
+      "originSelectionRange": {
+        "end": {
+          "character": 26,
+          "line": 4,
+        },
+        "start": {
+          "character": 14,
+          "line": 4,
+        },
+      },
+      "targetRange": {
+        "end": {
+          "character": 49,
+          "line": 2,
+        },
+        "start": {
+          "character": 12,
+          "line": 2,
+        },
+      },
+      "targetSelectionRange": {
+        "end": {
+          "character": 24,
+          "line": 2,
+        },
+        "start": {
+          "character": 12,
+          "line": 2,
+        },
+      },
+      "targetUri": "test://70ec82c78df54c1e7133b2d92765851f.emu",
+    },
+  ],
+]
+`;
+
+exports[`go to definition > linkSupport: grammar in grammar 1`] = `
+[
+  "MoreOneNight🔽",
+  [
+    {
+      "originSelectionRange": {
+        "end": {
+          "character": 28,
+          "line": 7,
+        },
+        "start": {
+          "character": 16,
+          "line": 7,
+        },
+      },
+      "targetRange": {
+        "end": {
+          "character": 49,
+          "line": 2,
+        },
+        "start": {
+          "character": 12,
+          "line": 2,
+        },
+      },
+      "targetSelectionRange": {
+        "end": {
+          "character": 24,
+          "line": 2,
+        },
+        "start": {
+          "character": 12,
+          "line": 2,
+        },
+      },
+      "targetUri": "test://70ec82c78df54c1e7133b2d92765851f.emu",
+    },
+  ],
+]
+`;
+
+exports[`go to definition > linkSupport: local variable 1`] = `
+[
+  "1. Perform ? FinishSavingTheWorld(_obj_🔽).",
+  [
+    {
+      "originSelectionRange": {
+        "end": {
+          "character": 54,
+          "line": 20,
+        },
+        "start": {
+          "character": 51,
+          "line": 20,
+        },
+      },
+      "targetRange": {
+        "end": {
+          "character": 27,
+          "line": 19,
+        },
+        "start": {
+          "character": 24,
+          "line": 19,
+        },
+      },
+      "targetSelectionRange": {
+        "end": {
+          "character": 27,
+          "line": 19,
+        },
+        "start": {
+          "character": 24,
+          "line": 19,
+        },
+      },
+      "targetUri": "test://70ec82c78df54c1e7133b2d92765851f.emu",
+    },
+  ],
+]
+`;
+
+exports[`go to definition > linkSupport: parameter 1`] = `
+[
+  "1. Let _obj_ be ! OrdinaryObjectCreate(_input_🔽).",
+  [
+    {
+      "originSelectionRange": {
+        "end": {
+          "character": 61,
+          "line": 19,
+        },
+        "start": {
+          "character": 56,
+          "line": 19,
+        },
+      },
+      "targetRange": {
+        "end": {
+          "character": 26,
+          "line": 13,
+        },
+        "start": {
+          "character": 21,
+          "line": 13,
+        },
+      },
+      "targetSelectionRange": {
+        "end": {
+          "character": 26,
+          "line": 13,
+        },
+        "start": {
+          "character": 21,
+          "line": 13,
+        },
+      },
+      "targetUri": "test://70ec82c78df54c1e7133b2d92765851f.emu",
+    },
+  ],
+]
+`;
+
 exports[`go to definition > local variable 1`] = `
 [
   "1. Perform ? FinishSavingTheWorld(_obj_🔽).",
-  {
-    "range": {
-      "end": {
-        "character": 27,
-        "line": 19,
+  [
+    {
+      "range": {
+        "end": {
+          "character": 27,
+          "line": 19,
+        },
+        "start": {
+          "character": 24,
+          "line": 19,
+        },
       },
-      "start": {
-        "character": 24,
-        "line": 19,
-      },
+      "uri": "test://70ec82c78df54c1e7133b2d92765851f.emu",
     },
-    "uri": "test://70ec82c78df54c1e7133b2d92765851f.emu",
-  },
+  ],
 ]
 `;
 
 exports[`go to definition > parameter 1`] = `
 [
   "1. Let _obj_ be ! OrdinaryObjectCreate(_input_🔽).",
-  {
-    "range": {
-      "end": {
-        "character": 26,
-        "line": 13,
+  [
+    {
+      "range": {
+        "end": {
+          "character": 26,
+          "line": 13,
+        },
+        "start": {
+          "character": 21,
+          "line": 13,
+        },
       },
-      "start": {
-        "character": 21,
-        "line": 13,
-      },
+      "uri": "test://70ec82c78df54c1e7133b2d92765851f.emu",
     },
-    "uri": "test://70ec82c78df54c1e7133b2d92765851f.emu",
-  },
+  ],
 ]
 `;

@@ -54,21 +54,39 @@ export function betterSnapshot(
     mark_ranges: { range?: Range; offset?: number; length?: number; annotate: string }[],
 ) {
     const textLined = document.getText().split('\n')
-    ;[...mark_ranges].reverse().forEach(({ range, annotate: annotate_text, length, offset }) => {
-        let line: number, character: number
+    const linesToInsert: [line: number, start: number, annotate: string][] = []
+    mark_ranges.forEach(({ range, annotate: annotate_text, length, offset }) => {
+        let startLine: number, startCharacter: number, endLine: number, endCharacter: number
         if (Range.is(range)) {
-            line = range.start.line
-            character = range.start.character
+            startLine = range.start.line
+            endLine = range.end.line
+
+            startCharacter = range.start.character
+            endCharacter = range.end.character
+
             length = range.end.character - range.start.character
-            if (range.end.line !== range.start.line) throw new Error('Cannot annotate multi-line ranges yet')
         } else if (length !== undefined && offset !== undefined) {
-            ;({ character, line } = document.positionAt(offset))
+            ;({ character: startCharacter, line: startLine } = document.positionAt(offset))
+            endLine = startLine
+            endCharacter = startCharacter + length
         } else {
-            throw new Error()
+            throw new Error('both range, offset and length are missing')
         }
-        const annotate = `${' '.repeat(character)}${'~'.repeat(length)}${annotate_text}`
-        textLined.splice(line + 1, 0, annotate)
+        if (startLine === endLine) {
+            const annotate = `${' '.repeat(startCharacter)}${'~'.repeat(length)}${annotate_text}`
+            linesToInsert.push([startLine, startCharacter, annotate])
+        } else {
+            const annotate = `${' '.repeat(startCharacter)}~~... (a multiline line annotate) ${annotate_text}`
+            const annotate2 = `${' '.repeat(endCharacter)}^ (a multiline annotate ends here)`
+            linesToInsert.push([startLine, startCharacter, annotate])
+            linesToInsert.push([endLine, endCharacter, annotate2])
+        }
     })
+    linesToInsert
+        .sort((a, b) => b[0] - a[0] || b[1] - a[1])
+        .forEach(([lineNo, , line]) => {
+            textLined.splice(lineNo + 1, 0, line)
+        })
     return textLined.join('\n')
 }
 

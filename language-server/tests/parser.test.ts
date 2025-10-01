@@ -30,8 +30,15 @@ it('parses', () => {
     expect(doc.localDefinedGrammars.map(({ node, ...rest }) => rest)).toMatchInlineSnapshot(`
       [
         {
+          "fullDefinitionRange": {
+            "length": 36,
+            "position": 21,
+          },
           "name": "MoreOneNight",
-          "pos": 21,
+          "range": {
+            "length": 12,
+            "position": 21,
+          },
           "summary": "MoreOneNight :: "more" "one" "night"",
           "type": "define",
         },
@@ -40,8 +47,15 @@ it('parses', () => {
     expect(doc.localDefinedAbstractOperations.map(({ node, ...rest }) => rest)).toMatchInlineSnapshot(`
       [
         {
+          "fullDefinitionRange": {
+            "length": 175,
+            "position": 25,
+          },
           "name": "MyFunction",
-          "pos": 25,
+          "range": {
+            "length": 10,
+            "position": 25,
+          },
           "summary": "MyFunction (
           _input_: an ECMAScript language value,
       ): either a normal completion containing an Object or a throw completion",

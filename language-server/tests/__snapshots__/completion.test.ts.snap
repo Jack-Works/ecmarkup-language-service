@@ -48,7 +48,7 @@ Completion(
     "ℝ",
   ],
   "kinds": {
-    "(method)": 687,
+    "(method)": 696,
   },
 }
 `;
@@ -89,7 +89,7 @@ Completion(
     "ℝ",
   ],
   "kinds": {
-    "(method)": 687,
+    "(method)": 696,
   },
 }
 `;
@@ -142,7 +142,7 @@ Completion(
     "ℝ",
   ],
   "kinds": {
-    "(method)": 687,
+    "(method)": 696,
   },
 }
 `;
@@ -183,7 +183,7 @@ Completion(
     "ℝ",
   ],
   "kinds": {
-    "(method)": 687,
+    "(method)": 696,
   },
 }
 `;
@@ -263,7 +263,7 @@ Completion(
     "ℝ",
   ],
   "kinds": {
-    "(method)": 687,
+    "(method)": 696,
   },
 }
 `;
@@ -309,7 +309,7 @@ exports[`complete clauses (#sec-...) > suggest 1`] = `
     "#sec-conformance-legacy-normative-optional",
   ],
   "kinds": {
-    "(clause)": 2234,
+    "(clause)": 2253,
   },
 }
 `;
@@ -341,7 +341,7 @@ exports[`complete clauses (#sec-...) > suggest but not replacing children 1`] = 
     "#sec-conformance-legacy-normative-optional",
   ],
   "kinds": {
-    "(clause)": 2234,
+    "(clause)": 2253,
   },
 }
 `;
@@ -373,7 +373,7 @@ exports[`complete clauses (#sec-...) > suggest with host 1`] = `
     "#sec-conformance-legacy-normative-optional",
   ],
   "kinds": {
-    "(clause)": 2234,
+    "(clause)": 2253,
   },
 }
 `;
@@ -419,7 +419,7 @@ exports[`complete clauses (#sec-...) > suggest with no end tag 1`] = `
     "#sec-conformance-legacy-normative-optional",
   ],
   "kinds": {
-    "(clause)": 2234,
+    "(clause)": 2253,
   },
 }
 `;
@@ -1342,8 +1342,8 @@ MyFunction
   ],
   "kinds": {
     "(grammar)": 378,
-    "(method)": 687,
-    "(term)": 413,
+    "(method)": 696,
+    "(term)": 414,
   },
 }
 `;

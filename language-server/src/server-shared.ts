@@ -22,7 +22,12 @@ export function initialize(connection: Connection, version: string) {
                     documents,
                     params.capabilities.textDocument?.completion,
                 ),
-                definitionProvider: definitionProvider(connection, globalProgram, documents),
+                definitionProvider: definitionProvider(
+                    connection,
+                    globalProgram,
+                    documents,
+                    params.capabilities.textDocument?.definition,
+                ),
                 hoverProvider: hoverProvider(connection, globalProgram, documents),
                 semanticTokensProvider: semanticTokensProvider(connection, globalProgram, documents),
                 referencesProvider: referenceProvider(connection, globalProgram, documents),

@@ -42,7 +42,7 @@ export class ReferenceProvider {
             const result = sourceFile.grammars.filter(
                 (entry) => entry.name === word && (includeDeclaration || entry.type === 'reference'),
             )
-            return result.map((ref): Location => ({ uri: document.uri, range: sourceFile.getEntryRange(ref) }))
+            return result.map((ref): Location => ({ uri: document.uri, range: sourceFile.getRelativeRange(ref.node, ref.range) }))
         } else if (node.tag === 'h1' || node.tag === 'emu-alg') {
             if (isVariable) {
                 const text = document.getText()

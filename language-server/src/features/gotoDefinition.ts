@@ -2,10 +2,12 @@ import {
     type CancellationToken,
     type Connection,
     type Definition,
+    type DefinitionClientCapabilities,
     type DefinitionLink,
     type DefinitionParams,
     type HandlerResult,
     type Location,
+    type LocationLink,
     Range,
     type ServerCapabilities,
     type TextDocuments,
@@ -19,13 +21,16 @@ export function definitionProvider(
     connection: Connection,
     program: Program,
     documents: TextDocuments<TextDocument>,
+    capabilities: DefinitionClientCapabilities | undefined,
 ): NonNullable<ServerCapabilities['definitionProvider']> {
-    const goToDefinition = new GoToDefinition()
+    const goToDefinition = new GoToDefinition(capabilities)
     connection.onDefinition(goToDefinition.handler(documents, program))
     return {}
 }
 
 export class GoToDefinition {
+    constructor(public capabilities?: DefinitionClientCapabilities) {}
+
     onDefinition(
         document: TextDocument,
         program: Program,
@@ -35,28 +40,46 @@ export class GoToDefinition {
     ): Definition | DefinitionLink[] | undefined | null {
         const sourceFile = program.getSourceFile(document)
         const offset = document.offsetAt(params.position)
-        const { word, isGrammarLeading, isVariableLeading } = word_at_cursor(document.getText(), offset)
+        const { word, isGrammarLeading, isVariableLeading, leftBoundary, rightBoundary } = word_at_cursor(
+            document.getText(),
+            offset,
+        )
+        const originSelectionRange = Range.create(
+            sourceFile.text.positionAt(leftBoundary),
+            sourceFile.text.positionAt(rightBoundary),
+        )
 
         const node = sourceFile.findNodeAt(offset)
         if (node.tag === 'emu-grammar' || isGrammarLeading) {
             const result = sourceFile.localDefinedGrammars.filter((define) => define.name === word)
-            return result.map((define): Location => ({ uri: document.uri, range: sourceFile.getEntryRange(define) }))
+            return this.toClient(
+                result.map(
+                    (define): LocationLink => ({
+                        targetUri: document.uri,
+                        targetRange: sourceFile.getRelativeRange(define.node, define.fullDefinitionRange),
+                        targetSelectionRange: sourceFile.getRelativeRange(define.node, define.range),
+                        originSelectionRange,
+                    }),
+                ),
+            )
         } else if (node.tag === 'emu-alg' || node.tag === 'h1') {
             if (isVariableLeading) {
                 const header = sourceFile.getAlgHeader(offset)
                 const headerText = sourceFile.getNodeText(header)
                 const headerDefine = headerText?.indexOf(`_${word}_`)
                 if (header && headerDefine && headerDefine !== -1) {
-                    const headerStart = header.startTagEnd || header.start
-                    return {
-                        uri: document.uri,
-                        range: Range.create(
-                            sourceFile.text.positionAt(headerStart + headerDefine + 1),
-                            sourceFile.text.positionAt(
-                                (header.startTagEnd || header.start) + headerDefine + word.length + 1,
-                            ),
-                        ),
-                    }
+                    const targetSelectionRange = sourceFile.getRelativeRange(header, {
+                        position: headerDefine + 1,
+                        length: word.length,
+                    })
+                    return this.toClient([
+                        {
+                            targetUri: document.uri,
+                            targetRange: targetSelectionRange,
+                            targetSelectionRange,
+                            originSelectionRange,
+                        },
+                    ])
                 }
 
                 const nodeText = sourceFile.getNodeText(node)
@@ -68,20 +91,39 @@ export class GoToDefinition {
                     } catch {}
                 }
                 if (nodeDefine === -1) return undefined
-                return {
-                    uri: document.uri,
-                    range: Range.create(
-                        sourceFile.text.positionAt((node.startTagEnd || node.start) + nodeDefine + 5),
-                        sourceFile.text.positionAt((node.startTagEnd || node.start) + nodeDefine + word.length + 5),
-                    ),
-                }
+                const targetSelectionRange = sourceFile.getRelativeRange(node, {
+                    position: nodeDefine + 5,
+                    length: word.length,
+                })
+                return this.toClient([
+                    {
+                        targetUri: document.uri,
+                        targetRange: targetSelectionRange,
+                        targetSelectionRange,
+                        originSelectionRange,
+                    },
+                ])
             } else {
                 const operation = sourceFile.localDefinedAbstractOperations.find((entry) => entry.name === word)
-                if (operation) return { uri: document.uri, range: sourceFile.getEntryRange(operation) }
+                if (operation) {
+                    return this.toClient([
+                        {
+                            targetUri: document.uri,
+                            targetSelectionRange: sourceFile.getRelativeRange(operation.node, operation.range),
+                            targetRange: sourceFile.getRelativeRange(operation.node, operation.fullDefinitionRange),
+                            originSelectionRange,
+                        },
+                    ])
+                }
             }
         }
 
         return undefined
+    }
+
+    private toClient(location: LocationLink[]): LocationLink[] | Location[] | Location {
+        if (this.capabilities?.linkSupport) return location
+        return location.map((link): Location => ({ uri: link.targetUri, range: link.targetSelectionRange }))
     }
 
     handler(documents: TextDocuments<TextDocument>, program: Program) {

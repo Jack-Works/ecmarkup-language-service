@@ -31,13 +31,12 @@ export class EcmarkupDocument {
     @lazy accessor localDefinedGrammars: readonly EntryDefinition[] = lazy.of(() =>
         this.grammars.filter((x): x is EntryDefinition => x.type === 'define'),
     )
-    getEntryRange(entry: EntryInfo) {
-        const realPos = entry.node.startTagEnd! + entry.pos
-        const offset = this.text.getText()[realPos] === '|' ? 1 : 0
-        const start = this.text.positionAt(realPos + offset)
+
+    getRelativeRange(node: Node, range: NodeRelativeRange) {
+        const relative = node.startTagEnd ?? node.start
         return Range.create(
-            start,
-            this.text.positionAt(entry.node.startTagEnd! + entry.pos + entry.name.length + offset),
+            this.text.positionAt(relative + range.position),
+            this.text.positionAt(relative + range.position + range.length),
         )
     }
 
@@ -62,13 +61,23 @@ export class EcmarkupDocument {
                     const text = fullText.slice(header.startTagEnd, header.endTagStart)
                     const regex = /(\w+) \(/
                     const nameLike = regex.exec(text)
+
+                    const firstNonEmpty = /\S/.exec(text) || { index: 0 }
+                    const lastNonEmpty = /\S\s*$/.exec(text) || { index: 0 }
                     if (nameLike) {
                         result.push({
                             type: 'define',
-                            name: nameLike[1]!,
                             node: header,
-                            pos: nameLike.index,
+                            name: nameLike[1]!,
                             summary: dedent(text),
+                            range: {
+                                position: nameLike.index,
+                                length: nameLike[1]!.length,
+                            },
+                            fullDefinitionRange: {
+                                position: firstNonEmpty.index,
+                                length: lastNonEmpty.index - firstNonEmpty.index,
+                            },
                         })
                         // AO defines should not nest with each other
                         return
@@ -101,12 +110,16 @@ function parseNormalText(node: Node, fullText: string): EntryInfo[] {
     const info: EntryInfo[] = []
     if (!node.startTagEnd) return info
     const textContent = fullText.slice(node.startTagEnd, node.endTagStart)
-    for (const match of textContent.matchAll(/\|\w+\|/g)) {
+    for (const match of textContent.matchAll(/\|(?<productionName>\w+)\|/g)) {
+        const name = match.groups!['productionName']!
         info.push({
-            name: match[0].slice(1, -1),
-            node,
-            pos: match.index!,
             type: 'reference',
+            node,
+            name,
+            range: {
+                position: match.index! + 1,
+                length: name.length,
+            },
         })
     }
     return info
@@ -128,16 +141,26 @@ function parseGrammarkdown(node: Node, isDefinition: boolean, fullText: string):
 
 export type EntryInfo = EntryDefinition | EntryReference
 export interface EntryInfoBase {
+    /** Entry name */
     name: string
-    pos: number
+    range: NodeRelativeRange
+    /** Containing HTML Node */
     node: Node
 }
 export interface EntryDefinition extends EntryInfoBase {
     type: 'define'
     summary: string
+    /** used to compute `targetRange` in LSP, relative to the `node.startTagEnd` */
+    fullDefinitionRange: NodeRelativeRange
 }
+
 export interface EntryReference extends EntryInfoBase {
     type: 'reference'
+}
+
+export interface NodeRelativeRange {
+    position: number
+    length: number
 }
 
 class Visitor extends NodeVisitor {
@@ -151,11 +174,15 @@ class Visitor extends NodeVisitor {
     }
     override visitNonterminal(node: Nonterminal): Nonterminal {
         if (node.name.text) {
+            const position = node.getStart(this.sourceFile)
             this.info.push({
-                name: node.name.text,
-                node: this.node,
-                pos: node.getStart(this.sourceFile),
                 type: 'reference',
+                node: this.node,
+                name: node.name.text,
+                range: {
+                    position,
+                    length: node.name.text.length,
+                },
             })
         }
         return super.visitNonterminal(node)
@@ -163,20 +190,31 @@ class Visitor extends NodeVisitor {
 
     override visitProduction(node: Production): Production {
         if (node.name.text) {
+            const start = node.getStart(this.sourceFile)
             if (this.isDefinitionSite) {
                 this.info.push({
-                    name: node.name.text,
-                    node: this.node,
-                    pos: node.getStart(this.sourceFile),
                     type: 'define',
+                    node: this.node,
+                    name: node.name.text,
                     summary: dedent(node.getText(this.sourceFile)),
+                    range: {
+                        position: start,
+                        length: node.name.text.length,
+                    },
+                    fullDefinitionRange: {
+                        position: start,
+                        length: node.getWidth(this.sourceFile),
+                    },
                 })
             } else {
                 this.info.push({
-                    name: node.name.text,
-                    node: this.node,
-                    pos: node.getStart(this.sourceFile),
                     type: 'reference',
+                    node: this.node,
+                    name: node.name.text,
+                    range: {
+                        position: start,
+                        length: node.name.text.length,
+                    },
                 })
             }
         }
@@ -187,6 +225,7 @@ class Visitor extends NodeVisitor {
 export function dedent(text: string) {
     const minIndent = text.split('\n').reduce((min, line) => {
         if (line.trim() === '') return min
+        if (line.match(/^\S/)) return 0
         const match = line.match(/^(\s+)/)
         if (match) {
             return Math.min(min, match[0].length)

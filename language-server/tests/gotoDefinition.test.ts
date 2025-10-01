@@ -36,4 +36,10 @@ it('go to definition', async () => {
         const result = goto.onDefinition(document, program, { textDocument, position })
         expect([around, result]).toMatchSnapshot(desc)
     }
+
+    goto.capabilities = { linkSupport: true }
+    for (const { position, around, desc } of markers) {
+        const result = goto.onDefinition(document, program, { textDocument, position })
+        expect([around, result]).toMatchSnapshot('linkSupport: ' + desc)
+    }
 })
