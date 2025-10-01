@@ -14,22 +14,15 @@ const documents = new TextDocuments(TextDocument)
 export function initialize(connection: Connection, version: string) {
     const globalProgram = createProgram(createRemoteIO(connection))
     connection.onInitialize((params) => {
+        const {
+            capabilities: { textDocument: capabilities },
+        } = params
         const features: InitializeResult<never> = {
             capabilities: {
                 textDocumentSync: TextDocumentSyncKind.Incremental,
-                completionProvider: completionProvider(
-                    connection,
-                    globalProgram,
-                    documents,
-                    params.capabilities.textDocument?.completion,
-                ),
-                definitionProvider: definitionProvider(
-                    connection,
-                    globalProgram,
-                    documents,
-                    params.capabilities.textDocument?.definition,
-                ),
-                hoverProvider: hoverProvider(connection, globalProgram, documents),
+                completionProvider: completionProvider(connection, globalProgram, documents, capabilities?.completion),
+                definitionProvider: definitionProvider(connection, globalProgram, documents, capabilities?.definition),
+                hoverProvider: hoverProvider(connection, globalProgram, documents, capabilities?.hover),
                 semanticTokensProvider: semanticTokensProvider(connection, globalProgram, documents),
                 referencesProvider: referenceProvider(connection, globalProgram, documents),
                 documentHighlightProvider: documentHighlightProvider(connection, globalProgram, documents),

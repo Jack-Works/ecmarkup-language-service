@@ -2,7 +2,7 @@ import type { BiblioEntry, BiblioOp, SpecOperations, SpecValue } from '@tc39/ecm
 import { type MarkupContent, MarkupKind } from 'vscode-languageserver-types'
 import { getURL } from './biblio.js'
 
-export function formatSignature({ aoid, signature }: BiblioOp): string {
+function formatSignature({ aoid, signature }: BiblioOp): string {
     if (!signature) return aoid
     let str = aoid + '('
     if (signature.parameters.length || signature.optionalParameters.length) {
@@ -51,25 +51,48 @@ function formatSpecValue(value: SpecValue.SpecDataType, identLevel: number): str
 function Cap(x: string): string {
     return x[0]!.toUpperCase() + x.slice(1)
 }
-export function formatDocument(entry: BiblioEntry): MarkupContent | undefined {
+export function formatDocument(
+    entry: BiblioEntry,
+    supportedFormats: MarkupKind[] | undefined,
+): MarkupContent | undefined {
+    const supportMarkdown = supportedFormats?.includes(MarkupKind.Markdown)
     const url = getURL(entry)
     if (entry.type === 'clause') {
-        return { kind: MarkupKind.Markdown, value: `${entry.title}\n\n[${url}](${url})` }
+        if (supportMarkdown) {
+            return { kind: MarkupKind.Markdown, value: `${entry.title}\n\n[${url}](${url})` }
+        } else {
+            return { kind: MarkupKind.PlainText, value: `${entry.title}\n${url}` }
+        }
     } else if (entry.type === 'production') {
         if (entry.local) return { kind: MarkupKind.PlainText, value: entry.name }
-        return { kind: MarkupKind.Markdown, value: `[${url}](${url})` }
+        if (!url) return undefined
+        if (supportMarkdown) {
+            return { kind: MarkupKind.Markdown, value: `[${url}](${url})` }
+        } else {
+            return { kind: MarkupKind.PlainText, value: url }
+        }
     } else if (entry.type === 'op') {
         let document = ''
-        if (url) document += `[${url}](${url})`
+        if (url) {
+            document += supportMarkdown ? `[${url}](${url})` : url
+        }
         if (entry.effects.includes('user-code'))
-            document += (document.length ? '\n\n' : '') + 'This abstract operation may triggers user code.'
+            document +=
+                (document.length ? (supportMarkdown ? '\n\n' : '\n') : '') +
+                'This abstract operation may triggers user code.'
         const signature = formatSignature(entry)
-        return {
-            kind: MarkupKind.Markdown,
-            value: '```ts\n' + signature + '\n```\n\n' + document,
+        if (supportMarkdown) {
+            return { kind: MarkupKind.Markdown, value: '```ts\n' + signature + '\n```\n\n' + document }
+        } else {
+            return { kind: MarkupKind.PlainText, value: signature + '\n' + document }
         }
     } else if (entry.type === 'term') {
-        return url ? { kind: MarkupKind.Markdown, value: `[${url}](${url})` } : undefined
+        if (!url) return undefined
+        if (supportMarkdown) {
+            return { kind: MarkupKind.Markdown, value: `[${url}](${url})` }
+        } else {
+            return { kind: MarkupKind.PlainText, value: url }
+        }
     }
     return undefined
 }

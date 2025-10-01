@@ -1,9 +1,11 @@
 import { expect, it } from 'vitest'
+import { MarkupKind } from 'vscode-languageserver-types'
 import { HoverProvider } from '../src/features/hover.js'
 import { File } from './File.js'
 
+const capabilities = { contentFormat: [MarkupKind.Markdown, MarkupKind.PlainText] }
 it('hover on biblio entries', async () => {
-    const hover = new HoverProvider()
+    const hover = new HoverProvider(capabilities)
     const { document, textDocument, markers, program } = File.of`
         Expression${File.mark('expression')}
         Call${File.mark('call')}
@@ -17,7 +19,7 @@ it('hover on biblio entries', async () => {
 })
 
 it('hover on local defined grammar', async () => {
-    const hover = new HoverProvider()
+    const hover = new HoverProvider(capabilities)
     const { document, textDocument, markers, program } = File.of`
         <emu-grammar type="definition">
             MoreOneNight :: "more" "one" "night"
@@ -39,7 +41,7 @@ it('hover on local defined grammar', async () => {
 })
 
 it('hover on local defined AO', async () => {
-    const hover = new HoverProvider()
+    const hover = new HoverProvider(capabilities)
     const { document, textDocument, markers, program } = File.of`
         <emu-clause id="sec-SaveTheWorld" type="abstract operation">
             <h1>

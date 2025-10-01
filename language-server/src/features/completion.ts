@@ -9,6 +9,7 @@ import {
     type CompletionParams,
     type Connection,
     InsertTextFormat,
+    MarkupKind,
     Range,
     type ResultProgressReporter,
     type ServerCapabilities,
@@ -36,10 +37,16 @@ export function completionProvider(
 }
 
 export class Completer {
-    constructor(public feature: CompletionClientCapabilities = { completionItem: { snippetSupport: true } }) {
-        this.supportSnippet = this.feature?.completionItem?.snippetSupport ?? false
+    constructor(
+        public capabilities: CompletionClientCapabilities = {
+            completionItem: { snippetSupport: true, documentationFormat: [MarkupKind.Markdown, MarkupKind.PlainText] },
+        },
+    ) {
+        this.supportSnippet = this.capabilities?.completionItem?.snippetSupport ?? false
+        this.documentationFormat = this.capabilities?.completionItem?.documentationFormat
     }
     supportSnippet
+    documentationFormat
     fuse: Fuse<BiblioEntry> = new Fuse([] as BiblioEntry[], {
         includeScore: true,
         findAllMatches: true,
@@ -115,7 +122,9 @@ export class Completer {
             const insertHost = !currentLineBeforeCursor.match(/\/\/\S*$/gmu)
             const items: CompletionItem[] = this.search_entry(biblio, search)
                 .filter((entry): entry is FuseResult<BiblioClause> => entry.item.type === 'clause')
-                .map(({ item, score = 0 }) => completeClause(item, insertHost, insertTitle, score))
+                .map(({ item, score = 0 }) =>
+                    completeClause(item, insertHost, insertTitle, score, this.documentationFormat),
+                )
             return { isIncomplete: false, items }
         }
 
@@ -160,7 +169,9 @@ export class Completer {
                     (entry): entry is FuseResult<BiblioTerm> =>
                         entry.item.type === 'term' && entry.item.term.startsWith('%'),
                 )
-                .flatMap(({ item, score = 0 }) => completeTerm(item, score, false, replaceRange, noWhiteSpaceAfter))
+                .flatMap(({ item, score = 0 }) =>
+                    completeTerm(item, score, false, replaceRange, noWhiteSpaceAfter, this.documentationFormat),
+                )
             return { isIncomplete: false, items }
         }
 
@@ -172,7 +183,9 @@ export class Completer {
                     (entry): entry is FuseResult<BiblioTerm> =>
                         entry.item.type === 'term' && entry.item.term.startsWith('%Symbol.'),
                 )
-                .flatMap(({ item, score = 0 }) => completeTerm(item, score, true, range, noWhiteSpaceAfter))
+                .flatMap(({ item, score = 0 }) =>
+                    completeTerm(item, score, true, range, noWhiteSpaceAfter, this.documentationFormat),
+                )
             return { isIncomplete: true, items }
         }
 
@@ -218,6 +231,7 @@ export class Completer {
                         this.supportSnippet,
                         prefixWith as '?' | '!' | undefined,
                         replaceRange,
+                        this.documentationFormat,
                     ),
                 )
             return { isIncomplete: false, items }
@@ -262,6 +276,7 @@ export class Completer {
                         !word ? ('local' in entry ? 0.1 : 0.2) : score,
                         replaceRange,
                         noWhiteSpaceAfter,
+                        this.documentationFormat,
                     )
                 })
             return { isIncomplete: false, items }
@@ -277,11 +292,26 @@ export class Completer {
             noWhiteSpaceAfter,
         ).concat(
             this.search_entry(collection, word).flatMap(({ item, score = 0 }) => {
-                if (item.type === 'term') return completeTerm(item, score, false, undefined, noWhiteSpaceAfter)
+                if (item.type === 'term')
+                    return completeTerm(item, score, false, undefined, noWhiteSpaceAfter, this.documentationFormat)
                 else if (item.type === 'op')
-                    return completeAbstractOperation(item, score, this.supportSnippet, undefined, undefined)
+                    return completeAbstractOperation(
+                        item,
+                        score,
+                        this.supportSnippet,
+                        undefined,
+                        undefined,
+                        this.documentationFormat,
+                    )
                 else if (item.type === 'production')
-                    return completeProduction(item, inGrammarTag, score, undefined, noWhiteSpaceAfter)
+                    return completeProduction(
+                        item,
+                        inGrammarTag,
+                        score,
+                        undefined,
+                        noWhiteSpaceAfter,
+                        this.documentationFormat,
+                    )
                 return []
             }),
         )
@@ -318,19 +348,21 @@ export class Completer {
  * @param insertHost If insert the host domain (https://tc39.es/ecma262/) before the #
  * @param insertTitle The range to be replaced with the clause title
  * @param score Match score
+ * @param supportedFormats The supported markup formats
  */
 function completeClause(
     entry: BiblioClause,
     insertHost: boolean,
     insertTitle: Range | undefined,
     score: number,
+    supportedFormats: MarkupKind[] | undefined,
 ): CompletionItem {
     return {
         label: '#' + entry.id,
         insertText: (insertHost ? entry.location || 'https://tc39.es/ecma262/' : '') + '#' + entry.id,
         additionalTextEdits: insertTitle ? [{ newText: entry.title.split('(')[0]!.trim(), range: insertTitle }] : [],
         kind: CompletionItemKind.Reference,
-        documentation: formatDocument(entry)!,
+        documentation: formatDocument(entry, supportedFormats)!,
         detail: '(clause) ' + entry.title,
         sortText: score.toString(),
     }
@@ -342,6 +374,7 @@ function completeClause(
  * @param score Match score
  * @param replaceRange Replace range when applies the match
  * @param noWhiteSpaceAfter If the insertText need a white space after it
+ * @param supportedFormats The supported markup formats
  */
 function completeProduction(
     entry: BiblioProduction,
@@ -349,6 +382,7 @@ function completeProduction(
     score: number,
     replaceRange: Range | undefined,
     noWhiteSpaceAfter: boolean,
+    supportedFormats: MarkupKind[] | undefined,
 ): CompletionItem {
     const insertText = inGrammarTag ? entry.name : `|${entry.name}|`
 
@@ -357,7 +391,7 @@ function completeProduction(
         detail: '(grammar) ' + entry.name,
         filterText: insertText,
         kind: CompletionItemKind.Interface,
-        documentation: formatDocument(entry)!,
+        documentation: formatDocument(entry, supportedFormats)!,
         sortText: score.toString(),
 
         textEdit: replaceRange ? TextEdit.replace(replaceRange, suffixSpace(insertText, noWhiteSpaceAfter)) : never,
@@ -371,6 +405,7 @@ function completeProduction(
  * @param isWellKnownSymbol If the completion is for a well-known symbol (starts with @@)
  * @param replaceRange Replace range when applies the match
  * @param noWhiteSpaceAfter If the insertText need a white space after it
+ * @param supportedFormats The supported markup formats
  */
 function completeTerm(
     entry: BiblioTerm,
@@ -378,6 +413,7 @@ function completeTerm(
     isWellKnownSymbol: boolean,
     replaceRange: Range | undefined,
     noWhiteSpaceAfter: boolean,
+    supportedFormats: MarkupKind[] | undefined,
 ): CompletionItem[] {
     return (entry.variants?.length ? entry.variants : [entry.term]).map((term): CompletionItem => {
         return {
@@ -385,7 +421,7 @@ function completeTerm(
             kind: entry.term.startsWith('%') ? CompletionItemKind.Value : CompletionItemKind.Keyword,
             filterText: isWellKnownSymbol ? '@@' + term.slice(1, -1) : never,
             detail: '(term) ' + term,
-            documentation: formatDocument(entry)!,
+            documentation: formatDocument(entry, supportedFormats)!,
             sortText: score.toString(),
 
             textEdit: replaceRange ? TextEdit.replace(replaceRange, suffixSpace(term, noWhiteSpaceAfter)) : never,
@@ -398,6 +434,7 @@ function completeTerm(
  * @param supportSnippet If the client supports snippets
  * @param prefixWith ? or !
  * @param replaceRange Replace range when applies the match
+ * @param supportedFormats The supported markup formats
  */
 function completeAbstractOperation(
     entry: BiblioOp,
@@ -405,6 +442,7 @@ function completeAbstractOperation(
     supportSnippet: boolean,
     prefixWith: '?' | '!' | undefined,
     replaceRange: Range | undefined,
+    supportedFormats: MarkupKind[] | undefined,
 ): CompletionItem {
     // Note: do not simplify to insertText only, vscode does not act consistently with prefixing with ? and !.
     const call = supportSnippet ? '( $1 )' : '( )'
@@ -413,7 +451,7 @@ function completeAbstractOperation(
         label: entry.aoid,
         kind: CompletionItemKind.Function,
         detail: '(method) ' + entry.aoid,
-        documentation: formatDocument(entry)!,
+        documentation: formatDocument(entry, supportedFormats)!,
         sortText: score.toString(),
         filterText: prefixWith ? prefixWith + entry.aoid : never,
         commitCharacters: ['('],

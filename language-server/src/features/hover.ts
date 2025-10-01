@@ -3,6 +3,7 @@ import {
     type Connection,
     type HandlerResult,
     type Hover,
+    type HoverClientCapabilities,
     type HoverParams,
     MarkupKind,
     type ServerCapabilities,
@@ -19,13 +20,16 @@ export function hoverProvider(
     connection: Connection,
     program: Program,
     documents: TextDocuments<TextDocument>,
+    capabilities: HoverClientCapabilities | undefined,
 ): NonNullable<ServerCapabilities['hoverProvider']> {
-    const hover = new HoverProvider()
+    const hover = new HoverProvider(capabilities)
     connection.onHover(hover.handler(documents, program))
     return {}
 }
 
 export class HoverProvider {
+    constructor(public capabilities: HoverClientCapabilities | undefined) {}
+
     async hover(
         document: TextDocument,
         program: Program,
@@ -46,7 +50,7 @@ export class HoverProvider {
             return word === getText(entry)
         })
         if (entry) {
-            const contents = formatDocument(entry)
+            const contents = formatDocument(entry, this.capabilities?.contentFormat)
             if (!contents) return undefined
             return { contents }
         }
