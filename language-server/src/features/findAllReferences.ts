@@ -42,10 +42,13 @@ export class ReferenceProvider {
             const result = sourceFile.grammars.filter(
                 (entry) => entry.name === word && (includeDeclaration || entry.type === 'reference'),
             )
-            return result.map((ref): Location => ({ uri: document.uri, range: sourceFile.getRelativeRange(ref.node, ref.range) }))
+            return result.map(
+                (ref): Location => ({ uri: document.uri, range: sourceFile.getRelativeRange(ref.node, ref.range) }),
+            )
         } else if (node.tag === 'h1' || node.tag === 'emu-alg') {
             if (isVariable) {
-                const text = document.getText()
+                const searchingNode = sourceFile.getAlgHeader(offset)?.parent ?? node
+                const text = sourceFile.getNodeText(searchingNode)
                 const location: Location[] = []
                 let lastIndex = 0
                 while (true) {
@@ -53,10 +56,10 @@ export class ReferenceProvider {
                     if (lastIndex === -1) break
                     location.push({
                         uri: document.uri,
-                        range: Range.create(
-                            sourceFile.text.positionAt(lastIndex + 1),
-                            sourceFile.text.positionAt(lastIndex + 1 + word.length),
-                        ),
+                        range: sourceFile.getRelativeRange(searchingNode, {
+                            position: lastIndex + 1,
+                            length: word.length,
+                        }),
                     })
                 }
                 return location
@@ -65,15 +68,23 @@ export class ReferenceProvider {
                 if (operation) {
                     const text = document.getText()
                     const location: Location[] = []
-                    let lastIndex = 0
-                    while (true) {
-                        lastIndex = text.indexOf(word, lastIndex + 1)
-                        if (lastIndex === -1) break
+                    const re =
+                        'escape' in RegExp
+                            ? new RegExp(
+                                  `\\b${
+                                      // biome-ignore lint/suspicious/noExplicitAny: remove after Node 24
+                                      (RegExp.escape as any)(word)
+                                  }\\b`,
+                                  'gu',
+                              )
+                            : // bless us
+                              new RegExp(`\\b${word}\\b`, 'g')
+                    for (const match of text.matchAll(re)) {
                         location.push({
                             uri: document.uri,
                             range: Range.create(
-                                sourceFile.text.positionAt(lastIndex),
-                                sourceFile.text.positionAt(lastIndex + word.length),
+                                sourceFile.text.positionAt(match.index),
+                                sourceFile.text.positionAt(match.index + word.length),
                             ),
                         })
                     }

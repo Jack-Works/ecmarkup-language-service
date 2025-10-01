@@ -6,7 +6,7 @@
 
         // Type Checking
         "strict": true,
-        "exactOptionalPropertyTypes": true,
+        // "exactOptionalPropertyTypes": true, // LSP definition does not support that.
         "noFallthroughCasesInSwitch": true,
         "noImplicitAny": true,
         "noImplicitOverride": true,

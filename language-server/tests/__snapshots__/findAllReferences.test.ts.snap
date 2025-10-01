@@ -129,3 +129,69 @@ exports[`find all references > parameter 1`] = `
         </emu-alg>
     "
 `;
+
+exports[`find all references no false positive (containing) 1`] = `
+"
+        <emu-clause id="sec-Save" type="abstract operation">
+                            ~~~~
+            <h1>
+                Save (
+                ~~~~
+                    _input_: an ECMAScript language value,
+                ): either a normal completion containing an Object or a throw completion
+            </h1>
+            <dl class="header">
+            </dl>
+            <emu-alg>
+            </emu-alg>
+        </emu-clause>
+        <emu-clause id="sec-SaveTheWorld" type="abstract operation">
+            <h1>
+                SaveTheWorld (
+                    _input_: an ECMAScript language value,
+                ): either a normal completion containing an Object or a throw completion
+            </h1>
+            <dl class="header">
+            </dl>
+            <emu-alg>
+            </emu-alg>
+        </emu-clause>
+        <emu-alg>
+            1. Perform ? SaveTheWorld(  ).
+        </emu-alg>
+    "
+`;
+
+exports[`find all references no false positive (cross AO variable) 1`] = `
+"
+        <emu-clause id="sec-Save" type="abstract operation">
+            <h1>
+                Save (
+                    _input_: an ECMAScript language value,
+                     ~~~~~
+                ): either a normal completion containing an Object or a throw completion
+            </h1>
+            <dl class="header">
+            </dl>
+            <emu-alg>
+                1. Set _input_ to *undefined*.
+                        ~~~~~
+            </emu-alg>
+        </emu-clause>
+        <emu-clause id="sec-SaveTheWorld" type="abstract operation">
+            <h1>
+                SaveTheWorld (
+                    _input_: an ECMAScript language value,
+                ): either a normal completion containing an Object or a throw completion
+            </h1>
+            <dl class="header">
+            </dl>
+            <emu-alg>
+                1. Set _input_ to *undefined*.
+            </emu-alg>
+        </emu-clause>
+        <emu-alg>
+            1. Perform ? SaveTheWorld(  ).
+        </emu-alg>
+    "
+`;

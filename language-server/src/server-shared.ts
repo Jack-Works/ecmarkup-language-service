@@ -1,5 +1,6 @@
 import { type Connection, type InitializeResult, TextDocumentSyncKind, TextDocuments } from 'vscode-languageserver'
 import { completionProvider } from './features/completion.js'
+import { documentHighlightProvider } from './features/documentHighlight.js'
 import { referenceProvider } from './features/findAllReferences.js'
 import { definitionProvider } from './features/gotoDefinition.js'
 import { hoverProvider } from './features/hover.js'
@@ -31,6 +32,7 @@ export function initialize(connection: Connection, version: string) {
                 hoverProvider: hoverProvider(connection, globalProgram, documents),
                 semanticTokensProvider: semanticTokensProvider(connection, globalProgram, documents),
                 referencesProvider: referenceProvider(connection, globalProgram, documents),
+                documentHighlightProvider: documentHighlightProvider(connection, globalProgram, documents),
             },
             serverInfo: {
                 name: 'ecmarkup language server',

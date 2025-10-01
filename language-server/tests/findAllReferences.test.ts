@@ -44,6 +44,88 @@ it('find all references', async () => {
     }
 })
 
+it('find all references no false positive (containing)', async () => {
+    const goto = new ReferenceProvider()
+    const { document, markers, textDocument, program } = File.of`
+        <emu-clause id="sec-Save" type="abstract operation">
+            <h1>
+                ${File.mark()}Save (
+                    _input_: an ECMAScript language value,
+                ): either a normal completion containing an Object or a throw completion
+            </h1>
+            <dl class="header">
+            </dl>
+            <emu-alg>
+            </emu-alg>
+        </emu-clause>
+        <emu-clause id="sec-SaveTheWorld" type="abstract operation">
+            <h1>
+                SaveTheWorld (
+                    _input_: an ECMAScript language value,
+                ): either a normal completion containing an Object or a throw completion
+            </h1>
+            <dl class="header">
+            </dl>
+            <emu-alg>
+            </emu-alg>
+        </emu-clause>
+        <emu-alg>
+            1. Perform ? SaveTheWorld(  ).
+        </emu-alg>
+    `
+
+    for (const { position, desc } of markers) {
+        const result = goto.findReferences(document, program, {
+            textDocument,
+            position,
+            context: { includeDeclaration: true },
+        })
+        expect(printRefs(document, result)).toMatchSnapshot(desc)
+    }
+})
+
+it('find all references no false positive (cross AO variable)', async () => {
+    const goto = new ReferenceProvider()
+    const { document, markers, textDocument, program } = File.of`
+        <emu-clause id="sec-Save" type="abstract operation">
+            <h1>
+                Save (
+                    _input_${File.mark()}: an ECMAScript language value,
+                ): either a normal completion containing an Object or a throw completion
+            </h1>
+            <dl class="header">
+            </dl>
+            <emu-alg>
+                1. Set _input_ to *undefined*.
+            </emu-alg>
+        </emu-clause>
+        <emu-clause id="sec-SaveTheWorld" type="abstract operation">
+            <h1>
+                SaveTheWorld (
+                    _input_: an ECMAScript language value,
+                ): either a normal completion containing an Object or a throw completion
+            </h1>
+            <dl class="header">
+            </dl>
+            <emu-alg>
+                1. Set _input_ to *undefined*.
+            </emu-alg>
+        </emu-clause>
+        <emu-alg>
+            1. Perform ? SaveTheWorld(  ).
+        </emu-alg>
+    `
+
+    for (const { position, desc } of markers) {
+        const result = goto.findReferences(document, program, {
+            textDocument,
+            position,
+            context: { includeDeclaration: true },
+        })
+        expect(printRefs(document, result)).toMatchSnapshot(desc)
+    }
+})
+
 function printRefs(document: TextDocument, tokens: Location[] | undefined) {
     if (tokens === undefined) return 'No reference found'
     return betterSnapshot(
