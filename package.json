@@ -5,7 +5,8 @@
     "workspaces": {
         "packages": [
             "language-server",
-            "extension-vscode"
+            "extension-vscode",
+            "ecmarkup"
         ]
     },
     "installConfig": {

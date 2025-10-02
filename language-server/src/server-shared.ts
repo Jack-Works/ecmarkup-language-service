@@ -3,9 +3,9 @@ import { completionProvider } from './features/completion.js'
 import { documentHighlightProvider } from './features/documentHighlight.js'
 import { documentSymbolProvider } from './features/documentSymbol.js'
 import { referenceProvider } from './features/findAllReferences.js'
+import { formatProvider } from './features/format.js'
 import { definitionProvider } from './features/gotoDefinition.js'
 import { hoverProvider } from './features/hover.js'
-import { linkedEditingRangeProvider } from './features/linkedEditingRange.js'
 import { renameProvider } from './features/rename.js'
 import { semanticTokensProvider } from './features/semanticTokens.js'
 import { TextDocument } from './lib.js'
@@ -38,7 +38,9 @@ export function initialize(connection: Connection, version: string) {
                     capabilities?.documentSymbol,
                 ),
                 renameProvider: renameProvider(connection, globalProgram, documents, capabilities?.rename),
-                linkedEditingRangeProvider: linkedEditingRangeProvider(connection, globalProgram, documents),
+                // linked editing range behaves strange when using ctrl-x to delete a line
+                // linkedEditingRangeProvider: linkedEditingRangeProvider(connection, globalProgram, documents),
+                documentFormattingProvider: formatProvider(connection, documents, capabilities?.formatting),
             },
             serverInfo: {
                 name: 'ecmarkup language server',

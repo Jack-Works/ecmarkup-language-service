@@ -1,7 +1,12 @@
 {
     "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
     "files": {
-        "includes": ["**/src/**/*.ts", "**/tests/**/*.ts"]
+        "includes": [
+            "extension-vscode/src/**/*.ts",
+            "extension-vscode/tests/**/*.ts",
+            "language-server/src/**/*.ts",
+            "language-server/tests/**/*.ts"
+        ]
     },
     "formatter": {
         "enabled": true,

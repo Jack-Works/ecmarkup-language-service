@@ -1,20 +1,4 @@
 {
-    ">": {
-        "prefix": "gt",
-        "body": "&gt; "
-    },
-    ">=": {
-        "prefix": "gteq",
-        "body": "&ge; "
-    },
-    "<": {
-        "prefix": "lt",
-        "body": "&lt; "
-    },
-    "<=": {
-        "prefix": "lteq",
-        "body": "&le; "
-    },
     "&": {
         "prefix": "and",
         "body": "&amp;"
