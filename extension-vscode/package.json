@@ -159,7 +159,7 @@
         "webpack-cli": "^6.0.1"
     },
     "scripts": {
-        "tmlang": "node ./scripts/generate-tmLanguage.mjs",
+        "tmlang": "node ./scripts/generate-tmLanguage.ts",
         "build": "webpack",
         "vsce": "vsce package --no-dependencies"
     }
