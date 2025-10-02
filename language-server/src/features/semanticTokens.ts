@@ -82,7 +82,7 @@ export class SemanticToken {
                 if (node.end < from || node.start > until) return
             }
             if (node.tag === 'emu-alg') {
-                for (const { index, 1: word } of sourceFile.getNodeText(node).matchAll(/(?<word>\b\w+\b)\(/g)) {
+                for (const { index, 1: word } of sourceFile.getNodeText(node).matchAll(/(?<word>\b\w+\b)(?:\(| of)/g)) {
                     if (
                         biblio
                             .filter(isBiblioOp)
@@ -96,6 +96,16 @@ export class SemanticToken {
                                 tokenType: SemanticTokenTypes.function,
                                 modifier: [SemanticTokenModifiers.mutable],
                             })
+                    } else {
+                        const local = sourceFile.localDefinedAbstractOperations.find((op) => op.name === word)
+                        if (local && node.startTagEnd) {
+                            tokens.push({
+                                offset: node.startTagEnd + index,
+                                length: word!.length,
+                                tokenType: SemanticTokenTypes.function,
+                                modifier: []
+                            })
+                        }
                     }
                 }
             } else if (node.tag === 'h1') {
@@ -108,14 +118,14 @@ export class SemanticToken {
                         if (aoid.groups!['semantics']) {
                             tokens.push({
                                 offset: node.startTagEnd + aoid.indices![1]![0],
-                                length: aoid.groups!['semantics']!.length,
+                                length: aoid.groups!['semantics']!.length - 1,
                                 tokenType: SemanticTokenTypes.comment,
                                 modifier: [],
                             })
                         }
                         tokens.push({
                             offset: node.startTagEnd + aoid.indices![2]![0],
-                            length: aoid.groups!['aoid']!.length,
+                            length: aoid.groups!['aoid']!.length - 1,
                             tokenType: SemanticTokenTypes.function,
                             modifier: [],
                         })

@@ -13,7 +13,7 @@ it('highlights AO header', async () => {
     const { document, textDocument, program } = File.basic`
         <emu-clause id="sec-OpenCalc" type="abstract operation">
             <h1>
-                OpenCalc (
+                Runtime Semantics: OpenCalc (
                     _input_: an ECMAScript language value,
                     _input2_: an ECMAScript language value,
                     [ _input3_: an ECMAScript language value, ]
@@ -52,13 +52,19 @@ it('highlights AO header', async () => {
             <dl class="header">
             </dl>
         </emu-clause>
+
+        <emu-alg>
+            1. Let _x_ be ? OpenCalc().
+            1. Let _x_ be OpenCalc of |Production|.
+        </emu-alg>
     `
     const result = await semanticTokens.tokenize(document, program, { textDocument })
     expect(printTokens(document, result)).toMatchInlineSnapshot(`
       "<emu-clause id="sec-OpenCalc" type="abstract operation">
           <h1>
-              OpenCalc (
-              ~~~~~~~~~ function
+              Runtime Semantics: OpenCalc (
+              ~~~~~~~~~~~~~~~~~ comment
+                                 ~~~~~~~~ function
                   _input_: an ECMAScript language value,
                    ~~~~~ variable
                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ type
@@ -78,7 +84,7 @@ it('highlights AO header', async () => {
       <emu-clause id="sec-OpenCalc" type="abstract operation">
           <h1>
               OpenCalc (
-              ~~~~~~~~~ function
+              ~~~~~~~~ function
                   _input_: an ECMAScript language value,
                    ~~~~~ variable
                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ type
@@ -95,7 +101,7 @@ it('highlights AO header', async () => {
       <emu-clause id="sec-OpenCalc" type="abstract operation">
           <h1>
               OpenCalc (
-              ~~~~~~~~~ function
+              ~~~~~~~~ function
                   _input_,
                    ~~~~~ variable
                   [ _input2_ ],
@@ -110,13 +116,20 @@ it('highlights AO header', async () => {
       <emu-clause id="sec-OpenCalc" type="abstract operation">
           <h1>
               Runtime Semantics: OpenCalc ( ): an Object
-              ~~~~~~~~~~~~~~~~~~ comment
-                                 ~~~~~~~~~ function
+              ~~~~~~~~~~~~~~~~~ comment
+                                 ~~~~~~~~ function
                                                ~~~~~~~~~ type
           </h1>
           <dl class="header">
           </dl>
-      </emu-clause>"
+      </emu-clause>
+
+      <emu-alg>
+          1. Let _x_ be ? OpenCalc().
+                          ~~~~~~~~ function
+          1. Let _x_ be OpenCalc of |Production|.
+                        ~~~~~~~~ function
+      </emu-alg>"
     `)
     expect(result).toMatchSnapshot()
 })
