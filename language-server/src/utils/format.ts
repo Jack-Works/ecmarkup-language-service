@@ -28,15 +28,7 @@ function formatSpecValue(value: SpecValue.SpecDataType, identLevel: number): str
     } else if (value.kind === 'list') {
         return `List<${formatSpecValue(value.elements, identLevel)}>`
     } else if (value.kind === 'opaque') {
-        return value.type
-            .replace(/^an? /, '')
-            .replace('ECMAScript language value', 'Value')
-            .replace('ECMAScript ', '')
-            .replace('function object', 'Function')
-            .replace(/(\w+) Record/, '$1')
-            .replace('*undefined*', 'undefined')
-            .replace('*false*', 'false')
-            .replace('property key', 'PropertyKey')
+        return formatSpecValueText(value.type)
     } else if (value.kind === 'unused') {
         return 'unused'
     } else if (value.kind === 'union') {
@@ -48,6 +40,33 @@ function formatSpecValue(value: SpecValue.SpecDataType, identLevel: number): str
     }
     throw new Error(`Unknown SpecValue: ${JSON.stringify(value)}`)
 }
+
+export function formatSpecValueText(text: string) {
+    return (
+        text
+            .replace(/^an? /, '')
+
+            // Note: remove those if we parse AOs by ecmarkup in the future
+            .replace(
+                /either a normal completion containing (.+) or an abrupt completion/g,
+                'NormalCompletion<$1> | AbruptCompletion',
+            )
+            .replace(
+                /either a normal completion containing (.+) or a throw completion/g,
+                'NormalCompletion<$1> | ThrowCompletion',
+            )
+            .replaceAll('~unused~', 'unused')
+
+            .replaceAll('ECMAScript language value', 'Value')
+            .replaceAll('ECMAScript ', '')
+            .replaceAll('function object', 'Function')
+            .replaceAll(/(\w+) Record/g, '$1')
+            .replaceAll('*undefined*', 'undefined')
+            .replaceAll('*false*', 'false')
+            .replaceAll('property key', 'PropertyKey')
+    )
+}
+
 function Cap(x: string): string {
     return x[0]!.toUpperCase() + x.slice(1)
 }

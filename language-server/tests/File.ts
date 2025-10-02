@@ -49,13 +49,20 @@ export class File {
     static mark = Symbol
 }
 
-export function betterSnapshot(
-    document: TextDocument,
-    mark_ranges: { range?: Range; offset?: number; length?: number; annotate: string }[],
-) {
+export interface MarkedRange {
+    range: Range
+    annotate: string
+}
+
+export interface MarkedOffset {
+    offset: number
+    length: number
+    annotate: string
+}
+export function betterSnapshot(document: TextDocument, mark_ranges: (MarkedRange | MarkedOffset)[]) {
     const textLined = document.getText().split('\n')
     const linesToInsert: [line: number, start: number, annotate: string][] = []
-    mark_ranges.forEach(({ range, annotate: annotate_text, length, offset }) => {
+    ;(mark_ranges as (MarkedOffset & MarkedRange)[]).forEach(({ range, annotate: annotate_text, length, offset }) => {
         let startLine: number, startCharacter: number, endLine: number, endCharacter: number
         if (Range.is(range)) {
             startLine = range.start.line

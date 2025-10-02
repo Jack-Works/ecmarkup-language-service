@@ -48,7 +48,7 @@ it('parses', () => {
       [
         {
           "fullDefinitionRange": {
-            "length": 175,
+            "length": 176,
             "position": 25,
           },
           "name": "MyFunction",

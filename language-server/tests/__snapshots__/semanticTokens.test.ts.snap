@@ -1,0 +1,132 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`highlights AO header 2`] = `
+[
+  {
+    "length": 9,
+    "modifier": [],
+    "offset": 74,
+    "tokenType": 0,
+  },
+  {
+    "length": 5,
+    "modifier": [],
+    "offset": 98,
+    "tokenType": 1,
+  },
+  {
+    "length": 28,
+    "modifier": [],
+    "offset": 106,
+    "tokenType": 3,
+  },
+  {
+    "length": 6,
+    "modifier": [],
+    "offset": 149,
+    "tokenType": 1,
+  },
+  {
+    "length": 28,
+    "modifier": [],
+    "offset": 158,
+    "tokenType": 3,
+  },
+  {
+    "length": 6,
+    "modifier": [],
+    "offset": 203,
+    "tokenType": 1,
+  },
+  {
+    "length": 28,
+    "modifier": [],
+    "offset": 212,
+    "tokenType": 3,
+  },
+  {
+    "length": 69,
+    "modifier": [],
+    "offset": 255,
+    "tokenType": 3,
+  },
+  {
+    "length": 9,
+    "modifier": [],
+    "offset": 458,
+    "tokenType": 0,
+  },
+  {
+    "length": 5,
+    "modifier": [],
+    "offset": 482,
+    "tokenType": 1,
+  },
+  {
+    "length": 28,
+    "modifier": [],
+    "offset": 490,
+    "tokenType": 3,
+  },
+  {
+    "length": 6,
+    "modifier": [],
+    "offset": 534,
+    "tokenType": 1,
+  },
+  {
+    "length": 28,
+    "modifier": [],
+    "offset": 544,
+    "tokenType": 3,
+  },
+  {
+    "length": 9,
+    "modifier": [],
+    "offset": 585,
+    "tokenType": 3,
+  },
+  {
+    "length": 9,
+    "modifier": [],
+    "offset": 728,
+    "tokenType": 0,
+  },
+  {
+    "length": 5,
+    "modifier": [],
+    "offset": 752,
+    "tokenType": 1,
+  },
+  {
+    "length": 6,
+    "modifier": [],
+    "offset": 775,
+    "tokenType": 1,
+  },
+  {
+    "length": 9,
+    "modifier": [],
+    "offset": 797,
+    "tokenType": 3,
+  },
+  {
+    "length": 18,
+    "modifier": [],
+    "offset": 940,
+    "tokenType": 2,
+  },
+  {
+    "length": 9,
+    "modifier": [],
+    "offset": 959,
+    "tokenType": 0,
+  },
+  {
+    "length": 9,
+    "modifier": [],
+    "offset": 973,
+    "tokenType": 3,
+  },
+]
+`;

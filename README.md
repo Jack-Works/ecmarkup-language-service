@@ -6,9 +6,16 @@ The [VSCode extension](https://marketplace.visualstudio.com/items?itemName=magic
 
 ## Roadmap
 
-- Read biblio from CDN
-- Refactor codebase with "project" that stores symbol information
-  <!-- - Support emu-import -->
+- [Select range](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_selectionRange) support (for nested calls in emu-alg like Get(Call(...)))
+- Highlight local AO with [semantic token](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_semanticTokens)
+- [Inlay hint](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_inlayHint) for AO parameters
+- [Rename](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_rename) and [linked editing range](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_linkedEditingRange)
+- [Code Action](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_codeAction) for ...
+  - Rename @@ notation to %Symbol.% notation
+
+### Hard, that require bundle ecmarkup compiler
+
+- [Formatter](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_formatting)
 
 <!-- Currently this library does not do real analysis because the compiler of the [ecmarkup language](https://github.com/tc39/ecmarkup) and the [grammarkdown language](https://github.com/rbuckton/grammarkdown) do not designed for IDE cases. -->
 

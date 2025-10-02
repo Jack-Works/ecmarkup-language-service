@@ -76,7 +76,7 @@ export class EcmarkupDocument {
                             },
                             fullDefinitionRange: {
                                 position: firstNonEmpty.index,
-                                length: lastNonEmpty.index - firstNonEmpty.index,
+                                length: lastNonEmpty.index - firstNonEmpty.index + 1,
                             },
                         })
                         // AO defines should not nest with each other

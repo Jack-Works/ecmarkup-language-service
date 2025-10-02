@@ -80,7 +80,7 @@ exports[`go to definition > linkSupport: AO 1`] = `
       },
       "targetRange": {
         "end": {
-          "character": 87,
+          "character": 88,
           "line": 14,
         },
         "start": {

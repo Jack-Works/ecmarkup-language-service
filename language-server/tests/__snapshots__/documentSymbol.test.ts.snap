@@ -1,0 +1,175 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`provides document symbols 2`] = `
+[
+  {
+    "children": [
+      {
+        "kind": 13,
+        "name": "input",
+        "range": {
+          "end": {
+            "character": 18,
+            "line": 3,
+          },
+          "start": {
+            "character": 13,
+            "line": 3,
+          },
+        },
+        "selectionRange": {
+          "end": {
+            "character": 18,
+            "line": 3,
+          },
+          "start": {
+            "character": 13,
+            "line": 3,
+          },
+        },
+      },
+      {
+        "kind": 13,
+        "name": "input2",
+        "range": {
+          "end": {
+            "character": 19,
+            "line": 4,
+          },
+          "start": {
+            "character": 13,
+            "line": 4,
+          },
+        },
+        "selectionRange": {
+          "end": {
+            "character": 19,
+            "line": 4,
+          },
+          "start": {
+            "character": 13,
+            "line": 4,
+          },
+        },
+      },
+      {
+        "kind": 13,
+        "name": "input3",
+        "range": {
+          "end": {
+            "character": 21,
+            "line": 5,
+          },
+          "start": {
+            "character": 15,
+            "line": 5,
+          },
+        },
+        "selectionRange": {
+          "end": {
+            "character": 21,
+            "line": 5,
+          },
+          "start": {
+            "character": 15,
+            "line": 5,
+          },
+        },
+      },
+      {
+        "kind": 13,
+        "name": "x",
+        "range": {
+          "end": {
+            "character": 17,
+            "line": 11,
+          },
+          "start": {
+            "character": 16,
+            "line": 11,
+          },
+        },
+        "selectionRange": {
+          "end": {
+            "character": 17,
+            "line": 11,
+          },
+          "start": {
+            "character": 16,
+            "line": 11,
+          },
+        },
+      },
+      {
+        "kind": 13,
+        "name": "y",
+        "range": {
+          "end": {
+            "character": 17,
+            "line": 12,
+          },
+          "start": {
+            "character": 16,
+            "line": 12,
+          },
+        },
+        "selectionRange": {
+          "end": {
+            "character": 17,
+            "line": 12,
+          },
+          "start": {
+            "character": 16,
+            "line": 12,
+          },
+        },
+      },
+    ],
+    "detail": "(input, input2, input3): NormalCompletion<an Object> | ThrowCompletion",
+    "kind": 12,
+    "name": "OpenCalc",
+    "range": {
+      "end": {
+        "character": 80,
+        "line": 6,
+      },
+      "start": {
+        "character": 8,
+        "line": 2,
+      },
+    },
+    "selectionRange": {
+      "end": {
+        "character": 16,
+        "line": 2,
+      },
+      "start": {
+        "character": 8,
+        "line": 2,
+      },
+    },
+  },
+]
+`;
+
+exports[`provides document symbols 4`] = `
+[
+  {
+    "kind": 12,
+    "location": {
+      "range": {
+        "end": {
+          "character": 16,
+          "line": 2,
+        },
+        "start": {
+          "character": 8,
+          "line": 2,
+        },
+      },
+      "uri": "test://d48d613fbf6241bf1b7f81f4064b68bb.emu",
+    },
+    "name": "OpenCalc",
+  },
+]
+`;

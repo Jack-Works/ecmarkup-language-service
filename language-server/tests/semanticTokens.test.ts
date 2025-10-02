@@ -118,6 +118,7 @@ it('highlights AO header', async () => {
           </dl>
       </emu-clause>"
     `)
+    expect(result).toMatchSnapshot()
 })
 
 it('highlights User Code calls in algorithms', async () => {
