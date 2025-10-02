@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { word_at_cursor } from '../src/utils/text.js'
+import { word_at_cursor } from '../src/parser/text.js'
 
 it('parse word at cursor', () => {
     function w([str]: TemplateStringsArray) {

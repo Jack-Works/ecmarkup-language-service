@@ -13,8 +13,8 @@ import {
     type TextDocuments,
     type WorkDoneProgressReporter,
 } from 'vscode-languageserver'
-import type { TextDocument } from '../lib.js'
-import { word_at_cursor } from '../utils/text.js'
+import type { TextDocument } from 'vscode-languageserver-textdocument'
+import { word_at_cursor } from '../parser/text.js'
 import type { Program } from '../workspace/program.js'
 
 export function definitionProvider(
@@ -49,8 +49,8 @@ export class GoToDefinition {
             sourceFile.text.positionAt(rightBoundary),
         )
 
-        const node = sourceFile.findNodeAt(offset)
-        if (node.tag === 'emu-grammar' || isGrammarLeading) {
+        const node = sourceFile.findElementAt(offset)
+        if (node?.nodeName === 'emu-grammar' || isGrammarLeading) {
             const result = sourceFile.localDefinedGrammars.filter((define) => define.name === word)
             return this.toClient(
                 result.map(
@@ -62,10 +62,10 @@ export class GoToDefinition {
                     }),
                 ),
             )
-        } else if (node.tag === 'emu-alg' || node.tag === 'h1') {
+        } else if (node?.nodeName === 'emu-alg' || node?.nodeName === 'h1') {
             if (isVariableLeading) {
-                const header = sourceFile.getAlgHeader(offset)
-                const headerText = sourceFile.getNodeText(header)
+                const header = sourceFile.getAbstractOperationHeader(offset)
+                const headerText = sourceFile.getNodeInnerText(header)
                 const headerDefine = headerText?.indexOf(`_${word}_`)
                 if (header && headerDefine && headerDefine !== -1) {
                     const targetSelectionRange = sourceFile.getRelativeRange(header, {
@@ -82,15 +82,15 @@ export class GoToDefinition {
                     ])
                 }
 
-                const nodeText = sourceFile.getNodeText(node)
-                let nodeDefine = nodeText.indexOf(`Let _${word}_`)
+                const nodeText = sourceFile.getNodeInnerText(node)
+                let nodeDefine = nodeText?.indexOf(`Let _${word}_`)
                 if (nodeDefine === -1) {
                     try {
-                        const match = nodeText.match(new RegExp(`For each (\\w+) _${word}_ of `))
+                        const match = nodeText?.match(new RegExp(`For each (\\w+) _${word}_ of `))
                         if (match) nodeDefine = match.index! + match[1]!.length + 6
                     } catch {}
                 }
-                if (nodeDefine === -1) return undefined
+                if (nodeDefine === -1 || !nodeDefine) return undefined
                 const targetSelectionRange = sourceFile.getRelativeRange(node, {
                     position: nodeDefine + 5,
                     length: word.length,

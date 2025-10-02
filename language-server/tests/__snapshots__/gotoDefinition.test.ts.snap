@@ -217,21 +217,21 @@ exports[`go to definition > linkSupport: local variable 1`] = `
       },
       "targetRange": {
         "end": {
-          "character": 27,
+          "character": 18,
           "line": 20,
         },
         "start": {
-          "character": 24,
+          "character": 15,
           "line": 20,
         },
       },
       "targetSelectionRange": {
         "end": {
-          "character": 27,
+          "character": 18,
           "line": 20,
         },
         "start": {
-          "character": 24,
+          "character": 15,
           "line": 20,
         },
       },
@@ -258,21 +258,21 @@ exports[`go to definition > linkSupport: parameter 1`] = `
       },
       "targetRange": {
         "end": {
-          "character": 26,
+          "character": 22,
           "line": 14,
         },
         "start": {
-          "character": 21,
+          "character": 17,
           "line": 14,
         },
       },
       "targetSelectionRange": {
         "end": {
-          "character": 26,
+          "character": 22,
           "line": 14,
         },
         "start": {
-          "character": 21,
+          "character": 17,
           "line": 14,
         },
       },
@@ -289,11 +289,11 @@ exports[`go to definition > local variable 1`] = `
     {
       "range": {
         "end": {
-          "character": 27,
+          "character": 18,
           "line": 20,
         },
         "start": {
-          "character": 24,
+          "character": 15,
           "line": 20,
         },
       },
@@ -310,11 +310,11 @@ exports[`go to definition > parameter 1`] = `
     {
       "range": {
         "end": {
-          "character": 26,
+          "character": 22,
           "line": 14,
         },
         "start": {
-          "character": 21,
+          "character": 17,
           "line": 14,
         },
       },

@@ -17,10 +17,11 @@ import {
     TextEdit,
     type WorkDoneProgressReporter,
 } from 'vscode-languageserver'
-import type { TextDocument } from '../lib.js'
+import type { TextDocument } from 'vscode-languageserver-textdocument'
+import type { EcmarkupDocument } from '../parser/ecmarkup.js'
+import { getNodeInnerText, withinAttributeValue } from '../parser/html.js'
+import { word_at_cursor } from '../parser/text.js'
 import { formatDocument } from '../utils/format.js'
-import type { EcmarkupDocument } from '../utils/parse.js'
-import { word_at_cursor } from '../utils/text.js'
 import type { Program } from '../workspace/program.js'
 
 const never: never = undefined!
@@ -72,9 +73,10 @@ export class Completer {
         const biblio = await program.resolveBiblio(document.uri)
         this.fuse.setCollection(biblio)
 
-        const fullText = document.getText()
+        const source = document.getText()
         const cursorAt = document.offsetAt(params.position)
-        const node = sourceFile.findNodeAt(cursorAt)
+        const node = sourceFile.findElementAt(cursorAt)
+        if (!node) return null
 
         const {
             leftBoundary,
@@ -90,27 +92,21 @@ export class Completer {
             isWellKnownSymbol,
             isIntrinsicLeading,
             leadingContextWord,
-        } = word_at_cursor(fullText, cursorAt)
+        } = word_at_cursor(source, cursorAt)
 
         // try to match <a href="...
-        const noWhiteSpaceAfter = fullText[rightBoundary + (isGrammar || isIntrinsic || isVariable ? 1 : 0)] === ' '
-        const is_in_href_of_a_tag =
-            node.tag === 'a' &&
-            (node.startTagEnd ? cursorAt < node.startTagEnd : true) &&
-            fullText.slice(node.start, cursorAt).match(/href\s*=\s*["']?([^"']*)$/gimu)
+        const noWhiteSpaceAfter = source[rightBoundary + (isGrammar || isIntrinsic || isVariable ? 1 : 0)] === ' '
+        const is_in_href_of_a_tag = node.nodeName === 'a' && withinAttributeValue(source, node, 'href', cursorAt)
 
         // TODO: complete local defined ids
         if (isHash || is_in_href_of_a_tag) {
             let insertTitle: Range | undefined
-            if (
-                is_in_href_of_a_tag &&
-                node.startTagEnd &&
-                // only replace title when the <a> tag is empty
-                (node.endTagStart ? !fullText.slice(node.startTagEnd, node.endTagStart).trim().length : true)
-            ) {
+            if (is_in_href_of_a_tag && node.sourceCodeLocation && !getNodeInnerText(source, node)?.trim().length) {
                 insertTitle = Range.create(
-                    sourceFile.text.positionAt(node.startTagEnd),
-                    sourceFile.text.positionAt(node.endTagStart || node.startTagEnd),
+                    sourceFile.text.positionAt(node.sourceCodeLocation.startTag.endOffset),
+                    sourceFile.text.positionAt(
+                        node.sourceCodeLocation.endTag?.startOffset ?? node.sourceCodeLocation.startTag.endOffset,
+                    ),
                 )
             }
             const search = word.replace('sec-', '')
@@ -130,20 +126,18 @@ export class Completer {
 
         // try to match <emu-clause id="...
         const is_in_id_of_emu_clause_tag =
-            node.tag === 'emu-clause' &&
-            node.startTagEnd &&
-            node.endTagStart &&
-            cursorAt > node.start &&
-            cursorAt < node.startTagEnd &&
-            fullText.slice(node.start, cursorAt).match(/id\s*=\s*["']?([^"']*)$/gmu)
+            node.nodeName === 'emu-clause' &&
+            node.sourceCodeLocation?.attrs?.['id'] &&
+            cursorAt > node.sourceCodeLocation.attrs['id'].startOffset &&
+            cursorAt < node.sourceCodeLocation.attrs['id'].endOffset
         // ... and complete the id according to the <h1> content
         if (is_in_id_of_emu_clause_tag) {
-            const h1 = node.children.find((node) => node.tag === 'h1')
-            if (h1?.startTagEnd && h1.endTagStart) {
-                const title = fullText.slice(h1.startTagEnd, h1.endTagStart).trim().split('(')[0]!
+            const h1 = node.childNodes.find((node) => node.nodeName === 'h1')
+            const h1_innerText = sourceFile.getNodeInnerText(h1)?.trim().split('(')[0]
+            if (h1_innerText) {
                 const suggestedId =
                     'sec-' +
-                    title
+                    h1_innerText
                         .toLowerCase()
                         .replace(/[^a-z0-9]+/g, '-')
                         .replace(/^-+|-+$/g, '')
@@ -215,10 +209,10 @@ export class Completer {
 
         // complete abstract operations
         if (
-            node.tag === 'emu-alg' &&
+            node.nodeName === 'emu-alg' &&
             (isCall || leadingContextWord === 'perform' || leadingContextWord === '?' || leadingContextWord === '!')
         ) {
-            const prefixWith = isCall ? fullText[leftBoundary - 1] : undefined
+            const prefixWith = isCall ? source[leftBoundary - 1] : undefined
             const replaceRange = isCall
                 ? Range.create(document.positionAt(leftBoundary - 1), document.positionAt(leftBoundary))
                 : undefined
@@ -237,7 +231,7 @@ export class Completer {
             return { isIncomplete: false, items }
         }
 
-        const inGrammarTag = node.tag === 'emu-grammar'
+        const inGrammarTag = node.nodeName === 'emu-grammar'
         // complete variables
         if (isVariableLeading || (!inGrammarTag && (leadingContextWord === 'set' || leadingContextWord === 'let'))) {
             const replaceRange = isVariableLeading
@@ -253,7 +247,7 @@ export class Completer {
                 word,
                 replaceRange,
                 // in case of "Set 🔽to ...", the noWhiteSpaceAfter is refer to the space after "to"
-                leadingContextWord ? fullText[cursorAt] === ' ' : noWhiteSpaceAfter,
+                leadingContextWord ? source[cursorAt] === ' ' : noWhiteSpaceAfter,
             )
             return { isIncomplete: false, items }
         }
@@ -479,8 +473,8 @@ function completeVariables(
     replaceRange: Range | undefined,
     noWhiteSpaceAfter: boolean,
 ): CompletionItem[] {
-    const nodeText = ecmarkup.getNodeText(ecmarkup.findNodeAt(cursorOffset))
-    const headerText = ecmarkup.getNodeText(ecmarkup.getAlgHeader(cursorOffset))
+    const nodeText = ecmarkup.getNodeInnerText(ecmarkup.findElementAt(cursorOffset)) || ''
+    const headerText = ecmarkup.getNodeInnerText(ecmarkup.getAbstractOperationHeader(cursorOffset)) || ''
 
     const variables = (headerText + nodeText).match(/(_\w+_)/g)
     const variables_deduplicated = new Set(variables)

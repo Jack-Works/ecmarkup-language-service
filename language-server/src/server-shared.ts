@@ -1,4 +1,5 @@
 import { type Connection, type InitializeResult, TextDocumentSyncKind, TextDocuments } from 'vscode-languageserver'
+import { TextDocument } from 'vscode-languageserver-textdocument'
 import { completionProvider } from './features/completion.js'
 import { documentHighlightProvider } from './features/documentHighlight.js'
 import { documentSymbolProvider } from './features/documentSymbol.js'
@@ -8,7 +9,6 @@ import { definitionProvider } from './features/gotoDefinition.js'
 import { hoverProvider } from './features/hover.js'
 import { renameProvider } from './features/rename.js'
 import { semanticTokensProvider } from './features/semanticTokens.js'
-import { TextDocument } from './lib.js'
 import { createRemoteIO } from './workspace/io.js'
 import { createProgram } from './workspace/program.js'
 

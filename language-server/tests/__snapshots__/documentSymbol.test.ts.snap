@@ -9,22 +9,22 @@ exports[`provides document symbols 2`] = `
         "name": "input",
         "range": {
           "end": {
-            "character": 18,
-            "line": 3,
+            "character": 26,
+            "line": 5,
           },
           "start": {
-            "character": 13,
-            "line": 3,
+            "character": 21,
+            "line": 5,
           },
         },
         "selectionRange": {
           "end": {
-            "character": 18,
-            "line": 3,
+            "character": 26,
+            "line": 5,
           },
           "start": {
-            "character": 13,
-            "line": 3,
+            "character": 21,
+            "line": 5,
           },
         },
       },
@@ -33,22 +33,22 @@ exports[`provides document symbols 2`] = `
         "name": "input2",
         "range": {
           "end": {
-            "character": 19,
-            "line": 4,
+            "character": 27,
+            "line": 6,
           },
           "start": {
-            "character": 13,
-            "line": 4,
+            "character": 21,
+            "line": 6,
           },
         },
         "selectionRange": {
           "end": {
-            "character": 19,
-            "line": 4,
+            "character": 27,
+            "line": 6,
           },
           "start": {
-            "character": 13,
-            "line": 4,
+            "character": 21,
+            "line": 6,
           },
         },
       },
@@ -57,22 +57,22 @@ exports[`provides document symbols 2`] = `
         "name": "input3",
         "range": {
           "end": {
-            "character": 21,
-            "line": 5,
+            "character": 29,
+            "line": 7,
           },
           "start": {
-            "character": 15,
-            "line": 5,
+            "character": 23,
+            "line": 7,
           },
         },
         "selectionRange": {
           "end": {
-            "character": 21,
-            "line": 5,
+            "character": 29,
+            "line": 7,
           },
           "start": {
-            "character": 15,
-            "line": 5,
+            "character": 23,
+            "line": 7,
           },
         },
       },
@@ -81,22 +81,22 @@ exports[`provides document symbols 2`] = `
         "name": "x",
         "range": {
           "end": {
-            "character": 17,
-            "line": 11,
+            "character": 25,
+            "line": 13,
           },
           "start": {
-            "character": 16,
-            "line": 11,
+            "character": 24,
+            "line": 13,
           },
         },
         "selectionRange": {
           "end": {
-            "character": 17,
-            "line": 11,
+            "character": 25,
+            "line": 13,
           },
           "start": {
-            "character": 16,
-            "line": 11,
+            "character": 24,
+            "line": 13,
           },
         },
       },
@@ -105,22 +105,22 @@ exports[`provides document symbols 2`] = `
         "name": "y",
         "range": {
           "end": {
-            "character": 17,
-            "line": 12,
+            "character": 25,
+            "line": 14,
           },
           "start": {
-            "character": 16,
-            "line": 12,
+            "character": 24,
+            "line": 14,
           },
         },
         "selectionRange": {
           "end": {
-            "character": 17,
-            "line": 12,
+            "character": 25,
+            "line": 14,
           },
           "start": {
-            "character": 16,
-            "line": 12,
+            "character": 24,
+            "line": 14,
           },
         },
       },
@@ -130,22 +130,22 @@ exports[`provides document symbols 2`] = `
     "name": "OpenCalc",
     "range": {
       "end": {
-        "character": 80,
-        "line": 6,
+        "character": 88,
+        "line": 8,
       },
       "start": {
-        "character": 8,
-        "line": 2,
+        "character": 16,
+        "line": 4,
       },
     },
     "selectionRange": {
       "end": {
-        "character": 16,
-        "line": 2,
+        "character": 24,
+        "line": 4,
       },
       "start": {
-        "character": 8,
-        "line": 2,
+        "character": 16,
+        "line": 4,
       },
     },
   },
@@ -159,15 +159,15 @@ exports[`provides document symbols 4`] = `
     "location": {
       "range": {
         "end": {
-          "character": 16,
-          "line": 2,
+          "character": 24,
+          "line": 4,
         },
         "start": {
-          "character": 8,
-          "line": 2,
+          "character": 16,
+          "line": 4,
         },
       },
-      "uri": "test://d48d613fbf6241bf1b7f81f4064b68bb.emu",
+      "uri": "test://1fe3ac1a5f7405c67b56a061ae3d0ebe.emu",
     },
     "name": "OpenCalc",
   },

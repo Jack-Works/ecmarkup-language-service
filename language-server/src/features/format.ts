@@ -11,7 +11,7 @@ import {
     TextEdit,
     type WorkDoneProgressReporter,
 } from 'vscode-languageserver'
-import type { TextDocument } from '../lib.js'
+import type { TextDocument } from 'vscode-languageserver-textdocument'
 
 import formatter = require('ecmarkup/lib/formatter/ecmarkup.js')
 
@@ -40,11 +40,17 @@ export class Formatter {
         ]
     }
 
-    async formatRange(_document: TextDocument, _params: DocumentRangeFormattingParams): Promise<TextEdit[] | undefined> {
+    async formatRange(
+        _document: TextDocument,
+        _params: DocumentRangeFormattingParams,
+    ): Promise<TextEdit[] | undefined> {
         return undefined
     }
 
-    async formatOnType(_document: TextDocument, _params: DocumentOnTypeFormattingParams): Promise<TextEdit[] | undefined> {
+    async formatOnType(
+        _document: TextDocument,
+        _params: DocumentOnTypeFormattingParams,
+    ): Promise<TextEdit[] | undefined> {
         return undefined
     }
 

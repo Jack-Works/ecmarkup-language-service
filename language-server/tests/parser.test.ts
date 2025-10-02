@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest'
-import { TextDocument } from '../src/lib.js'
-import { dedent, EcmarkupDocument } from '../src/utils/parse.js'
+import { TextDocument } from 'vscode-languageserver-textdocument'
+import { EcmarkupDocument } from '../src/parser/ecmarkup.js'
 
 it('parses', () => {
     const doc = new EcmarkupDocument(
@@ -33,12 +33,12 @@ it('parses', () => {
         {
           "fullDefinitionRange": {
             "length": 36,
-            "position": 21,
+            "position": 52,
           },
           "name": "MoreOneNight",
           "range": {
             "length": 12,
-            "position": 21,
+            "position": 52,
           },
           "summary": "MoreOneNight :: "more" "one" "night"",
           "type": "define",
@@ -50,12 +50,12 @@ it('parses', () => {
         {
           "fullDefinitionRange": {
             "length": 176,
-            "position": 25,
+            "position": 29,
           },
           "name": "MyFunction",
           "range": {
             "length": 10,
-            "position": 25,
+            "position": 29,
           },
           "summary": "MyFunction (
           _input_: an ECMAScript language value,
@@ -64,16 +64,4 @@ it('parses', () => {
         },
       ]
     `)
-})
-
-it('dedent', () => {
-    expect(
-        dedent(`
-    Head
-      Body
-  `),
-    ).toMatchInlineSnapshot(`
-    "Head
-      Body"
-  `)
 })

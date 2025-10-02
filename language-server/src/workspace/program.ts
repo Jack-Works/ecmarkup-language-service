@@ -1,8 +1,8 @@
 import bundledBiblio from '@tc39/ecma262-biblio' with { type: 'json' }
 import type { BiblioEntry } from '@tc39/ecma262-biblio'
 import type { TextDocument } from 'vscode-html-languageservice'
-import { EcmarkupDocument } from '../utils/parse.js'
-import { getLanguageModelCache } from '../utils/parseCache.js'
+import { getLanguageModelCache } from '../parser/cache.js'
+import { EcmarkupDocument } from '../parser/ecmarkup.js'
 import type { IO } from './io.js'
 
 export interface Program {

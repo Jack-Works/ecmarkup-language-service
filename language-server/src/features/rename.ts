@@ -14,9 +14,10 @@ import {
     type WorkDoneProgressReporter,
     type WorkspaceEdit,
 } from 'vscode-languageserver'
-import type { TextDocument } from '../lib.js'
+import type { TextDocument } from 'vscode-languageserver-textdocument'
+import { getFirstElementChild } from '../parser/html.js'
+import { word_at_cursor } from '../parser/text.js'
 import { getText } from '../utils/biblio.js'
-import { word_at_cursor } from '../utils/text.js'
 import type { Program } from '../workspace/program.js'
 
 type PrepareResult = Range | { range: Range; placeholder: string } | { defaultBehavior: boolean } | undefined | null
@@ -42,25 +43,26 @@ export class RenameProvider {
         _token?: CancellationToken,
         _workDoneProgress?: WorkDoneProgressReporter,
     ): Promise<WorkspaceEdit | undefined> {
-        const fullText = document.getText()
+        const source = document.getText()
         const offset = document.offsetAt(params.position)
         const sourceFile = program.getSourceFile(document)
         const biblio = await program.resolveBiblio(document.uri)
 
-        const { word, isVariable } = word_at_cursor(fullText, offset)
+        const { word, isVariable } = word_at_cursor(source, offset)
         rejectRenameInBiblio(word, biblio)
 
         if (isVariable) {
-            const node = sourceFile.getAlgHeader(offset)?.parent || sourceFile.findNodeAt(offset)
+            const node = getFirstElementChild(
+                sourceFile.getAbstractOperationHeader(offset)?.parentNode || sourceFile.findElementAt(offset),
+            )
             const edits: TextEdit[] = []
-            for (const vars of sourceFile.getNodeText(node).matchAll(/_(\w+)_/g)) {
+            const innerText = sourceFile.getNodeInnerText(node)
+            if (!innerText || !node) return undefined
+            for (const vars of innerText.matchAll(/_(\w+)_/g)) {
                 if (vars[1] === word) {
                     edits.push(
                         TextEdit.replace(
-                            sourceFile.getRelativeRange(node, {
-                                position: vars.index! + 1,
-                                length: word.length,
-                            }),
+                            sourceFile.getRelativeRangeToInnerText(node, vars.index! + 1, word.length),
                             params.newName,
                         ),
                     )
@@ -80,7 +82,7 @@ export class RenameProvider {
             return { changes: { [document.uri]: edits } }
         }
 
-        const operation = sourceFile.findReferenceOfLocalAbstractOperation(word)
+        const operation = sourceFile.findReferencesOfLocalAbstractOperation(word)
         if (operation) {
             return {
                 changes: {
@@ -103,12 +105,12 @@ export class RenameProvider {
         _token?: CancellationToken,
         _workDoneProgress?: WorkDoneProgressReporter,
     ): Promise<PrepareResult> {
-        const fullText = document.getText()
+        const source = document.getText()
         const offset = document.offsetAt(params.position)
         const sourceFile = program.getSourceFile(document)
         const biblio = await program.resolveBiblio(document.uri)
 
-        const { word, leftBoundary, rightBoundary, isVariable } = word_at_cursor(fullText, offset)
+        const { word, leftBoundary, rightBoundary, isVariable } = word_at_cursor(source, offset)
         rejectRenameInBiblio(word, biblio)
         if (
             isVariable ||

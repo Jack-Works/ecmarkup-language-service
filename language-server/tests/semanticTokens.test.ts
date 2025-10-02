@@ -1,11 +1,11 @@
 import { expect, it } from 'vitest'
+import type { TextDocument } from 'vscode-languageserver-textdocument'
 import {
     SemanticToken,
     type SemanticTokenData,
     SemanticTokenModifiers,
     SemanticTokenTypes,
 } from '../src/features/semanticTokens.js'
-import type { TextDocument } from '../src/lib.js'
 import { betterSnapshot, File } from './File.js'
 
 it('highlights AO header', async () => {

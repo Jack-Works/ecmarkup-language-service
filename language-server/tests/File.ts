@@ -1,7 +1,7 @@
 import { hash } from 'node:crypto'
+import dedent from 'dedent-js'
+import { TextDocument } from 'vscode-languageserver-textdocument'
 import { type Position, Range, type TextDocumentIdentifier } from 'vscode-languageserver-types'
-import { TextDocument } from '../src/lib.js'
-import { dedent } from '../src/utils/parse.js'
 import type { IO } from '../src/workspace/io.js'
 import { createProgram } from '../src/workspace/program.js'
 
@@ -41,7 +41,7 @@ export class File {
     }
 
     static basic(text: TemplateStringsArray) {
-        const full = dedent(text.join(''))
+        const full = text.join('')
         const document = TextDocument.create(`test://${hash('md5', full)}.emu`, 'ecmarkup', 0, full)
         const file = new File(document)
         return file

@@ -1,12 +1,13 @@
 import { expect, it } from 'vitest'
+import type { TextDocument } from 'vscode-languageserver-textdocument'
 import { type DocumentSymbol, type SymbolInformation, SymbolKind } from 'vscode-languageserver-types'
 import { DocumentSymbolProvider } from '../src/features/documentSymbol.js'
-import type { TextDocument } from '../src/lib.js'
 import { betterSnapshot, File, type MarkedOffset, type MarkedRange } from './File.js'
 
 it('provides document symbols', async () => {
     const documentSymbol = new DocumentSymbolProvider()
     const { document, textDocument, program } = File.basic`
+        <!doctype html>
         <emu-clause id="sec-OpenCalc" type="abstract operation">
             <h1>
                 OpenCalc (
@@ -27,7 +28,8 @@ it('provides document symbols', async () => {
     `
     const result = await documentSymbol.findDocumentSymbols(document, program, { textDocument })
     expect(printSymbols(document, result!)).toMatchInlineSnapshot(`
-      "<emu-clause id="sec-OpenCalc" type="abstract operation">
+      "<!doctype html>
+      <emu-clause id="sec-OpenCalc" type="abstract operation">
           <h1>
               OpenCalc (
               ~~~~~~~~ OpenCalc (Function) (input, input2, input3): NormalCompletion<an Object> | ThrowCompletion
@@ -56,7 +58,8 @@ it('provides document symbols', async () => {
     documentSymbol.capabilities = undefined
     const result2 = await documentSymbol.findDocumentSymbols(document, program, { textDocument })
     expect(printSymbols(document, result2!)).toMatchInlineSnapshot(`
-      "<emu-clause id="sec-OpenCalc" type="abstract operation">
+      "<!doctype html>
+      <emu-clause id="sec-OpenCalc" type="abstract operation">
           <h1>
               OpenCalc (
               ~~~~~~~~ OpenCalc (Function)

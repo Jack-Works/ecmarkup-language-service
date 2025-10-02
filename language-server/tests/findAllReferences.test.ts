@@ -1,7 +1,7 @@
 import { expect, it } from 'vitest'
 import type { Location } from 'vscode-languageserver'
+import type { TextDocument } from 'vscode-languageserver-textdocument'
 import { ReferenceProvider } from '../src/features/findAllReferences.js'
-import type { TextDocument } from '../src/lib.js'
 import { betterSnapshot, File } from './File.js'
 
 it('find all references', async () => {

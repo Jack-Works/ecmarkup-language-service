@@ -1,3 +1,4 @@
+import { isElementNode } from 'parse5/lib/tree-adapters/default.js'
 import {
     type CancellationToken,
     type Connection,
@@ -12,7 +13,8 @@ import {
     type TextDocuments,
     type WorkDoneProgressReporter,
 } from 'vscode-languageserver'
-import type { TextDocument } from '../lib.js'
+import type { TextDocument } from 'vscode-languageserver-textdocument'
+import { getAbstractOperationHeader } from '../parser/ecmarkup.js'
 import { formatSpecValueText } from '../utils/format.js'
 import type { Program } from '../workspace/program.js'
 
@@ -51,22 +53,23 @@ export class DocumentSymbolProvider {
             })
         }
         for (const operation of sourceFile.localDefinedAbstractOperations) {
-            const header = sourceFile.getAlgHeader(operation.node.startTagEnd || operation.node.start)
+            const header = getAbstractOperationHeader(operation.node)
+            const position = operation.range.position + operation.range.length
+            const headerText = sourceFile.getNodeInnerText(header)?.slice(position)
             let detail: string | undefined
             const seenVariables = new Set<string>()
             const children: DocumentSymbol[] = []
 
-            if (header) {
-                const position = operation.range.position + operation.range.length
-                const headerText = sourceFile.getNodeText(header).slice(position)
+            if (header && headerText) {
                 const params = [...headerText.matchAll(/_(\w+)_/g)]
                 params.forEach((param) => {
                     if (!seenVariables.has(param[1]!)) {
                         seenVariables.add(param[1]!)
-                        const range = sourceFile.getRelativeRange(header, {
-                            position: position + param.index + 1,
-                            length: param[1]!.length,
-                        })
+                        const range = sourceFile.getRelativeRangeToInnerText(
+                            header,
+                            position + param.index + 1,
+                            param[1]!.length,
+                        )
                         children.push({
                             name: param[1]!,
                             kind: SymbolKind.Variable,
@@ -80,16 +83,17 @@ export class DocumentSymbolProvider {
                 if (returnType) detail += `: ${formatSpecValueText(returnType.trim()).trim()}`
             }
 
-            const parent = operation.node.parent
-            if (parent) {
-                const fullText = sourceFile.getNodeText(parent)
-                for (const match of fullText.matchAll(/let\s*_(\w+)_/dgi)) {
+            const parent = operation.node.parentNode
+            const source = sourceFile.getNodeInnerText(parent)
+            if (isElementNode(parent) && source) {
+                for (const match of source.matchAll(/let\s*_(\w+)_/dgi)) {
                     if (!seenVariables.has(match[1]!)) {
                         seenVariables.add(match[1]!)
-                        const range = sourceFile.getRelativeRange(parent, {
-                            position: match.indices![1]![0],
-                            length: match[1]!.length,
-                        })
+                        const range = sourceFile.getRelativeRangeToInnerText(
+                            parent,
+                            match.indices![1]![0],
+                            match[1]!.length,
+                        )
                         children.push({
                             name: match[1]!,
                             kind: SymbolKind.Variable,

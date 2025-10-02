@@ -5,9 +5,12 @@
     "type": "module",
     "dependencies": {
         "@tc39/ecma262-biblio": "^2.1.2951",
+        "@types/parse5": "^6.0.1",
+        "dedent-js": "^1.0.1",
         "ecmarkup": "*",
         "fuse.js": "^7.1.0",
         "grammarkdown": "^3.3.2",
+        "parse5": "^6.0.1",
         "vscode-html-languageservice": "^5.5.1",
         "vscode-languageserver": "^9.0.1",
         "vscode-languageserver-textdocument": "^1.0.12",

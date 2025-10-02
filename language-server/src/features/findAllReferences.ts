@@ -8,8 +8,9 @@ import type {
     TextDocuments,
     WorkDoneProgressReporter,
 } from 'vscode-languageserver'
-import type { TextDocument } from '../lib.js'
-import { word_at_cursor } from '../utils/text.js'
+import type { TextDocument } from 'vscode-languageserver-textdocument'
+import { getFirstElementChild } from '../parser/html.js'
+import { word_at_cursor } from '../parser/text.js'
 import type { Program } from '../workspace/program.js'
 
 export function referenceProvider(
@@ -36,35 +37,34 @@ export class ReferenceProvider {
         const { word, isGrammarLeading, isVariable } = word_at_cursor(document.getText(), offset)
         const { includeDeclaration } = params.context
 
-        const node = sourceFile.findNodeAt(offset)
-        if (node.tag === 'emu-grammar' || isGrammarLeading) {
+        const node = sourceFile.findElementAt(offset)
+        if (node?.nodeName === 'emu-grammar' || isGrammarLeading) {
             const result = sourceFile.grammars.filter(
                 (entry) => entry.name === word && (includeDeclaration || entry.type === 'reference'),
             )
             return result.map(
                 (ref): Location => ({ uri: document.uri, range: sourceFile.getRelativeRange(ref.node, ref.range) }),
             )
-        } else if (node.tag === 'h1' || node.tag === 'emu-alg') {
+        } else if (node?.nodeName === 'h1' || node?.nodeName === 'emu-alg') {
             if (isVariable) {
-                const searchingNode = sourceFile.getAlgHeader(offset)?.parent ?? node
-                const text = sourceFile.getNodeText(searchingNode)
+                const searchingNode = getFirstElementChild(
+                    sourceFile.getAbstractOperationHeader(offset)?.parentNode ?? node,
+                )
+                const text = sourceFile.getNodeInnerText(searchingNode)
                 const location: Location[] = []
                 let lastIndex = 0
-                while (true) {
+                while (text && searchingNode) {
                     lastIndex = text.indexOf(`_${word}_`, lastIndex + 1)
                     if (lastIndex === -1) break
                     location.push({
                         uri: document.uri,
-                        range: sourceFile.getRelativeRange(searchingNode, {
-                            position: lastIndex + 1,
-                            length: word.length,
-                        }),
+                        range: sourceFile.getRelativeRangeToInnerText(searchingNode, lastIndex + 1, word.length),
                     })
                 }
                 return location
             } else {
                 return sourceFile
-                    .findReferenceOfLocalAbstractOperation(word)
+                    .findReferencesOfLocalAbstractOperation(word)
                     ?.map((range): Location => ({ uri: document.uri, range }))
             }
         }

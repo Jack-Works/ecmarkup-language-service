@@ -4,7 +4,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import type { TextDocument } from '../lib.js'
+import type { TextDocument } from 'vscode-languageserver-textdocument'
 
 export interface LanguageModelCache<T> {
     get(document: TextDocument): T

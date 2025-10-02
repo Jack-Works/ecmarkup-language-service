@@ -1,4 +1,5 @@
-import type { Node } from 'vscode-html-languageservice'
+import type { Element } from 'parse5'
+import { isElementNode } from 'parse5/lib/tree-adapters/default.js'
 import type {
     Connection,
     SemanticTokens,
@@ -7,7 +8,8 @@ import type {
     ServerCapabilities,
     TextDocuments,
 } from 'vscode-languageserver'
-import type { TextDocument } from '../lib.js'
+import type { TextDocument } from 'vscode-languageserver-textdocument'
+import { getAbstractOperationHeader } from '../parser/ecmarkup.js'
 import { isBiblioOp } from '../utils/biblio.js'
 import type { Program } from '../workspace/program.js'
 
@@ -75,32 +77,37 @@ export class SemanticToken {
         const sourceFile = program.getSourceFile(document)
         const tokens: SemanticTokenData[] = []
 
-        function visitor(node: Node) {
+        function visitor(node: Element) {
             if ('range' in params) {
-                const from = document.offsetAt(params.range.start)
-                const until = document.offsetAt(params.range.end)
-                if (node.end < from || node.start > until) return
+                const range_from = document.offsetAt(params.range.start)
+                const range_to = document.offsetAt(params.range.end)
+                const node_from = node.sourceCodeLocation?.startOffset
+                const node_to = node.sourceCodeLocation?.endOffset
+                if (node_from !== undefined && range_from < node_from) {
+                    if (node_to !== undefined && range_to > node_to) return
+                }
             }
-            if (node.tag === 'emu-alg') {
-                for (const { index, 1: word } of sourceFile.getNodeText(node).matchAll(/(?<word>\b\w+\b)(?:\(| of)/g)) {
+            if (node.nodeName === 'emu-alg') {
+                for (const { index, 1: word } of (sourceFile.getNodeInnerText(node) || '').matchAll(
+                    /(?<word>\b\w+\b)(?:\(| of)/g,
+                )) {
                     if (
                         biblio
                             .filter(isBiblioOp)
                             .find((entry) => entry.aoid === word)
                             ?.effects.includes('user-code')
                     ) {
-                        node.startTagEnd &&
-                            tokens.push({
-                                offset: node.startTagEnd + index,
-                                length: word!.length,
-                                tokenType: SemanticTokenTypes.function,
-                                modifier: [SemanticTokenModifiers.mutable],
-                            })
+                        tokens.push({
+                            offset: node.sourceCodeLocation!.startTag.endOffset + index,
+                            length: word!.length,
+                            tokenType: SemanticTokenTypes.function,
+                            modifier: [SemanticTokenModifiers.mutable],
+                        })
                     } else {
                         const local = sourceFile.localDefinedAbstractOperations.find((op) => op.name === word)
-                        if (local && node.startTagEnd) {
+                        if (local) {
                             tokens.push({
-                                offset: node.startTagEnd + index,
+                                offset: node.sourceCodeLocation!.startTag.endOffset + index,
                                 length: word!.length,
                                 tokenType: SemanticTokenTypes.function,
                                 modifier: [],
@@ -108,32 +115,32 @@ export class SemanticToken {
                         }
                     }
                 }
-            } else if (node.tag === 'h1') {
-                if (node.startTagEnd && sourceFile.getAlgHeader(node.startTagEnd)) {
-                    const text = sourceFile.getNodeText(node)
-                    const aoid = text.match(
+            } else if (node.nodeName === 'h1') {
+                if (getAbstractOperationHeader(node)) {
+                    const innerText = sourceFile.getNodeInnerText(node)
+                    const aoid = innerText?.match(
                         /(?<semantics>(?:Static Semantics:|Runtime Semantics:))?\s*(?<aoid>[\w.[\]% ]+)\s*\(/du,
                     )
-                    if (aoid) {
+                    if (aoid && innerText) {
                         if (aoid.groups!['semantics']) {
                             tokens.push({
-                                offset: node.startTagEnd + aoid.indices![1]![0],
+                                offset: node.sourceCodeLocation!.startTag.endOffset + aoid.indices![1]![0],
                                 length: aoid.groups!['semantics']!.length - 1,
                                 tokenType: SemanticTokenTypes.comment,
                                 modifier: [],
                             })
                         }
                         tokens.push({
-                            offset: node.startTagEnd + aoid.indices![2]![0],
+                            offset: node.sourceCodeLocation!.startTag.endOffset + aoid.indices![2]![0],
                             length: aoid.groups!['aoid']!.length - 1,
                             tokenType: SemanticTokenTypes.function,
                             modifier: [],
                         })
                         const matcher = /\[?\s*_(?<variable>\w+)_\s*\]?\s*(:\s*(?<type>.*)\]?\s*,)?/dg
                         matcher.lastIndex = aoid.index!
-                        for (const parameter of text.matchAll(matcher)) {
+                        for (const parameter of innerText.matchAll(matcher)) {
                             tokens.push({
-                                offset: node.startTagEnd + parameter.indices![1]![0],
+                                offset: node.sourceCodeLocation!.startTag.endOffset + parameter.indices![1]![0],
                                 length: parameter.groups!['variable']!.length,
                                 tokenType: SemanticTokenTypes.variable,
                                 modifier: [],
@@ -141,7 +148,7 @@ export class SemanticToken {
                             const type = parameter.indices![3]?.[0]
                             type &&
                                 tokens.push({
-                                    offset: node.startTagEnd + type,
+                                    offset: node.sourceCodeLocation!.startTag.endOffset + type,
                                     length: parameter.groups!['type']!.length,
                                     tokenType: SemanticTokenTypes.type,
                                     modifier: [],
@@ -149,10 +156,10 @@ export class SemanticToken {
                         }
                         const typeMatcher = /\): (?<type>.+)/dg
                         typeMatcher.lastIndex = matcher.lastIndex
-                        const returnType = typeMatcher.exec(text)
+                        const returnType = typeMatcher.exec(innerText)
                         if (returnType) {
                             tokens.push({
-                                offset: node.startTagEnd + returnType.indices![1]![0],
+                                offset: node.sourceCodeLocation!.startTag.endOffset + returnType.indices![1]![0],
                                 length: returnType.groups!['type']!.length,
                                 tokenType: SemanticTokenTypes.type,
                                 modifier: [],
@@ -160,9 +167,9 @@ export class SemanticToken {
                         }
                     }
                 }
-            } else node.children.forEach(visitor)
+            } else if ('childNodes' in node) node.childNodes.filter(isElementNode).forEach(visitor)
         }
-        sourceFile.html.roots.forEach(visitor)
+        sourceFile.html.childNodes.filter(isElementNode).forEach(visitor)
         return tokens
     }
 

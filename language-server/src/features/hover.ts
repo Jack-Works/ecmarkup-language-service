@@ -10,10 +10,10 @@ import {
     type TextDocuments,
     type WorkDoneProgressReporter,
 } from 'vscode-languageserver'
-import type { TextDocument } from '../lib.js'
+import type { TextDocument } from 'vscode-languageserver-textdocument'
+import { word_at_cursor } from '../parser/text.js'
 import { getText } from '../utils/biblio.js'
 import { formatDocument } from '../utils/format.js'
-import { word_at_cursor } from '../utils/text.js'
 import type { Program } from '../workspace/program.js'
 
 export function hoverProvider(
@@ -37,12 +37,12 @@ export class HoverProvider {
         _token?: CancellationToken,
         _workDoneProgress?: WorkDoneProgressReporter,
     ): Promise<Hover | undefined> {
-        const fullText = document.getText()
+        const source = document.getText()
         const offset = document.offsetAt(params.position)
         const sourceFile = program.getSourceFile(document)
         const biblio = await program.resolveBiblio(document.uri)
 
-        const { word, isGrammar, isIntrinsic } = word_at_cursor(fullText, offset)
+        const { word, isGrammar, isIntrinsic } = word_at_cursor(source, offset)
 
         const entry = biblio.find((entry) => {
             if (isGrammar) return entry.type === 'production' && word === entry.name

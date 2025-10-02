@@ -8,7 +8,7 @@ import type {
     TextDocuments,
     WorkDoneProgressReporter,
 } from 'vscode-languageserver'
-import type { TextDocument } from '../lib.js'
+import type { TextDocument } from 'vscode-languageserver-textdocument'
 import type { Program } from '../workspace/program.js'
 import { ReferenceProvider } from './findAllReferences.js'
 

@@ -9,7 +9,7 @@ import type {
     TextDocuments,
     WorkDoneProgressReporter,
 } from 'vscode-languageserver'
-import type { TextDocument } from '../lib.js'
+import type { TextDocument } from 'vscode-languageserver-textdocument'
 import { getText, getURL } from '../utils/biblio.js'
 import type { Program } from '../workspace/program.js'
 

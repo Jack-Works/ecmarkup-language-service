@@ -1540,7 +1540,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/parse5@npm:^6.0.2, @types/parse5@npm:^6.0.3":
+"@types/parse5@npm:^6.0.1, @types/parse5@npm:^6.0.2, @types/parse5@npm:^6.0.3":
   version: 6.0.3
   resolution: "@types/parse5@npm:6.0.3"
   checksum: 10c0/a7c7ef6625974b74b93c1105953003a2291897e453369efcadc569b907de2784d61d4e6905de3ef959fa07f3278f41ed0c22ead0173776023fc43b6ed31042d0
@@ -3262,9 +3262,12 @@ __metadata:
   dependencies:
     "@tc39/ecma262-biblio": "npm:^2.1.2951"
     "@types/node": "npm:24.5.2"
+    "@types/parse5": "npm:^6.0.1"
+    dedent-js: "npm:^1.0.1"
     ecmarkup: "npm:*"
     fuse.js: "npm:^7.1.0"
     grammarkdown: "npm:^3.3.2"
+    parse5: "npm:^6.0.1"
     vscode-html-languageservice: "npm:^5.5.1"
     vscode-languageserver: "npm:^9.0.1"
     vscode-languageserver-textdocument: "npm:^1.0.12"
