@@ -1,13 +1,12 @@
-import {
-    type CancellationToken,
-    type Connection,
-    type Location,
-    Range,
-    type ReferenceParams,
-    type ResultProgressReporter,
-    type ServerCapabilities,
-    type TextDocuments,
-    type WorkDoneProgressReporter,
+import type {
+    CancellationToken,
+    Connection,
+    Location,
+    ReferenceParams,
+    ResultProgressReporter,
+    ServerCapabilities,
+    TextDocuments,
+    WorkDoneProgressReporter,
 } from 'vscode-languageserver'
 import type { TextDocument } from '../lib.js'
 import { word_at_cursor } from '../utils/text.js'
@@ -64,32 +63,9 @@ export class ReferenceProvider {
                 }
                 return location
             } else {
-                const operation = sourceFile.localDefinedAbstractOperations.find((entry) => entry.name === word)
-                if (operation) {
-                    const text = document.getText()
-                    const location: Location[] = []
-                    const re =
-                        'escape' in RegExp
-                            ? new RegExp(
-                                  `\\b${
-                                      // biome-ignore lint/suspicious/noExplicitAny: remove after Node 24
-                                      (RegExp.escape as any)(word)
-                                  }\\b`,
-                                  'gu',
-                              )
-                            : // bless us
-                              new RegExp(`\\b${word}\\b`, 'g')
-                    for (const match of text.matchAll(re)) {
-                        location.push({
-                            uri: document.uri,
-                            range: Range.create(
-                                sourceFile.text.positionAt(match.index),
-                                sourceFile.text.positionAt(match.index + word.length),
-                            ),
-                        })
-                    }
-                    return location
-                }
+                return sourceFile
+                    .findReferenceOfLocalAbstractOperation(word)
+                    ?.map((range): Location => ({ uri: document.uri, range }))
             }
         }
 

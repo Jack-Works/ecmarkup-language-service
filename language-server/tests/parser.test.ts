@@ -9,6 +9,7 @@ it('parses', () => {
             'ecmarkup',
             0,
             `
+                <meta />
                 <emu-grammar type="definition">
                     MoreOneNight :: "more" "one" "night"
                 </emu-grammar>

@@ -5,6 +5,7 @@ import { documentSymbolProvider } from './features/documentSymbol.js'
 import { referenceProvider } from './features/findAllReferences.js'
 import { definitionProvider } from './features/gotoDefinition.js'
 import { hoverProvider } from './features/hover.js'
+import { renameProvider } from './features/rename.js'
 import { semanticTokensProvider } from './features/semanticTokens.js'
 import { TextDocument } from './lib.js'
 import { createRemoteIO } from './workspace/io.js'
@@ -29,7 +30,13 @@ export function initialize(connection: Connection, version: string) {
                 documentHighlightProvider: documentHighlightProvider(connection, globalProgram, documents),
                 // It's kinda working for providing links for 262's AOs, but looks strange in IDE, let's skip it for now.
                 // documentLinkProvider: documentLinkProvider(connection, globalProgram, documents),
-                documentSymbolProvider: documentSymbolProvider(connection, globalProgram, documents, capabilities?.documentSymbol),
+                documentSymbolProvider: documentSymbolProvider(
+                    connection,
+                    globalProgram,
+                    documents,
+                    capabilities?.documentSymbol,
+                ),
+                renameProvider: renameProvider(connection, globalProgram, documents, capabilities?.rename),
             },
             serverInfo: {
                 name: 'ecmarkup language server',

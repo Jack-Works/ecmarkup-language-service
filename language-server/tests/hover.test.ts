@@ -33,6 +33,10 @@ it('hover on local defined grammar', async () => {
         <emu-clause>
             MoreOneNight${File.mark('possible ref')}
         </emu-clause>
+        <emu-prodref name="MoreOneNight${
+            // TODO: not working yet
+            File.mark('emu-prodref')
+        }"></emu-prodref>
     `
     for (const { desc, position, around } of markers) {
         const result = await hover.hover(document, program, { textDocument, position })

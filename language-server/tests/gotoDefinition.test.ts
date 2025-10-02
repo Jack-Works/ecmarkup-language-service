@@ -9,6 +9,10 @@ it('go to definition', async () => {
             MoreOneNight ::= "more" "one" "night"
         </emu-grammar>
         <p>A |MoreOneNight${File.mark('grammar')}| production.</p>
+        <emu-prodref name="MoreOneNight${
+            // TODO: not working yet
+            File.mark('emu-prodref')
+        }"></emu-prodref>
         <emu-grammar>
             Other
                 MoreOneNight${File.mark('grammar in grammar')}

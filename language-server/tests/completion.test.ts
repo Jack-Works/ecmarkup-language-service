@@ -104,6 +104,10 @@ it('complete grammars', async () => {
             ${File.mark('grammar no filter')}
             More${File.mark('grammar')}
         </emu-grammar>
+        <emu-prodref name="${
+            // TODO: not working yet
+            File.mark('emu-prodref')
+        }"></emu-prodref>
         <p>|${File.mark('starting trigger char only')}</p>
         <p>|${File.mark('full syntax')}|</p>
     `

@@ -8,7 +8,7 @@ The [VSCode extension](https://marketplace.visualstudio.com/items?itemName=magic
 
 - [Select range](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_selectionRange) support (for nested calls in emu-alg like Get(Call(...)))
 - [Inlay hint](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_inlayHint) for AO parameters
-- [Rename](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_rename) and [linked editing range](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_linkedEditingRange)
+- [linked editing range](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_linkedEditingRange)
 - [Code Action](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_codeAction) for ...
   - Rename @@ notation to %Symbol.% notation
 

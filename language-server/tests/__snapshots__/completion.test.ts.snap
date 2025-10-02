@@ -424,6 +424,75 @@ exports[`complete clauses (#sec-...) > suggest with no end tag 1`] = `
 }
 `;
 
+exports[`complete grammars > emu-prodref 1`] = `
+{
+  "around": "<emu-prodref name="🔽"></emu-prodref>",
+  "examples": [
+    {
+      "detail": "(term) Normative Optional",
+      "documentation": {
+        "kind": "markdown",
+        "value": "[https://tc39.es/ecma262/#sec-conformance](https://tc39.es/ecma262/#sec-conformance)",
+      },
+      "filterText": undefined,
+      "insertText": "Normative Optional ",
+      "kind": 14,
+      "label": "Normative Optional",
+      "sortText": "0",
+      "textEdit": undefined,
+    },
+    {
+      "commitCharacters": [
+        "(",
+      ],
+      "detail": "(method) Completion",
+      "documentation": {
+        "kind": "markdown",
+        "value": "\`\`\`ts
+Completion(
+  completionRecord: MixedCompletion
+): MixedCompletion
+\`\`\`
+
+[https://tc39.es/ecma262/#sec-completion-ao](https://tc39.es/ecma262/#sec-completion-ao)",
+      },
+      "filterText": undefined,
+      "insertText": "Completion( $1 )",
+      "insertTextFormat": 2,
+      "kind": 3,
+      "label": "Completion",
+      "sortText": "0",
+      "textEdit": undefined,
+    },
+    {
+      "detail": "(grammar) StringNumericLiteral",
+      "documentation": {
+        "kind": "markdown",
+        "value": "[https://tc39.es/ecma262/#prod-StringNumericLiteral](https://tc39.es/ecma262/#prod-StringNumericLiteral)",
+      },
+      "filterText": "|StringNumericLiteral|",
+      "insertText": "|StringNumericLiteral| ",
+      "kind": 8,
+      "label": "StringNumericLiteral",
+      "sortText": "0",
+      "textEdit": undefined,
+    },
+  ],
+  "high5": [
+    "Normative Optional",
+    "Legacy",
+    "implementation-defined",
+    "implementation-approximated",
+    "host",
+  ],
+  "kinds": {
+    "(grammar)": 379,
+    "(method)": 695,
+    "(term)": 414,
+  },
+}
+`;
+
 exports[`complete grammars > full syntax 1`] = `
 {
   "around": "<p>|🔽|</p>",
@@ -444,11 +513,11 @@ exports[`complete grammars > full syntax 1`] = `
         "range": {
           "end": {
             "character": 13,
-            "line": 9,
+            "line": 10,
           },
           "start": {
             "character": 11,
-            "line": 9,
+            "line": 10,
           },
         },
       },
@@ -529,6 +598,22 @@ exports[`complete grammars > grammar no filter 1`] = `
 }
 `;
 
+exports[`complete grammars > should suggest MoreOneNight (emu-prodref) 1`] = `
+{
+  "detail": "(grammar) MoreOneNight",
+  "documentation": {
+    "kind": "plaintext",
+    "value": "MoreOneNight",
+  },
+  "filterText": "|MoreOneNight|",
+  "insertText": "|MoreOneNight| ",
+  "kind": 8,
+  "label": "MoreOneNight",
+  "sortText": "0",
+  "textEdit": undefined,
+}
+`;
+
 exports[`complete grammars > should suggest MoreOneNight (full syntax) 1`] = `
 {
   "detail": "(grammar) MoreOneNight",
@@ -546,11 +631,11 @@ exports[`complete grammars > should suggest MoreOneNight (full syntax) 1`] = `
     "range": {
       "end": {
         "character": 13,
-        "line": 9,
+        "line": 10,
       },
       "start": {
         "character": 11,
-        "line": 9,
+        "line": 10,
       },
     },
   },
@@ -606,11 +691,11 @@ exports[`complete grammars > should suggest MoreOneNight (starting trigger char 
     "range": {
       "end": {
         "character": 12,
-        "line": 8,
+        "line": 9,
       },
       "start": {
         "character": 11,
-        "line": 8,
+        "line": 9,
       },
     },
   },
@@ -637,11 +722,11 @@ exports[`complete grammars > starting trigger char only 1`] = `
         "range": {
           "end": {
             "character": 12,
-            "line": 8,
+            "line": 9,
           },
           "start": {
             "character": 11,
-            "line": 8,
+            "line": 9,
           },
         },
       },

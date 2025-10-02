@@ -59,7 +59,8 @@ export interface MarkedOffset {
     length: number
     annotate: string
 }
-export function betterSnapshot(document: TextDocument, mark_ranges: (MarkedRange | MarkedOffset)[]) {
+export function betterSnapshot(document: TextDocument, mark_ranges: undefined | (MarkedRange | MarkedOffset)[]) {
+    if (!mark_ranges) return '<no mark>'
     const textLined = document.getText().split('\n')
     const linesToInsert: [line: number, start: number, annotate: string][] = []
     ;(mark_ranges as (MarkedOffset & MarkedRange)[]).forEach(({ range, annotate: annotate_text, length, offset }) => {
@@ -94,7 +95,7 @@ export function betterSnapshot(document: TextDocument, mark_ranges: (MarkedRange
         .forEach(([lineNo, , line]) => {
             textLined.splice(lineNo + 1, 0, line)
         })
-    return textLined.join('\n')
+    return dedent(textLined.join('\n'))
 }
 
 export function mockIO(io: Partial<IO>): IO {

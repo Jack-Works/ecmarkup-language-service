@@ -10,6 +10,7 @@ it('find all references', async () => {
         <emu-grammar type="definition">
             MoreOne${File.mark('grammar')}Night ::= "more" "one" "night"
         </emu-grammar>
+        <emu-prodref name="MoreOneNight"></emu-prodref>
         <p>A |MoreOneNight| production.</p>
         <emu-grammar>
             Other

@@ -150,4 +150,9 @@ it('parse word at cursor', () => {
       ?
        "
     `)
+    expect(w`_iterator_^.[[Done]]`).toMatchInlineSnapshot(`
+      "'iterator' ; Variable & VariableLeading
+      _iterator_.[[Done]]
+       ~~~~~~~~          "
+    `)
 })

@@ -103,7 +103,7 @@ export class SemanticToken {
                                 offset: node.startTagEnd + index,
                                 length: word!.length,
                                 tokenType: SemanticTokenTypes.function,
-                                modifier: []
+                                modifier: [],
                             })
                         }
                     }

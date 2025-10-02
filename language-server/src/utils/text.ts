@@ -1,5 +1,5 @@
 const matcher =
-    /(?<wellKnownSymbol>@@[\w_.]*)|(?<hash>#[\w\-_.]*)|(?<intrinsics>%[\w.]*%?)|(?<grammar>\|[\w.]*\|?)|(?<variable>_[\w.]*_?)|(?<call>[?!]\w*)|(?<plain>[\w.-]*)/dgu
+    /(?<wellKnownSymbol>@@[\w_.]*)|(?<hash>#[\w\-_.]*)|(?<intrinsics>%[\w.]*%?)|(?<grammar>\|[\w.]*\|?)|(?<variable>_\w*_?)|(?<call>[?!]\w*)|(?<plain>[\w.-]*)/dgu
 export function word_at_cursor(text: string, offset: number) {
     const lastSpace = text.lastIndexOf(' ', offset - 1)
     const lastNewLine = text.lastIndexOf('\n', offset - 1)

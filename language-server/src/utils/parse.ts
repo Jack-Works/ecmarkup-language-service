@@ -20,6 +20,22 @@ export class EcmarkupDocument {
             if (node.tag === 'emu-grammar') {
                 const isDefinition = !!node.attributes?.['type']?.includes('definition')
                 result.push(...parseGrammarkdown(node, isDefinition, fullText))
+            } else if (node.tag === 'emu-prodref') {
+                const name = node.attributes?.['name']?.replaceAll(/['"]/g, '')
+                if (name) {
+                    const position = fullText.slice(node.start, node.end)
+                    result.push({
+                        type: 'reference',
+                        node,
+                        name,
+                        range: {
+                            position: node.startTagEnd
+                                ? position.indexOf(name) - (node.startTagEnd - node.start)
+                                : position.indexOf(name),
+                            length: name.length,
+                        },
+                    })
+                }
             } else if (node.tag !== 'script' && node.tag !== 'style') {
                 result.push(...parseNormalText(node, fullText))
                 node.children.forEach(visit)
@@ -92,6 +108,32 @@ export class EcmarkupDocument {
         return result
     })
 
+    findReferenceOfLocalAbstractOperation(word: string) {
+        const operation = this.localDefinedAbstractOperations.find((entry) => entry.name === word)
+        if (operation) {
+            const text = this.text.getText()
+            const location: Range[] = []
+            const re =
+                'escape' in RegExp
+                    ? new RegExp(
+                          `\\b${
+                              // biome-ignore lint/suspicious/noExplicitAny: remove after Node 24
+                              (RegExp.escape as any)(word)
+                          }\\b`,
+                          'gu',
+                      )
+                    : // bless us
+                      new RegExp(`\\b${word}\\b`, 'g')
+            for (const match of text.matchAll(re)) {
+                location.push(
+                    Range.create(this.text.positionAt(match.index), this.text.positionAt(match.index + word.length)),
+                )
+            }
+            return location
+        }
+        return undefined
+    }
+
     findNodeAt(offset: number) {
         const node = this.html.findNodeAt(offset)
         if (node.tag === 'ins' || node.tag === 'del') return node.parent || node
@@ -108,8 +150,15 @@ export class EcmarkupDocument {
 
 function parseNormalText(node: Node, fullText: string): EntryInfo[] {
     const info: EntryInfo[] = []
-    if (!node.startTagEnd) return info
-    const textContent = fullText.slice(node.startTagEnd, node.endTagStart)
+    if (!node.startTagEnd || !node.endTagStart) return info
+    let textContent = fullText.slice(node.startTagEnd, node.endTagStart)
+    for (const child of node.children) {
+        // child nodes will be visited by the visitor
+        textContent =
+            textContent.slice(0, child.start - node.startTagEnd) +
+            ' '.repeat(child.end - child.start) +
+            textContent.slice(child.end - node.startTagEnd)
+    }
     for (const match of textContent.matchAll(/\|(?<productionName>\w+)\|/g)) {
         const name = match.groups!['productionName']!
         info.push({
@@ -159,6 +208,7 @@ export interface EntryReference extends EntryInfoBase {
 }
 
 export interface NodeRelativeRange {
+    /** might be negative. the position is relative to startTagEnd */
     position: number
     length: number
 }

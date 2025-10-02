@@ -73,6 +73,19 @@ exports[`hover on local defined AO 1`] = `
 ]
 `;
 
+exports[`hover on local defined grammar > emu-prodref 1`] = `
+[
+  "<emu-prodref name="MoreOneNight🔽"></emu-prodref>",
+  {
+    "contents": {
+      "kind": "plaintext",
+      "language": "grammarkdown",
+      "value": "MoreOneNight :: "more" "one" "night"",
+    },
+  },
+]
+`;
+
 exports[`hover on local defined grammar > possible ref 1`] = `
 [
   "MoreOneNight🔽",
