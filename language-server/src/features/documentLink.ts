@@ -6,24 +6,14 @@ import type {
     Location,
     ResultProgressReporter,
     ServerCapabilities,
-    TextDocuments,
     WorkDoneProgressReporter,
 } from 'vscode-languageserver'
 import type { TextDocument } from 'vscode-languageserver-textdocument'
+import { documents } from '../server-shared.js'
 import { getText, getURL } from '../utils/biblio.js'
 import type { Program } from '../workspace/program.js'
 
-export function documentLinkProvider(
-    connection: Connection,
-    program: Program,
-    documents: TextDocuments<TextDocument>,
-): NonNullable<ServerCapabilities['documentLinkProvider']> {
-    const provider = new DocumentLinkProvider()
-    connection.onDocumentLinks(provider.handler(documents, program))
-    return {}
-}
-
-export class DocumentLinkProvider {
+export class DocumentLinks {
     async findDocumentLinks(
         document: TextDocument,
         program: Program,
@@ -58,16 +48,18 @@ export class DocumentLinkProvider {
         return result
     }
 
-    handler(documents: TextDocuments<TextDocument>, program: Program) {
-        return (
-            params: DocumentLinkParams,
-            token: CancellationToken,
-            workDoneProgress: WorkDoneProgressReporter,
-            resultProgress: ResultProgressReporter<Location[]> | undefined,
-        ) => {
+    static enable(
+        serverCapabilities: ServerCapabilities<never>,
+        connection: Connection,
+        program: Program,
+        _capabilities: unknown,
+    ) {
+        const provider = new DocumentLinks()
+        connection.onDocumentLinks((params, token, workDoneProgress, resultProgress) => {
             const document = documents.get(params.textDocument.uri)
             if (!document) return undefined
-            return this.findDocumentLinks(document, program, params, token, workDoneProgress, resultProgress)
-        }
+            return provider.findDocumentLinks(document, program, params, token, workDoneProgress, resultProgress)
+        })
+        serverCapabilities.documentLinkProvider = {}
     }
 }

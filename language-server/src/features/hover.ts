@@ -1,33 +1,21 @@
 import {
     type CancellationToken,
     type Connection,
-    type HandlerResult,
     type Hover,
     type HoverClientCapabilities,
     type HoverParams,
     MarkupKind,
     type ServerCapabilities,
-    type TextDocuments,
     type WorkDoneProgressReporter,
 } from 'vscode-languageserver'
 import type { TextDocument } from 'vscode-languageserver-textdocument'
 import { word_at_cursor } from '../parser/text.js'
+import { documents } from '../server-shared.js'
 import { getText } from '../utils/biblio.js'
 import { formatDocument } from '../utils/format.js'
 import type { Program } from '../workspace/program.js'
 
-export function hoverProvider(
-    connection: Connection,
-    program: Program,
-    documents: TextDocuments<TextDocument>,
-    capabilities: HoverClientCapabilities | undefined,
-): NonNullable<ServerCapabilities['hoverProvider']> {
-    const hover = new HoverProvider(capabilities)
-    connection.onHover(hover.handler(documents, program))
-    return {}
-}
-
-export class HoverProvider {
+export class Hovers {
     constructor(public capabilities: HoverClientCapabilities | undefined) {}
 
     async hover(
@@ -70,15 +58,18 @@ export class HoverProvider {
         return undefined
     }
 
-    handler(documents: TextDocuments<TextDocument>, program: Program) {
-        return (
-            params: HoverParams,
-            _token?: CancellationToken,
-            _workDoneProgress?: WorkDoneProgressReporter,
-        ): HandlerResult<Hover | null | undefined, void> => {
+    static enable(
+        features: ServerCapabilities<never>,
+        connection: Connection,
+        program: Program,
+        capabilities: HoverClientCapabilities | undefined,
+    ) {
+        connection.onHover((params, token, workDoneProgress) => {
             const document = documents.get(params.textDocument.uri)
             if (!document) return null
-            return this.hover(document, program, params, _token, _workDoneProgress)
-        }
+            const hover = new Hovers(capabilities)
+            return hover.hover(document, program, params, token, workDoneProgress)
+        })
+        features.hoverProvider = {}
     }
 }

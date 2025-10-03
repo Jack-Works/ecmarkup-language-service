@@ -3,34 +3,16 @@ import { isElementNode } from 'parse5/lib/tree-adapters/default.js'
 import type {
     Connection,
     SemanticTokens,
+    SemanticTokensClientCapabilities,
     SemanticTokensParams,
     SemanticTokensRangeParams,
     ServerCapabilities,
-    TextDocuments,
 } from 'vscode-languageserver'
 import type { TextDocument } from 'vscode-languageserver-textdocument'
 import { getAbstractOperationHeader } from '../parser/ecmarkup.js'
+import { documents } from '../server-shared.js'
 import { isBiblioOp } from '../utils/biblio.js'
 import type { Program } from '../workspace/program.js'
-
-export function semanticTokensProvider(
-    connection: Connection,
-    program: Program,
-    documents: TextDocuments<TextDocument>,
-): NonNullable<ServerCapabilities['semanticTokensProvider']> {
-    const semanticTokens = new SemanticToken()
-    connection.languages.semanticTokens.on(semanticTokens.handler(documents, program))
-    connection.languages.semanticTokens.onRange(semanticTokens.handler(documents, program))
-
-    return {
-        full: { delta: false },
-        range: true,
-        legend: {
-            tokenTypes: Object.keys(SemanticTokenTypes).filter((token) => !token.match(/\d/)),
-            tokenModifiers,
-        },
-    }
-}
 
 export interface SemanticTokenData {
     offset: number
@@ -173,11 +155,30 @@ export class SemanticToken {
         return tokens
     }
 
-    handler(documents: TextDocuments<TextDocument>, program: Program) {
+    handler(program: Program) {
         return (params: SemanticTokensParams | SemanticTokensRangeParams) => {
             const document = documents.get(params.textDocument.uri)
             if (!document) return { data: [] }
             return this.tokenizeCompressed(document, program, params)
+        }
+    }
+
+    static enable(
+        serverCapabilities: ServerCapabilities<never>,
+        connection: Connection,
+        program: Program,
+        _capabilities: SemanticTokensClientCapabilities | undefined,
+    ) {
+        const semanticTokens = new SemanticToken()
+        connection.languages.semanticTokens.on(semanticTokens.handler(program))
+        connection.languages.semanticTokens.onRange(semanticTokens.handler(program))
+        serverCapabilities.semanticTokensProvider = {
+            full: { delta: false },
+            range: true,
+            legend: {
+                tokenTypes: Object.keys(SemanticTokenTypes).filter((token) => !token.match(/\d/)),
+                tokenModifiers,
+            },
         }
     }
 }

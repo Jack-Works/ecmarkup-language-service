@@ -1,9 +1,10 @@
+import dedent from 'dedent-js'
 import { expect, it } from 'vitest'
-import { RenameProvider } from '../src/features/rename.js'
-import { betterSnapshot, File, type MarkedRange } from './File.js'
+import { Rename } from '../src/features/rename.js'
+import { applyTextEdit, File } from './File.js'
 
 it('rename local defined grammar', async () => {
-    const rename = new RenameProvider({})
+    const rename = new Rename({})
     const { document, textDocument, program, mark } = File.of`
         <emu-grammar type="definition">
             MoreOneNight :: "more" "one" "night"
@@ -31,32 +32,21 @@ it('rename local defined grammar', async () => {
     `)
 
     const result = await rename.rename(document, program, { textDocument, position: mark.position, newName: 'Next' })
-    expect(
-        betterSnapshot(
-            document,
-            result?.changes?.[document.uri]?.map(
-                ({ newText, range }): MarkedRange => ({ range, annotate: ` renamed to ${newText}` }),
-            ),
-        ),
-    ).toMatchInlineSnapshot(`
+    expect(dedent(applyTextEdit(document, result?.changes?.[document.uri]))).toMatchInlineSnapshot(`
       "<emu-grammar type="definition">
-          MoreOneNight :: "more" "one" "night"
-          ~~~~~~~~~~~~ renamed to Next
+          Next :: "more" "one" "night"
           Other
-              MoreOneNight
-              ~~~~~~~~~~~~ renamed to Next
+              Next
       </emu-grammar>
-      <emu-prodref name="MoreOneNight"></emu-prodref>
-                         ~~~~~~~~~~~~ renamed to Next
+      <emu-prodref name="Next"></emu-prodref>
       <emu-alg>
-          1. Let _x_ be Evaluation of |MoreOneNight|.
-                                       ~~~~~~~~~~~~ renamed to Next
+          1. Let _x_ be Evaluation of |Next|.
       </emu-alg>"
     `)
 })
 
 it('rename variable', async () => {
-    const rename = new RenameProvider({})
+    const rename = new Rename({})
     const { document, textDocument, program, mark } = File.of`
         <emu-alg>
             1. Let _x_${File.mark()} be ...
@@ -83,19 +73,10 @@ it('rename variable', async () => {
     `)
 
     const result = await rename.rename(document, program, { textDocument, position: mark.position, newName: 'Next' })
-    expect(
-        betterSnapshot(
-            document,
-            result?.changes?.[document.uri]?.map(
-                ({ newText, range }): MarkedRange => ({ range, annotate: ` renamed to ${newText}` }),
-            ),
-        ),
-    ).toMatchInlineSnapshot(`
+    expect(dedent(applyTextEdit(document, result?.changes?.[document.uri]))).toMatchInlineSnapshot(`
       "<emu-alg>
-          1. Let _x_ be ...
-                  ~ renamed to Next
-          1. Set _x_ to ...
-                  ~ renamed to Next
+          1. Let _Next_ be ...
+          1. Set _Next_ to ...
       </emu-alg>
       <emu-alg>
           1. Let _x_ be ...
@@ -105,7 +86,7 @@ it('rename variable', async () => {
 })
 
 it('rename variable in header', async () => {
-    const rename = new RenameProvider({})
+    const rename = new Rename({})
     const { document, textDocument, program, mark } = File.of`
         <emu-clause id="sec-test" type="abstract operation">
             <h1>
@@ -136,33 +117,24 @@ it('rename variable in header', async () => {
     `)
 
     const result = await rename.rename(document, program, { textDocument, position: mark.position, newName: 'Next' })
-    expect(
-        betterSnapshot(
-            document,
-            result?.changes?.[document.uri]?.map(
-                ({ newText, range }): MarkedRange => ({ range, annotate: ` renamed to ${newText}` }),
-            ),
-        ),
-    ).toMatchInlineSnapshot(`
+    expect(dedent(applyTextEdit(document, result?.changes?.[document.uri]))).toMatchInlineSnapshot(`
       "<emu-clause id="sec-test" type="abstract operation">
           <h1>
               Test (
-                  _input_: an ECMAScript language value,
-                   ~~~~~ renamed to Next
+                  _Next_: an ECMAScript language value,
               ): either a normal completion containing an Object or a throw completion
           </h1>
           <dl class="header">
           </dl>
           <emu-alg>
-              1. Set _input_ to ...
-                      ~~~~~ renamed to Next
+              1. Set _Next_ to ...
           </emu-alg>
       </emu-clause>"
     `)
 })
 
 it('rename variable with header', async () => {
-    const rename = new RenameProvider({})
+    const rename = new Rename({})
     const { document, textDocument, program, mark } = File.of`
         <emu-clause id="sec-test" type="abstract operation">
             <h1>
@@ -193,33 +165,24 @@ it('rename variable with header', async () => {
     `)
 
     const result = await rename.rename(document, program, { textDocument, position: mark.position, newName: 'Next' })
-    expect(
-        betterSnapshot(
-            document,
-            result?.changes?.[document.uri]?.map(
-                ({ newText, range }): MarkedRange => ({ range, annotate: ` renamed to ${newText}` }),
-            ),
-        ),
-    ).toMatchInlineSnapshot(`
+    expect(dedent(applyTextEdit(document, result?.changes?.[document.uri]))).toMatchInlineSnapshot(`
       "<emu-clause id="sec-test" type="abstract operation">
           <h1>
               Test (
-                  _input_: an ECMAScript language value,
-                   ~~~~~ renamed to Next
+                  _Next_: an ECMAScript language value,
               ): either a normal completion containing an Object or a throw completion
           </h1>
           <dl class="header">
           </dl>
           <emu-alg>
-              1. Set _input_ to ...
-                      ~~~~~ renamed to Next
+              1. Set _Next_ to ...
           </emu-alg>
       </emu-clause>"
     `)
 })
 
 it('rename local defined abstract operation', async () => {
-    const rename = new RenameProvider({})
+    const rename = new Rename({})
     const { document, textDocument, program, mark } = File.of`
         <emu-clause id="sec-test" type="abstract operation">
             <h1>
@@ -254,18 +217,10 @@ it('rename local defined abstract operation', async () => {
     `)
 
     const result = await rename.rename(document, program, { textDocument, position: mark.position, newName: 'Next' })
-    expect(
-        betterSnapshot(
-            document,
-            result?.changes?.[document.uri]?.map(
-                ({ newText, range }): MarkedRange => ({ range, annotate: ` renamed to ${newText}` }),
-            ),
-        ),
-    ).toMatchInlineSnapshot(`
+    expect(dedent(applyTextEdit(document, result?.changes?.[document.uri]))).toMatchInlineSnapshot(`
       "<emu-clause id="sec-test" type="abstract operation">
           <h1>
-              Test (
-              ~~~~ renamed to Next
+              Next (
                   _input_: an ECMAScript language value,
               ): either a normal completion containing an Object or a throw completion
           </h1>
@@ -277,14 +232,13 @@ it('rename local defined abstract operation', async () => {
       </emu-clause>
 
       <emu-alg>
-          1. Set _x_ to Test().
-                        ~~~~ renamed to Next
+          1. Set _x_ to Next().
       </emu-alg>"
     `)
 })
 
 it('rename local defined abstract operation in header', async () => {
-    const rename = new RenameProvider({})
+    const rename = new Rename({})
     const { document, textDocument, program, mark } = File.of`
         <emu-clause id="sec-test" type="abstract operation">
             <h1>
@@ -319,18 +273,10 @@ it('rename local defined abstract operation in header', async () => {
     `)
 
     const result = await rename.rename(document, program, { textDocument, position: mark.position, newName: 'Next' })
-    expect(
-        betterSnapshot(
-            document,
-            result?.changes?.[document.uri]?.map(
-                ({ newText, range }): MarkedRange => ({ range, annotate: ` renamed to ${newText}` }),
-            ),
-        ),
-    ).toMatchInlineSnapshot(`
+    expect(dedent(applyTextEdit(document, result?.changes?.[document.uri]))).toMatchInlineSnapshot(`
       "<emu-clause id="sec-test" type="abstract operation">
           <h1>
-              Test (
-              ~~~~ renamed to Next
+              Next (
                   _input_: an ECMAScript language value,
               ): either a normal completion containing an Object or a throw completion
           </h1>
@@ -342,8 +288,7 @@ it('rename local defined abstract operation in header', async () => {
       </emu-clause>
 
       <emu-alg>
-          1. Set _x_ to Test().
-                        ~~~~ renamed to Next
+          1. Set _x_ to Next().
       </emu-alg>"
     `)
 })

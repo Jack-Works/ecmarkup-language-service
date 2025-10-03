@@ -1,6 +1,6 @@
 import { hash } from 'node:crypto'
 import dedent from 'dedent-js'
-import { TextDocument } from 'vscode-languageserver-textdocument'
+import { TextDocument, type TextEdit } from 'vscode-languageserver-textdocument'
 import { type Position, Range, type TextDocumentIdentifier } from 'vscode-languageserver-types'
 import type { IO } from '../src/workspace/io.js'
 import { createProgram } from '../src/workspace/program.js'
@@ -111,4 +111,24 @@ export function mockIO(io: Partial<IO>): IO {
         },
         ...io,
     }
+}
+
+export function applyTextEdit(source: TextDocument, textEdit: TextEdit[] | undefined) {
+    if (!textEdit?.length) return '<no text edit applied>'
+    let edited = source.getText()
+    ;[...textEdit]
+        .sort((b, a) => {
+            const rangeA = a.range.start
+            const rangeB = b.range.start
+            if (rangeA.line === rangeB.line) {
+                return rangeA.character - rangeB.character
+            }
+            return rangeA.line - rangeB.line
+        })
+        .forEach((edit) => {
+            const start = source.offsetAt(edit.range.start)
+            const end = source.offsetAt(edit.range.end)
+            edited = edited.slice(0, start) + edit.newText + edited.slice(end)
+        })
+    return edited
 }

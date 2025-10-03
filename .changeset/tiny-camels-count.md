@@ -2,4 +2,4 @@
 "ecmarkup-language-server": minor
 ---
 
-Add format
+Add format and range format

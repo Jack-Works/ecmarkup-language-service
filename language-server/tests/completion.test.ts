@@ -3,12 +3,12 @@
 import { expect, it } from 'vitest'
 import type { CompletionItem } from 'vscode-languageserver-types'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { Completer } from '../src/features/completion.js'
+import { Completion } from '../src/features/completion.js'
 import { createProgram } from '../src/workspace/program.js'
 import { File, mockIO } from './File.js'
 
 it('complete clauses (#sec-...)', async () => {
-    const completer = new Completer()
+    const completer = new Completion()
     const { document, textDocument, markers, program } = File.of`
         <a href="${File.mark('suggest')}"></a>
         <a href="#${File.mark('suggest but not replacing children')}">Text</a>
@@ -22,7 +22,7 @@ it('complete clauses (#sec-...)', async () => {
 })
 
 it('suggest clause id (#sec-...)', async () => {
-    const completer = new Completer()
+    const completer = new Completion()
     const { document, textDocument, markers, program } = File.of`
         <emu-clause id="sec-${File.mark('suggest id: sec-function-properties-of-the-cute-object')}" type="abstract operation">
             <h1>Function properties of the Cute object</h1>
@@ -39,7 +39,7 @@ it('suggest clause id (#sec-...)', async () => {
 })
 
 it('complete variables in emu-alg', async () => {
-    const completer = new Completer()
+    const completer = new Completion()
     const { document, textDocument, markers, program } = File.of`
         <emu-clause id="sec-StartGenshin" type="abstract operation">
             <h1>
@@ -66,7 +66,7 @@ it('complete variables in emu-alg', async () => {
     }
 
     {
-        const completer = new Completer()
+        const completer = new Completion()
         const {
             document,
             textDocument,
@@ -95,7 +95,7 @@ it('complete variables in emu-alg', async () => {
 })
 
 it('complete grammars', async () => {
-    const completer = new Completer()
+    const completer = new Completion()
     const { document, textDocument, markers, program } = File.of`
         <emu-grammar type="definition">
             MoreOneNight ::= "more" "one" "night"
@@ -122,7 +122,7 @@ it('complete grammars', async () => {
 })
 
 it('complete intrinsics', async () => {
-    const completer = new Completer()
+    const completer = new Completion()
     const { document, textDocument, markers, program } = File.of`
         <p>%${File.mark('intrinsic no filter')}%</p>
         <p>%${File.mark('intrinsic no filter no closing')}</p>
@@ -139,7 +139,7 @@ it('complete intrinsics', async () => {
 })
 
 it('complete well-known symbols', async () => {
-    const completer = new Completer()
+    const completer = new Completion()
     const { document, textDocument, markers, program } = File.of`
         <p>@@${File.mark('intrinsic no filter')}</p>
         <p>@@iter${File.mark('intrinsic')}</p>
@@ -151,7 +151,7 @@ it('complete well-known symbols', async () => {
 })
 
 it('complete AOs in emu-alg', async () => {
-    const completer = new Completer()
+    const completer = new Completion()
     const { document, textDocument, markers, program } = File.of`
         <emu-clause id="sec-StartGenshin" type="abstract operation">
             <h1>
@@ -181,7 +181,7 @@ it('complete AOs in emu-alg', async () => {
 })
 
 it('completion should take care of the tailing whitespace', async () => {
-    const completer = new Completer()
+    const completer = new Completion()
     const { document, textDocument, markers, program } = File.of`
         <emu-alg>
             1. Let _a_ be ....
@@ -195,7 +195,7 @@ it('completion should take care of the tailing whitespace', async () => {
 })
 
 it('completion should read local installed biblio', async () => {
-    const completer = new Completer()
+    const completer = new Completion()
     const { document, textDocument, markers } = File.of`
         <emu-alg>
             1. ${File.mark()}

@@ -1,11 +1,15 @@
 import { expect, it } from 'vitest'
 import type { TextDocument } from 'vscode-languageserver-textdocument'
-import { type DocumentSymbol, type SymbolInformation, SymbolKind } from 'vscode-languageserver-types'
-import { DocumentSymbolProvider } from '../src/features/documentSymbol.js'
+import {
+    type DocumentSymbol as LSPDocumentSymbol,
+    type SymbolInformation,
+    SymbolKind,
+} from 'vscode-languageserver-types'
+import { DocumentSymbols } from '../src/features/documentSymbol.js'
 import { betterSnapshot, File, type MarkedOffset, type MarkedRange } from './File.js'
 
 it('provides document symbols', async () => {
-    const documentSymbol = new DocumentSymbolProvider()
+    const documentSymbol = new DocumentSymbols()
     const { document, textDocument, program } = File.basic`
         <!doctype html>
         <emu-clause id="sec-OpenCalc" type="abstract operation">
@@ -81,7 +85,7 @@ it('provides document symbols', async () => {
     expect(result2).toMatchSnapshot()
 })
 
-function printSymbols(document: TextDocument, tokens: (DocumentSymbol | SymbolInformation)[]) {
+function printSymbols(document: TextDocument, tokens: (LSPDocumentSymbol | SymbolInformation)[]) {
     return betterSnapshot(
         document,
         tokens.flatMap(function toMarked(symbol): (MarkedRange | MarkedOffset)[] {

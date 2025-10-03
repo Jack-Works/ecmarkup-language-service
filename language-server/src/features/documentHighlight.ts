@@ -6,24 +6,14 @@ import {
     type Location,
     type ResultProgressReporter,
     type ServerCapabilities,
-    type TextDocuments,
     type WorkDoneProgressReporter,
 } from 'vscode-languageserver'
 import type { TextDocument } from 'vscode-languageserver-textdocument'
+import { documents } from '../server-shared.js'
 import type { Program } from '../workspace/program.js'
-import { ReferenceProvider } from './findAllReferences.js'
+import { Reference } from './findAllReferences.js'
 
-export function documentHighlightProvider(
-    connection: Connection,
-    program: Program,
-    documents: TextDocuments<TextDocument>,
-): NonNullable<ServerCapabilities['documentHighlightProvider']> {
-    const provider = new DocumentHighlightProvider()
-    connection.onDocumentHighlight(provider.handler(documents, program))
-    return {}
-}
-
-export class DocumentHighlightProvider {
+export class DocumentHighlight {
     findDocumentHighlights(
         document: TextDocument,
         program: Program,
@@ -33,7 +23,7 @@ export class DocumentHighlightProvider {
         resultProgress?: ResultProgressReporter<Location[]> | undefined,
     ) {
         const { position, textDocument, partialResultToken, workDoneToken } = params
-        const ref = new ReferenceProvider()
+        const ref = new Reference()
         return ref
             .findReferences(
                 document,
@@ -63,16 +53,18 @@ export class DocumentHighlightProvider {
             })
     }
 
-    handler(documents: TextDocuments<TextDocument>, program: Program) {
-        return (
-            params: DocumentHighlightParams,
-            token: CancellationToken,
-            workDoneProgress: WorkDoneProgressReporter,
-            resultProgress: ResultProgressReporter<Location[]> | undefined,
-        ) => {
+    static enable(
+        serverCapabilities: ServerCapabilities<never>,
+        connection: Connection,
+        program: Program,
+        _capabilities: unknown,
+    ) {
+        const provider = new DocumentHighlight()
+        connection.onDocumentHighlight((params, token, workDoneProgress, resultProgress) => {
             const document = documents.get(params.textDocument.uri)
             if (!document) return undefined
-            return this.findDocumentHighlights(document, program, params, token, workDoneProgress, resultProgress)
-        }
+            return provider.findDocumentHighlights(document, program, params, token, workDoneProgress, resultProgress)
+        })
+        serverCapabilities.documentHighlightProvider = {}
     }
 }

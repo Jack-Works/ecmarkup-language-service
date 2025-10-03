@@ -13,7 +13,6 @@ import {
     Range,
     type ResultProgressReporter,
     type ServerCapabilities,
-    type TextDocuments,
     TextEdit,
     type WorkDoneProgressReporter,
 } from 'vscode-languageserver'
@@ -21,23 +20,13 @@ import type { TextDocument } from 'vscode-languageserver-textdocument'
 import type { EcmarkupDocument } from '../parser/ecmarkup.js'
 import { getNodeInnerText, withinAttributeValue } from '../parser/html.js'
 import { word_at_cursor } from '../parser/text.js'
+import { documents } from '../server-shared.js'
 import { formatDocument } from '../utils/format.js'
 import type { Program } from '../workspace/program.js'
 
 const never: never = undefined!
 
-export function completionProvider(
-    connection: Connection,
-    program: Program,
-    documents: TextDocuments<TextDocument>,
-    capabilities: CompletionClientCapabilities | undefined,
-): NonNullable<ServerCapabilities['completionProvider']> {
-    const completer = new Completer(capabilities)
-    connection.onCompletion(completer.handler(program, documents))
-    return { triggerCharacters: ['%', '@', '|', '#', '?', '!', '_'] }
-}
-
-export class Completer {
+export class Completion {
     constructor(
         public capabilities: CompletionClientCapabilities = {
             completionItem: { snippetSupport: true, documentationFormat: [MarkupKind.Markdown, MarkupKind.PlainText] },
@@ -323,17 +312,19 @@ export class Completer {
         }
     }
 
-    handler(program: Program, documents: TextDocuments<TextDocument>) {
-        return (
-            params: CompletionParams,
-            _token?: CancellationToken,
-            _workDoneProgress?: WorkDoneProgressReporter,
-            _resultProgress?: ResultProgressReporter<CompletionItem[]> | undefined,
-        ) => {
+    static enable(
+        serverCapabilities: ServerCapabilities<never>,
+        connection: Connection,
+        program: Program,
+        capabilities: CompletionClientCapabilities | undefined,
+    ) {
+        const provider = new Completion(capabilities)
+        connection.onCompletion((params, token, workDoneProgress, resultProgress) => {
             const document = documents.get(params.textDocument.uri)
             if (!document) return []
-            return this.complete(document, program, params, _token, _workDoneProgress, _resultProgress)
-        }
+            return provider.complete(document, program, params, token, workDoneProgress, resultProgress)
+        })
+        serverCapabilities.completionProvider = { triggerCharacters: ['%', '@', '|', '#', '?', '!', '_'] }
     }
 }
 

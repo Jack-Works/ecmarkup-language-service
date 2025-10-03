@@ -5,28 +5,16 @@ import {
     type DefinitionClientCapabilities,
     type DefinitionLink,
     type DefinitionParams,
-    type HandlerResult,
     type Location,
     type LocationLink,
     Range,
     type ServerCapabilities,
-    type TextDocuments,
     type WorkDoneProgressReporter,
 } from 'vscode-languageserver'
 import type { TextDocument } from 'vscode-languageserver-textdocument'
 import { word_at_cursor } from '../parser/text.js'
+import { documents } from '../server-shared.js'
 import type { Program } from '../workspace/program.js'
-
-export function definitionProvider(
-    connection: Connection,
-    program: Program,
-    documents: TextDocuments<TextDocument>,
-    capabilities: DefinitionClientCapabilities | undefined,
-): NonNullable<ServerCapabilities['definitionProvider']> {
-    const goToDefinition = new GoToDefinition(capabilities)
-    connection.onDefinition(goToDefinition.handler(documents, program))
-    return {}
-}
 
 export class GoToDefinition {
     constructor(public capabilities?: DefinitionClientCapabilities) {}
@@ -126,15 +114,18 @@ export class GoToDefinition {
         return location.map((link): Location => ({ uri: link.targetUri, range: link.targetSelectionRange }))
     }
 
-    handler(documents: TextDocuments<TextDocument>, program: Program) {
-        return (
-            params: DefinitionParams,
-            _token?: CancellationToken,
-            _workDoneProgress?: WorkDoneProgressReporter,
-        ): HandlerResult<Definition | DefinitionLink[] | undefined | null, void> => {
+    static enable(
+        serverCapabilities: ServerCapabilities<never>,
+        connection: Connection,
+        program: Program,
+        capabilities: DefinitionClientCapabilities | undefined,
+    ) {
+        const definition = new GoToDefinition(capabilities)
+        connection.onDefinition((params, token, workDoneProgress) => {
             const document = documents.get(params.textDocument.uri)
             if (!document) return null
-            return this.onDefinition(document, program, params, _token, _workDoneProgress)
-        }
+            return definition.onDefinition(document, program, params, token, workDoneProgress)
+        })
+        serverCapabilities.definitionProvider = {}
     }
 }

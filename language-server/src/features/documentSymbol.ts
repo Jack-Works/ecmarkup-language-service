@@ -10,26 +10,15 @@ import {
     type ServerCapabilities,
     type SymbolInformation,
     SymbolKind,
-    type TextDocuments,
     type WorkDoneProgressReporter,
 } from 'vscode-languageserver'
 import type { TextDocument } from 'vscode-languageserver-textdocument'
 import { getAbstractOperationHeader } from '../parser/ecmarkup.js'
+import { documents } from '../server-shared.js'
 import { formatSpecValueText } from '../utils/format.js'
 import type { Program } from '../workspace/program.js'
 
-export function documentSymbolProvider(
-    connection: Connection,
-    program: Program,
-    documents: TextDocuments<TextDocument>,
-    capabilities: DocumentSymbolClientCapabilities | undefined,
-): NonNullable<ServerCapabilities['documentSymbolProvider']> {
-    const provider = new DocumentSymbolProvider(capabilities)
-    connection.onDocumentSymbol(provider.handler(documents, program))
-    return {}
-}
-
-export class DocumentSymbolProvider {
+export class DocumentSymbols {
     constructor(
         public capabilities: DocumentSymbolClientCapabilities | undefined = { hierarchicalDocumentSymbolSupport: true },
     ) {}
@@ -130,16 +119,18 @@ export class DocumentSymbolProvider {
         }
     }
 
-    handler(documents: TextDocuments<TextDocument>, program: Program) {
-        return (
-            params: DocumentSymbolParams,
-            token: CancellationToken,
-            workDoneProgress: WorkDoneProgressReporter,
-            resultProgress: ResultProgressReporter<SymbolInformation[] | DocumentSymbol[]> | undefined,
-        ) => {
+    static enable(
+        serverCapabilities: ServerCapabilities,
+        connection: Connection,
+        program: Program,
+        capabilities: DocumentSymbolClientCapabilities | undefined,
+    ) {
+        const provider = new DocumentSymbols(capabilities)
+        connection.onDocumentSymbol((params, token, workDoneProgress, resultProgress) => {
             const document = documents.get(params.textDocument.uri)
             if (!document) return undefined
-            return this.findDocumentSymbols(document, program, params, token, workDoneProgress, resultProgress)
-        }
+            return provider.findDocumentSymbols(document, program, params, token, workDoneProgress, resultProgress)
+        })
+        serverCapabilities.documentSymbolProvider = {}
     }
 }

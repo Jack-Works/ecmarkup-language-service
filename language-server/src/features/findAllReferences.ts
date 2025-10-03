@@ -2,28 +2,19 @@ import type {
     CancellationToken,
     Connection,
     Location,
+    ReferenceClientCapabilities,
     ReferenceParams,
     ResultProgressReporter,
     ServerCapabilities,
-    TextDocuments,
     WorkDoneProgressReporter,
 } from 'vscode-languageserver'
 import type { TextDocument } from 'vscode-languageserver-textdocument'
 import { getFirstElementChild } from '../parser/html.js'
 import { word_at_cursor } from '../parser/text.js'
+import { documents } from '../server-shared.js'
 import type { Program } from '../workspace/program.js'
 
-export function referenceProvider(
-    connection: Connection,
-    program: Program,
-    documents: TextDocuments<TextDocument>,
-): NonNullable<ServerCapabilities['referencesProvider']> {
-    const provider = new ReferenceProvider()
-    connection.onReferences(provider.handler(documents, program))
-    return {}
-}
-
-export class ReferenceProvider {
+export class Reference {
     findReferences(
         document: TextDocument,
         program: Program,
@@ -72,16 +63,18 @@ export class ReferenceProvider {
         return undefined
     }
 
-    handler(documents: TextDocuments<TextDocument>, program: Program) {
-        return (
-            params: ReferenceParams,
-            token: CancellationToken,
-            workDoneProgress: WorkDoneProgressReporter,
-            resultProgress: ResultProgressReporter<Location[]> | undefined,
-        ) => {
+    static enable(
+        serverCapabilities: ServerCapabilities<never>,
+        connection: Connection,
+        program: Program,
+        _capabilities: ReferenceClientCapabilities | undefined,
+    ) {
+        const provider = new Reference()
+        connection.onReferences((params, token, workDoneProgress, resultProgress) => {
             const document = documents.get(params.textDocument.uri)
             if (!document) return undefined
-            return this.findReferences(document, program, params, token, workDoneProgress, resultProgress)
-        }
+            return provider.findReferences(document, program, params, token, workDoneProgress, resultProgress)
+        })
+        serverCapabilities.referencesProvider = {}
     }
 }

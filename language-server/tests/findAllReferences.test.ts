@@ -1,11 +1,11 @@
 import { expect, it } from 'vitest'
 import type { Location } from 'vscode-languageserver'
 import type { TextDocument } from 'vscode-languageserver-textdocument'
-import { ReferenceProvider } from '../src/features/findAllReferences.js'
+import { Reference } from '../src/features/findAllReferences.js'
 import { betterSnapshot, File } from './File.js'
 
 it('find all references', async () => {
-    const goto = new ReferenceProvider()
+    const goto = new Reference()
     const { document, markers, textDocument, program } = File.of`
         <emu-grammar type="definition">
             MoreOne${File.mark('grammar')}Night ::= "more" "one" "night"
@@ -46,7 +46,7 @@ it('find all references', async () => {
 })
 
 it('find all references no false positive (containing)', async () => {
-    const goto = new ReferenceProvider()
+    const goto = new Reference()
     const { document, markers, textDocument, program } = File.of`
         <emu-clause id="sec-Save" type="abstract operation">
             <h1>
@@ -86,7 +86,7 @@ it('find all references no false positive (containing)', async () => {
 })
 
 it('find all references no false positive (cross AO variable)', async () => {
-    const goto = new ReferenceProvider()
+    const goto = new Reference()
     const { document, markers, textDocument, program } = File.of`
         <emu-clause id="sec-Save" type="abstract operation">
             <h1>

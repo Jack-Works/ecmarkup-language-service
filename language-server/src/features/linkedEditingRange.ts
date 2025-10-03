@@ -10,19 +10,9 @@ import type {
 } from 'vscode-languageserver'
 import type { TextDocument } from 'vscode-languageserver-textdocument'
 import type { Program } from '../workspace/program.js'
-import { ReferenceProvider } from './findAllReferences.js'
+import { Reference } from './findAllReferences.js'
 
-export function linkedEditingRangeProvider(
-    connection: Connection,
-    program: Program,
-    documents: TextDocuments<TextDocument>,
-): NonNullable<ServerCapabilities['linkedEditingRangeProvider']> {
-    const provider = new LinkedEditingRangeProvider()
-    connection.languages.onLinkedEditingRange(provider.handler(documents, program))
-    return {}
-}
-
-export class LinkedEditingRangeProvider {
+export class LinkedEditingRange {
     findLinkedEditingRanges(
         document: TextDocument,
         program: Program,
@@ -31,7 +21,7 @@ export class LinkedEditingRangeProvider {
         workDoneProgress?: WorkDoneProgressReporter | undefined,
         _resultProgress?: ResultProgressReporter<LinkedEditingRanges> | undefined,
     ): LinkedEditingRanges | null | undefined {
-        const references = new ReferenceProvider().findReferences(
+        const references = new Reference().findReferences(
             document,
             program,
             {
@@ -46,16 +36,18 @@ export class LinkedEditingRangeProvider {
         return { ranges: references.map((ref) => ref.range) }
     }
 
-    handler(documents: TextDocuments<TextDocument>, program: Program) {
-        return (
-            params: LinkedEditingRangeParams,
-            token: CancellationToken,
-            workDoneProgress: WorkDoneProgressReporter,
-            resultProgress: ResultProgressReporter<LinkedEditingRanges> | undefined,
-        ) => {
+    static enable(
+        capabilities: ServerCapabilities,
+        connection: Connection,
+        program: Program,
+        documents: TextDocuments<TextDocument>,
+    ) {
+        const provider = new LinkedEditingRange()
+        connection.languages.onLinkedEditingRange((params, token, workDoneProgress, resultProgress) => {
             const document = documents.get(params.textDocument.uri)
             if (!document) return undefined
-            return this.findLinkedEditingRanges(document, program, params, token, workDoneProgress, resultProgress)
-        }
+            return provider.findLinkedEditingRanges(document, program, params, token, workDoneProgress, resultProgress)
+        })
+        capabilities.linkedEditingRangeProvider = true
     }
 }

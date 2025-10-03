@@ -2,14 +2,12 @@ import type { BiblioEntry } from '@tc39/ecma262-biblio'
 import {
     type CancellationToken,
     type Connection,
-    type HandlerResult,
     type PrepareRenameParams,
     Range,
     type RenameClientCapabilities,
     type RenameParams,
     ResponseError,
     type ServerCapabilities,
-    type TextDocuments,
     TextEdit,
     type WorkDoneProgressReporter,
     type WorkspaceEdit,
@@ -17,23 +15,13 @@ import {
 import type { TextDocument } from 'vscode-languageserver-textdocument'
 import { getFirstElementChild } from '../parser/html.js'
 import { word_at_cursor } from '../parser/text.js'
+import { documents } from '../server-shared.js'
 import { getText } from '../utils/biblio.js'
 import type { Program } from '../workspace/program.js'
 
 type PrepareResult = Range | { range: Range; placeholder: string } | { defaultBehavior: boolean } | undefined | null
-export function renameProvider(
-    connection: Connection,
-    program: Program,
-    documents: TextDocuments<TextDocument>,
-    capabilities: RenameClientCapabilities | undefined,
-): NonNullable<ServerCapabilities['renameProvider']> {
-    const Rename = new RenameProvider(capabilities)
-    connection.onRenameRequest(Rename.handler(documents, program))
-    connection.onPrepareRename(Rename.prepareHandler(documents, program))
-    return { prepareProvider: true }
-}
 
-export class RenameProvider {
+export class Rename {
     constructor(public capabilities: RenameClientCapabilities | undefined) {}
 
     async rename(
@@ -103,7 +91,6 @@ export class RenameProvider {
         program: Program,
         params: PrepareRenameParams,
         _token?: CancellationToken,
-        _workDoneProgress?: WorkDoneProgressReporter,
     ): Promise<PrepareResult> {
         const source = document.getText()
         const offset = document.offsetAt(params.position)
@@ -122,28 +109,24 @@ export class RenameProvider {
         return null
     }
 
-    handler(documents: TextDocuments<TextDocument>, program: Program) {
-        return (
-            params: RenameParams,
-            _token?: CancellationToken,
-            _workDoneProgress?: WorkDoneProgressReporter,
-        ): HandlerResult<WorkspaceEdit | null | undefined, void> => {
+    static enable(
+        serverCapabilities: ServerCapabilities<never>,
+        connection: Connection,
+        program: Program,
+        capabilities: RenameClientCapabilities | undefined,
+    ) {
+        const rename = new Rename(capabilities)
+        connection.onPrepareRename((params, token) => {
             const document = documents.get(params.textDocument.uri)
             if (!document) return null
-            return this.rename(document, program, params, _token, _workDoneProgress)
-        }
-    }
-
-    prepareHandler(documents: TextDocuments<TextDocument>, program: Program) {
-        return (
-            params: PrepareRenameParams,
-            _token?: CancellationToken,
-            _workDoneProgress?: WorkDoneProgressReporter,
-        ): HandlerResult<PrepareResult, void> => {
+            return rename.prepare(document, program, params, token)
+        })
+        connection.onRenameRequest((params, token, workDoneProgress) => {
             const document = documents.get(params.textDocument.uri)
             if (!document) return null
-            return this.prepare(document, program, params, _token, _workDoneProgress)
-        }
+            return rename.rename(document, program, params, token, workDoneProgress)
+        })
+        serverCapabilities.renameProvider = { prepareProvider: true }
     }
 }
 

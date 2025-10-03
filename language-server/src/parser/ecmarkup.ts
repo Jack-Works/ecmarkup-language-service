@@ -138,7 +138,7 @@ export class EcmarkupDocument {
         return location
     }
 
-    findElementAt(offset: number) {
+    findElementAt(offset: number): Element | undefined {
         function visitor(node: Node): Element | undefined {
             if (isElementNode(node)) {
                 const start = node.sourceCodeLocation?.startOffset
@@ -155,8 +155,27 @@ export class EcmarkupDocument {
         }
         const result = find_first(this.html.childNodes, visitor)
         const tag = result?.nodeName
-        if (tag === 'ins' || tag === 'del') return result?.parentNode || result
+        if ((tag === 'ins' || tag === 'del') && result?.parentNode && isElementNode(result.parentNode))
+            return result.parentNode || result
         return result
+    }
+
+    findNodeAt(offset: number): Node | undefined {
+        function visitor(node: Node): Node | undefined {
+            if ('sourceCodeLocation' in node && node.sourceCodeLocation) {
+                const start = node.sourceCodeLocation.startOffset
+                const end = node.sourceCodeLocation.endOffset
+                if (start !== undefined && end) {
+                    if (start <= offset && offset <= end) {
+                        if ('childNodes' in node) return find_first(node.childNodes, visitor) || node
+                        return node
+                    } else return undefined
+                }
+            }
+            if ('childNodes' in node) return find_first(node.childNodes, visitor)
+            return undefined
+        }
+        return find_first(this.html.childNodes, visitor)
     }
 
     getNodeInnerText(node: Node | undefined): string | undefined {
