@@ -53,16 +53,6 @@ export class Formatter {
             end_offset -= slice.length - slice.trimEnd().length
         }
 
-        let indent_count = 0
-        {
-            const line = sourceFile.text.positionAt(start_offset).line
-            const first_line = source.slice(
-                sourceFile.text.offsetAt({ line, character: 0 }),
-                sourceFile.text.offsetAt({ line: line + 1, character: 0 }),
-            )
-            indent_count = first_line.length - first_line.trimStart().length
-        }
-
         const start = sourceFile.findNodeAt(start_offset)
         const end = sourceFile.findNodeAt(end_offset)
         if (!start || !end) return undefined
@@ -74,6 +64,20 @@ export class Formatter {
         await Promise.all(
             formatable_nodes.map(async (node) => {
                 if (isElementNode(node) || isCommentNode(node) || isTextNode(node)) {
+                    let indent_count = 0
+
+                    if (
+                        !source.slice(node.sourceCodeLocation!.startOffset, node.sourceCodeLocation!.endOffset).trim()
+                    ) {
+                        return
+                    }
+                    const line = sourceFile.text.positionAt(node.sourceCodeLocation!.startOffset).line
+                    const first_line = source.slice(
+                        sourceFile.text.offsetAt({ line, character: 0 }),
+                        sourceFile.text.offsetAt({ line: line + 1, character: 0 }),
+                    )
+                    indent_count = first_line.length - first_line.trimStart().length
+
                     const formatted = await formatter.printChildNodes(source, [node], false, false, indent_count / 2)
                     edits.push(
                         TextEdit.replace(
@@ -82,7 +86,7 @@ export class Formatter {
                                 start: sourceFile.text.positionAt(node.sourceCodeLocation!.startOffset),
                                 end: sourceFile.text.positionAt(node.sourceCodeLocation!.endOffset),
                             },
-                            formatted.lines.join('\n'),
+                            formatted.lines.join('\n').trim(),
                         ),
                     )
                 }
@@ -92,9 +96,23 @@ export class Formatter {
     }
 
     async formatOnType(
-        _document: TextDocument,
-        _params: DocumentOnTypeFormattingParams,
+        document: TextDocument,
+        program: Program,
+        params: DocumentOnTypeFormattingParams,
     ): Promise<TextEdit[] | undefined> {
+        const sourceFile = program.getSourceFile(document)
+        const source = document.getText()
+        const cursorAt = sourceFile.text.offsetAt(params.position)
+        if (source[cursorAt] === '\n' && sourceFile.findElementAt(cursorAt)?.tagName === 'emu-alg') {
+            return this.formatRange(document, program, {
+                range: {
+                    start: params.position,
+                    end: params.position,
+                },
+                options: params.options,
+                textDocument: params.textDocument,
+            })
+        }
         return undefined
     }
 
@@ -115,8 +133,14 @@ export class Formatter {
             if (!document) return null
             return provider.formatRange(document, program, params)
         })
+        connection.onDocumentOnTypeFormatting((params, _token) => {
+            const document = documents.get(params.textDocument.uri)
+            if (!document) return null
+            return provider.formatOnType(document, program, params)
+        })
         serverCapabilities.documentFormattingProvider = {}
         serverCapabilities.documentRangeFormattingProvider = {}
+        serverCapabilities.documentOnTypeFormattingProvider = { firstTriggerCharacter: '.' }
     }
 }
 
@@ -160,7 +184,9 @@ function findFormatRange(a: Node, b: Node): Node[] {
 
 function* findChildrenWithRange(node: Node): Generator<Node> {
     if ('sourceCodeLocation' in node && node.sourceCodeLocation) {
-        yield node
+        if (isTextNode(node) && 'sourceCodeLocation' in node.parentNode && node.parentNode.sourceCodeLocation)
+            yield node.parentNode
+        else yield node
     } else if ('childNodes' in node) {
         for (const child of node.childNodes) {
             yield* findChildrenWithRange(child)
