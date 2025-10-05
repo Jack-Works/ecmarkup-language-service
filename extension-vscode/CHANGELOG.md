@@ -1,5 +1,13 @@
 # ecmarkup-language-extension-vscode
 
+## 0.4.1
+
+### Patch Changes
+
+- ed72549: Fix cannot read biblio on node natively because of exports map
+- 81af9c4: Remove gt lt as snippet
+- 86abde1: Fix AO snippet conflicts with aoid completion
+
 ## 0.4.0
 
 ### Minor Changes
