@@ -1,5 +1,22 @@
 # ecmarkup-language-server
 
+## 0.5.0
+
+### Minor Changes
+
+- 33220a3: Add document symbols
+- c4adc8c: Add rename
+- 81af9c4: Add format, range format and format on type
+
+### Patch Changes
+
+- d5c7a21: Add plainText support for completion and hover
+- 86abde1: Fix AO snippet conflicts with aoid completion
+- f261968: Add document highlight (use same result from find references)
+- f261968: Fix some false positive of find reference
+- b99b105: Add local defined AO to semantic token
+- 3475d95: Add LocationLink support to goto definition
+
 ## 0.4.0
 
 ### Minor Changes

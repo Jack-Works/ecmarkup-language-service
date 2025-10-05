@@ -17,7 +17,7 @@
     "author": "Jack Works",
     "publisher": "MagicWorks",
     "license": "MIT",
-    "version": "0.4.0",
+    "version": "0.4.1",
     "main": "./lib/node.js",
     "type": "module",
     "enableProposedApis": false,
