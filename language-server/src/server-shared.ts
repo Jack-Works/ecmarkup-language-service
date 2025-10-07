@@ -1,6 +1,7 @@
 import { type Connection, type InitializeResult, TextDocumentSyncKind, TextDocuments } from 'vscode-languageserver'
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { Completion } from './features/completion.js'
+import { Diagnostics } from './features/diagnostic.js'
 import { DocumentHighlight } from './features/documentHighlight.js'
 import { DocumentSymbols } from './features/documentSymbol.js'
 import { Reference } from './features/findAllReferences.js'
@@ -9,11 +10,10 @@ import { GoToDefinition } from './features/gotoDefinition.js'
 import { Hovers } from './features/hover.js'
 import { Rename } from './features/rename.js'
 import { SemanticToken } from './features/semanticTokens.js'
-import { createRemoteIO } from './workspace/io.js'
+import { createRemoteIO, type ServerAPI } from './workspace/io.js'
 import { createProgram } from './workspace/program.js'
 
 export const documents = new TextDocuments(TextDocument)
-// https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_implementation
 export function initialize(connection: Connection, version: string) {
     const globalProgram = createProgram(createRemoteIO(connection))
     connection.onInitialize((params) => {
@@ -21,13 +21,8 @@ export function initialize(connection: Connection, version: string) {
             capabilities: { textDocument: capabilities },
         } = params
         const features: InitializeResult<never> = {
-            capabilities: {
-                textDocumentSync: TextDocumentSyncKind.Incremental,
-            },
-            serverInfo: {
-                name: 'ecmarkup language server',
-                version,
-            },
+            capabilities: { textDocumentSync: TextDocumentSyncKind.Incremental },
+            serverInfo: { name: 'ecmarkup language server', version },
         }
         Completion.enable(features.capabilities, connection, globalProgram, capabilities?.completion)
         GoToDefinition.enable(features.capabilities, connection, globalProgram, capabilities?.definition)
@@ -42,8 +37,25 @@ export function initialize(connection: Connection, version: string) {
         // linked editing range behaves strange when using ctrl-x to delete a line
         // LinkedEditingRange.enable(features.capabilities, connection, globalProgram, documents)
         Formatter.enable(features.capabilities, connection, globalProgram, capabilities)
+        const diagnosticConfig = Diagnostics.enable(
+            features.capabilities,
+            connection,
+            globalProgram,
+            capabilities?.publishDiagnostics,
+            capabilities?.diagnostic,
+        )
+
+        Object.entries({
+            enableDiagnostics(boolean) {
+                diagnosticConfig.enable(boolean)
+            },
+        } satisfies ServerAPI as ServerAPI).forEach(([key, f]) => {
+            connection.onRequest(`api/${key}`, (params) => f(...params))
+        })
         return features
     })
+
+
     documents.onDidClose((e) => globalProgram.onDocumentRemoved(e.document))
     connection.onShutdown(() => globalProgram.dispose())
 

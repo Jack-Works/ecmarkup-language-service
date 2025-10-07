@@ -2,7 +2,8 @@ import type { ExtensionContext } from 'vscode'
 import { commands, extensions, workspace } from 'vscode'
 import type { LanguageClient as WebClient, LanguageClientOptions as WebOptions } from 'vscode-languageclient/browser.js'
 import type { LanguageClient as NodeClient, LanguageClientOptions as NodeOptions } from 'vscode-languageclient/node.js'
-import { io } from './io/general.js'
+import { client as clientAPI } from './io/general.js'
+import { createRemoteIO } from './io/server.js'
 
 let client: NodeClient | WebClient
 export async function onActivate(
@@ -24,9 +25,17 @@ export async function onActivate(
     client = createClient(clientOptions)
     client.start()
 
-    Object.entries(io).forEach(([key, f]) => {
-        context.subscriptions.push(client!.onRequest(`io/${key}`, (params) => f(...params)))
+    Object.entries(clientAPI).forEach(([key, f]) => {
+        context.subscriptions.push(client!.onRequest(`api/${key}`, (params) => f(...params)))
     })
+
+    const server = createRemoteIO(client)
+
+    workspace.onDidChangeConfiguration(updateConfiguration)
+    updateConfiguration()
+    function updateConfiguration() {
+        server.enableDiagnostics(workspace.getConfiguration('ecmarkup').get<boolean>('diagnostic') ?? true)
+    }
 
     context.subscriptions.push(
         commands.registerCommand('ecmarkup.restart', async () => {

@@ -1,7 +1,7 @@
 import { Uri, window, workspace } from 'vscode'
-import type { IO } from '../../../language-server/src/workspace/io.js'
+import type { ClientAPI } from '../../../language-server/src/workspace/io.js'
 
-export const io: IO = {
+export const client: ClientAPI = {
     async warn(...message) {
         console.warn(...message)
     },

@@ -3267,6 +3267,7 @@ __metadata:
     ecmarkup: "npm:*"
     fuse.js: "npm:^7.1.0"
     grammarkdown: "npm:^3.3.2"
+    jsdom: "npm:^25.0.1"
     parse5: "npm:^6.0.1"
     vscode-html-languageservice: "npm:^5.5.1"
     vscode-languageserver: "npm:^9.0.1"

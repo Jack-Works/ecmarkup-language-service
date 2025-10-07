@@ -3,7 +3,7 @@ import type { BiblioEntry } from '@tc39/ecma262-biblio'
 import type { TextDocument } from 'vscode-html-languageservice'
 import { getLanguageModelCache } from '../parser/cache.js'
 import { EcmarkupDocument } from '../parser/ecmarkup.js'
-import type { IO } from './io.js'
+import type { ClientAPI } from './io.js'
 
 export interface Program {
     getSourceFile(document: TextDocument): EcmarkupDocument
@@ -15,7 +15,7 @@ export interface Program {
     warn(...message: unknown[]): Promise<void>
 }
 
-export function createProgram(io: IO): Program {
+export function createProgram(client: ClientAPI): Program {
     const fileCache = getLanguageModelCache(10, 60, (doc) => new EcmarkupDocument(doc))
     const biblioCache = new Map<string, Promise<readonly BiblioEntry[]>>()
 
@@ -29,14 +29,14 @@ export function createProgram(io: IO): Program {
         dispose() {
             fileCache.dispose()
         },
-        warn: io.warn,
-        getEditorCursorCount: io.getEditorCursorCount,
+        warn: client.warn,
+        getEditorCursorCount: client.getEditorCursorCount,
         resolveBiblio(base) {
             if (biblioCache.has(base)) return biblioCache.get(base)!
             const promise = new Promise<readonly BiblioEntry[]>((resolve, reject) => {
                 setTimeout(() => reject('Timeout'), 1000)
                 // TODO: validate the external biblio
-                io.resolveBiblio(base).then((result) => {
+                client.resolveBiblio(base).then((result) => {
                     if (!result) return resolve(bundledBiblio.entries)
                     const merged: BiblioEntry[] = []
                     const seen = new Set<string>()
@@ -44,6 +44,8 @@ export function createProgram(io: IO): Program {
                         seen.add(`${entry.type}|${getID(entry)}`)
                         if (result.location !== 'https://tc39.es/ecma262/') {
                             merged.push({ ...entry, source: result.source, location: result.location })
+                        } else {
+                            merged.push({ ...entry, source: result.source })
                         }
                     }
                     for (const entry of bundledBiblio.entries) {
@@ -54,7 +56,7 @@ export function createProgram(io: IO): Program {
                     resolve(merged)
                 }, reject)
             }).catch((err) => {
-                io.warn(`Could not resolve @tc39/ecma262-biblio from ${base}`, err)
+                client.warn(`Could not resolve @tc39/ecma262-biblio from ${base}`, err)
                 biblioCache.set(base, Promise.resolve(bundledBiblio.entries))
                 return bundledBiblio.entries
             })

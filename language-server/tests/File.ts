@@ -2,7 +2,7 @@ import { hash } from 'node:crypto'
 import dedent from 'dedent-js'
 import { TextDocument, type TextEdit } from 'vscode-languageserver-textdocument'
 import { type Position, Range, type TextDocumentIdentifier } from 'vscode-languageserver-types'
-import type { IO } from '../src/workspace/io.js'
+import type { ClientAPI } from '../src/workspace/io.js'
 import { createProgram } from '../src/workspace/program.js'
 
 export interface Mark {
@@ -18,7 +18,7 @@ export class File {
     textDocument: TextDocumentIdentifier
     mark!: Mark
     markers: Mark[] = []
-    program = createProgram(mockIO({}))
+    program = createProgram(mockClient({}))
     static of(text: TemplateStringsArray, ...markers: [symbol, ...symbol[]]) {
         const full = text.join('')
         const document = TextDocument.create(`test://${hash('md5', full)}.emu`, 'ecmarkup', 0, full)
@@ -98,7 +98,7 @@ export function betterSnapshot(document: TextDocument, mark_ranges: undefined | 
     return dedent(textLined.join('\n'))
 }
 
-export function mockIO(io: Partial<IO>): IO {
+export function mockClient(io: Partial<ClientAPI>): ClientAPI {
     return {
         async resolveBiblio() {
             return undefined

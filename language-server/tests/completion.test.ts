@@ -5,7 +5,7 @@ import type { CompletionItem } from 'vscode-languageserver-types'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { Completion } from '../src/features/completion.js'
 import { createProgram } from '../src/workspace/program.js'
-import { File, mockIO } from './File.js'
+import { File, mockClient } from './File.js'
 
 it('complete clauses (#sec-...)', async () => {
     const completer = new Completion()
@@ -202,7 +202,7 @@ it('completion should read local installed biblio', async () => {
         </emu-alg>
     `
     const program = createProgram(
-        mockIO({
+        mockClient({
             async resolveBiblio() {
                 return {
                     source: 'mocked',

@@ -17,7 +17,6 @@ const config = {
     experiments: { outputModule: true },
     resolve: {
         alias: {
-            jsdom: fileURLToPath(new URL('./scripts/null.cjs', import.meta.url)),
             chalk: fileURLToPath(new URL('./scripts/null.cjs', import.meta.url)),
         },
         extensions: ['.ts', '.tsx', '.js'],

@@ -23,6 +23,17 @@
     "enableProposedApis": false,
     "activationEvents": [],
     "contributes": {
+        "configuration": {
+            "title": "ecmarkup language service",
+            "type": "object",
+            "properties": {
+                "ecmarkup.diagnostic": {
+                    "type": "boolean",
+                    "default": true,
+                    "markdownDescription": "Enable diagnostics\n\n*This feature may have performance issue*"
+                }
+            }
+        },
         "html": {
             "customData": [
                 "./custom-element.json"
