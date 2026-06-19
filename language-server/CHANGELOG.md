@@ -1,5 +1,11 @@
 # ecmarkup-language-server
 
+## 0.6.0
+
+### Minor Changes
+
+- 07fa995: Add diagnostics and a settings to disable it
+
 ## 0.5.0
 
 ### Minor Changes
