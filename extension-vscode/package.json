@@ -21,7 +21,9 @@
     "main": "./lib/node.js",
     "type": "module",
     "enableProposedApis": false,
-    "activationEvents": [],
+    "activationEvents": [
+        "onLanguage:html"
+    ],
     "contributes": {
         "configuration": {
             "title": "ecmarkup language service",
@@ -31,6 +33,11 @@
                     "type": "boolean",
                     "default": true,
                     "markdownDescription": "Enable diagnostics\n\n*This feature may have performance issue*"
+                },
+                "ecmarkup.detectInHtml": {
+                    "type": "boolean",
+                    "default": true,
+                    "markdownDescription": "Automatically treat `.html` files as ecmarkup when they contain an `<emu-clause` tag.\n\nSome TC39 proposals (e.g. Temporal) write their spec text in `.html` files rather than `.emu`. When enabled, such files are switched to the ecmarkup language mode; other HTML files are left untouched."
                 }
             }
         },
