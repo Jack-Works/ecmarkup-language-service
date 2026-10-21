@@ -1,5 +1,15 @@
 # ecmarkup-language-server
 
+## 0.7.0
+
+### Minor Changes
+
+- 6941931: add command "ecmarkup: Insert clause" (`ecmarkup.insertClause` in vscode, "ecmarkup/insertClause" in the language server)
+
+### Patch Changes
+
+- 603e056: fix diagnostic not clear old errors
+
 ## 0.6.0
 
 ### Minor Changes
