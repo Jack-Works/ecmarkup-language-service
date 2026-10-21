@@ -1,8 +1,11 @@
 import dedent from 'dedent-js'
 import { NodeVisitor, type Nonterminal, Parser, type Production, type SourceFile } from 'grammarkdown'
-import type { ChildNode, Element } from 'parse5'
+import type { DefaultTreeAdapterTypes } from 'parse5'
 import { getNodeInnerText } from './html.js'
 import type { SymbolInfo } from './symbol.js'
+
+type ChildNode = DefaultTreeAdapterTypes.ChildNode
+type Element = DefaultTreeAdapterTypes.Element
 
 let parser: Parser
 
@@ -13,7 +16,7 @@ export function parseGrammarkdown(node: Element, isDefinition: boolean, source: 
 
     parser ??= new Parser()
     const tag_start =
-        (node.sourceCodeLocation?.startTag.endOffset ?? 0) - (node.sourceCodeLocation?.startTag.startOffset ?? 0)
+        (node.sourceCodeLocation?.startTag?.endOffset ?? 0) - (node.sourceCodeLocation?.startTag?.startOffset ?? 0)
     const doc = parser.parseSourceFile('test.grammarkdown', innerText)
     const visitor = new Visitor(info, isDefinition, node, doc, tag_start)
     visitor.visitSourceFile(doc)

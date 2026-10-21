@@ -21,10 +21,11 @@
         "build": "tsc -b ."
     },
     "devDependencies": {
-        "@biomejs/biome": "2.2.4",
-        "@changesets/cli": "^2.29.7",
-        "typescript": "^5.9.2",
-        "vitest": "^3.2.4"
+        "@biomejs/biome": "2.6.2",
+        "@changesets/cli": "^3.0.3",
+        "typescript": "^7.0.2",
+        "vite": "^7.0.0",
+        "vitest": "^5.0.5"
     },
-    "packageManager": "yarn@4.10.3"
+    "packageManager": "yarn@4.18.1"
 }

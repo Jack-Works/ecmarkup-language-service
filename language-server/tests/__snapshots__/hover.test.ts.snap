@@ -32,9 +32,9 @@ exports[`hover on biblio entries > call 1`] = `
       "kind": "markdown",
       "value": "\`\`\`ts
 Call(
-  F: Value,
-  V: Value,
-  argumentsList?: List<Values>
+  func: Value,
+  thisValue: Value,
+  argList?: List<Values>
 ): Completion<Value>
 \`\`\`
 

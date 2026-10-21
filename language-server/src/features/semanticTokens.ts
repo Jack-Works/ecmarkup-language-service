@@ -1,5 +1,4 @@
-import type { Element } from 'parse5'
-import { isElementNode } from 'parse5/lib/tree-adapters/default.js'
+import { type DefaultTreeAdapterTypes, defaultTreeAdapter } from 'parse5'
 import type {
     Connection,
     SemanticTokens,
@@ -13,6 +12,10 @@ import { getAbstractOperationHeader } from '../parser/ecmarkup.js'
 import { documents } from '../server-shared.js'
 import { isBiblioOp } from '../utils/biblio.js'
 import type { Program } from '../workspace/program.js'
+
+type Element = DefaultTreeAdapterTypes.Element
+type Node = DefaultTreeAdapterTypes.Node
+const isElementNode = (node: Node): node is Element => defaultTreeAdapter.isElementNode(node)
 
 export interface SemanticTokenData {
     offset: number
@@ -80,7 +83,7 @@ export class SemanticToken {
                             ?.effects.includes('user-code')
                     ) {
                         tokens.push({
-                            offset: node.sourceCodeLocation!.startTag.endOffset + index,
+                            offset: node.sourceCodeLocation!.startTag!.endOffset + index,
                             length: word!.length,
                             tokenType: SemanticTokenTypes.function,
                             modifier: [SemanticTokenModifiers.mutable],
@@ -89,7 +92,7 @@ export class SemanticToken {
                         const local = sourceFile.localDefinedAbstractOperations.find((op) => op.name === word)
                         if (local) {
                             tokens.push({
-                                offset: node.sourceCodeLocation!.startTag.endOffset + index,
+                                offset: node.sourceCodeLocation!.startTag!.endOffset + index,
                                 length: word!.length,
                                 tokenType: SemanticTokenTypes.function,
                                 modifier: [],
@@ -106,14 +109,14 @@ export class SemanticToken {
                     if (aoid && innerText) {
                         if (aoid.groups!['semantics']) {
                             tokens.push({
-                                offset: node.sourceCodeLocation!.startTag.endOffset + aoid.indices![1]![0],
+                                offset: node.sourceCodeLocation!.startTag!.endOffset + aoid.indices![1]![0],
                                 length: aoid.groups!['semantics']!.length - 1,
                                 tokenType: SemanticTokenTypes.comment,
                                 modifier: [],
                             })
                         }
                         tokens.push({
-                            offset: node.sourceCodeLocation!.startTag.endOffset + aoid.indices![2]![0],
+                            offset: node.sourceCodeLocation!.startTag!.endOffset + aoid.indices![2]![0],
                             length: aoid.groups!['aoid']!.length - 1,
                             tokenType: SemanticTokenTypes.function,
                             modifier: [],
@@ -122,7 +125,7 @@ export class SemanticToken {
                         matcher.lastIndex = aoid.index!
                         for (const parameter of innerText.matchAll(matcher)) {
                             tokens.push({
-                                offset: node.sourceCodeLocation!.startTag.endOffset + parameter.indices![1]![0],
+                                offset: node.sourceCodeLocation!.startTag!.endOffset + parameter.indices![1]![0],
                                 length: parameter.groups!['variable']!.length,
                                 tokenType: SemanticTokenTypes.variable,
                                 modifier: [],
@@ -130,7 +133,7 @@ export class SemanticToken {
                             const type = parameter.indices![3]?.[0]
                             type &&
                                 tokens.push({
-                                    offset: node.sourceCodeLocation!.startTag.endOffset + type,
+                                    offset: node.sourceCodeLocation!.startTag!.endOffset + type,
                                     length: parameter.groups!['type']!.length,
                                     tokenType: SemanticTokenTypes.type,
                                     modifier: [],
@@ -141,7 +144,7 @@ export class SemanticToken {
                         const returnType = typeMatcher.exec(innerText)
                         if (returnType) {
                             tokens.push({
-                                offset: node.sourceCodeLocation!.startTag.endOffset + returnType.indices![1]![0],
+                                offset: node.sourceCodeLocation!.startTag!.endOffset + returnType.indices![1]![0],
                                 length: returnType.groups!['type']!.length,
                                 tokenType: SemanticTokenTypes.type,
                                 modifier: [],

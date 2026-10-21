@@ -1,12 +1,21 @@
 import dedent from 'dedent-js'
-import { type ChildNode, type Document, type Element, type Node, parse, type TextNode } from 'parse5'
-import { isCommentNode, isElementNode, isTextNode } from 'parse5/lib/tree-adapters/default.js'
+import { type DefaultTreeAdapterTypes, defaultTreeAdapter, parse } from 'parse5'
 import type { TextDocument } from 'vscode-languageserver-textdocument'
 import { Range } from 'vscode-languageserver-types'
 import { lazy } from '../utils/lazy.js'
 import { parseGrammarkdown } from './grammarkdown.js'
 import { find_first, getAttributeValuePosition, getNodeInnerText, getRelativePositionToTagStart } from './html.js'
 import type { DefinitionSymbol, NodeRelativeRange, SymbolInfo } from './symbol.js'
+
+type ChildNode = DefaultTreeAdapterTypes.ChildNode
+type Document = DefaultTreeAdapterTypes.Document
+type Element = DefaultTreeAdapterTypes.Element
+type Node = DefaultTreeAdapterTypes.Node
+type TextNode = DefaultTreeAdapterTypes.TextNode
+const isCommentNode = (node: Node): node is DefaultTreeAdapterTypes.CommentNode =>
+    defaultTreeAdapter.isCommentNode(node)
+const isElementNode = (node: Node): node is Element => defaultTreeAdapter.isElementNode(node)
+const isTextNode = (node: Node): node is TextNode => defaultTreeAdapter.isTextNode(node)
 
 export class EcmarkupDocument {
     public readonly html: Document
@@ -20,6 +29,7 @@ export class EcmarkupDocument {
         function visit(node: ChildNode) {
             if (isTextNode(node)) result.push(...parseTextNode(node, source))
             else if (isCommentNode(node)) return
+            else if (!isElementNode(node)) return
             else if (node.tagName === 'emu-grammar') {
                 const isDefinition = !!node.attrs.some((attr) => attr.value === 'definition')
                 result.push(...parseGrammarkdown(node, isDefinition, source))
@@ -61,7 +71,7 @@ export class EcmarkupDocument {
     getRelativeRangeToInnerText(node: ChildNode, position: number, length: number) {
         let tagStart = node.sourceCodeLocation!.startOffset
         if (isElementNode(node)) {
-            tagStart = node.sourceCodeLocation!.startTag.endOffset
+            tagStart = node.sourceCodeLocation!.startTag!.endOffset
         }
         return Range.create(
             this.text.positionAt(tagStart + position),
@@ -69,7 +79,7 @@ export class EcmarkupDocument {
         )
     }
 
-    getAbstractOperationHeader(offset: number) {
+    getAbstractOperationHeader(offset: number): DefaultTreeAdapterTypes.Element | undefined {
         return getAbstractOperationHeader(this.findElementAt(offset))
     }
 
@@ -212,6 +222,7 @@ export function getAbstractOperationHeader(node: Node | undefined): Element | un
         if (next?.nodeName === 'dl' || next?.nodeName === 'p') return elements[index]
     }
     if ('parentNode' in node) {
+        if (!node.parentNode) return undefined
         const elements = node.parentNode.childNodes.filter(isElementNode)
         const index = elements.findIndex((node) => node.nodeName === 'h1')
         const next = elements[index + 1]

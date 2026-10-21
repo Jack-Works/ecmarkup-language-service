@@ -1,7 +1,7 @@
 import type { ExtensionContext, TextDocument } from 'vscode'
 import { commands, extensions, languages, workspace } from 'vscode'
-import type { LanguageClient as WebClient, LanguageClientOptions as WebOptions } from 'vscode-languageclient/browser.js'
-import type { LanguageClient as NodeClient, LanguageClientOptions as NodeOptions } from 'vscode-languageclient/node.js'
+import type { LanguageClient as WebClient, LanguageClientOptions as WebOptions } from 'vscode-languageclient/browser'
+import type { LanguageClient as NodeClient, LanguageClientOptions as NodeOptions } from 'vscode-languageclient/node'
 import { client as clientAPI } from './io/general.js'
 import { createRemoteIO } from './io/server.js'
 

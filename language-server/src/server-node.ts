@@ -1,4 +1,4 @@
-import { createConnection, ProposedFeatures } from 'vscode-languageserver/node.js'
+import { createConnection, ProposedFeatures } from 'vscode-languageserver/node'
 import pkg from '../package.json' with { type: 'json' }
 import { initialize } from './server-shared.js'
 

@@ -1,4 +1,6 @@
-import type { ChildNode } from 'parse5'
+import type { DefaultTreeAdapterTypes } from 'parse5'
+
+type ChildNode = DefaultTreeAdapterTypes.ChildNode
 
 export type SymbolInfo = DefinitionSymbol | ReferenceSymbol
 interface Symbol {

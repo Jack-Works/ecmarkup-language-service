@@ -42,13 +42,13 @@ Completion(
   ],
   "high5": [
     "Completion",
-    "ReturnIfAbrupt",
     "𝔽",
     "ℤ",
     "ℝ",
+    "abs",
   ],
   "kinds": {
-    "(method)": 696,
+    "(method)": 757,
   },
 }
 `;
@@ -83,13 +83,13 @@ Completion(
   ],
   "high5": [
     "Completion",
-    "ReturnIfAbrupt",
     "𝔽",
     "ℤ",
     "ℝ",
+    "abs",
   ],
   "kinds": {
-    "(method)": 696,
+    "(method)": 757,
   },
 }
 `;
@@ -136,13 +136,13 @@ Completion(
   ],
   "high5": [
     "Completion",
-    "ReturnIfAbrupt",
     "𝔽",
     "ℤ",
     "ℝ",
+    "abs",
   ],
   "kinds": {
-    "(method)": 696,
+    "(method)": 757,
   },
 }
 `;
@@ -177,13 +177,13 @@ Completion(
   ],
   "high5": [
     "Completion",
-    "ReturnIfAbrupt",
     "𝔽",
     "ℤ",
     "ℝ",
+    "abs",
   ],
   "kinds": {
-    "(method)": 696,
+    "(method)": 757,
   },
 }
 `;
@@ -210,7 +210,7 @@ StartGenshin
       "insertTextFormat": 2,
       "kind": 3,
       "label": "StartGenshin",
-      "sortText": "0.001",
+      "sortText": "0.31622776601683794",
       "textEdit": undefined,
     },
   ],
@@ -222,7 +222,7 @@ StartGenshin
     "GeneratorStart",
   ],
   "kinds": {
-    "(method)": 108,
+    "(method)": 112,
   },
 }
 `;
@@ -257,13 +257,13 @@ Completion(
   ],
   "high5": [
     "Completion",
-    "ReturnIfAbrupt",
     "𝔽",
     "ℤ",
     "ℝ",
+    "abs",
   ],
   "kinds": {
-    "(method)": 696,
+    "(method)": 757,
   },
 }
 `;
@@ -309,7 +309,7 @@ exports[`complete clauses (#sec-...) > suggest 1`] = `
     "#sec-conformance-legacy-normative-optional",
   ],
   "kinds": {
-    "(clause)": 2253,
+    "(clause)": 2342,
   },
 }
 `;
@@ -341,7 +341,7 @@ exports[`complete clauses (#sec-...) > suggest but not replacing children 1`] = 
     "#sec-conformance-legacy-normative-optional",
   ],
   "kinds": {
-    "(clause)": 2253,
+    "(clause)": 2342,
   },
 }
 `;
@@ -373,7 +373,7 @@ exports[`complete clauses (#sec-...) > suggest with host 1`] = `
     "#sec-conformance-legacy-normative-optional",
   ],
   "kinds": {
-    "(clause)": 2253,
+    "(clause)": 2342,
   },
 }
 `;
@@ -419,7 +419,7 @@ exports[`complete clauses (#sec-...) > suggest with no end tag 1`] = `
     "#sec-conformance-legacy-normative-optional",
   ],
   "kinds": {
-    "(clause)": 2253,
+    "(clause)": 2342,
   },
 }
 `;
@@ -486,9 +486,9 @@ Completion(
     "host",
   ],
   "kinds": {
-    "(grammar)": 379,
-    "(method)": 695,
-    "(term)": 414,
+    "(grammar)": 383,
+    "(method)": 756,
+    "(term)": 439,
   },
 }
 `;
@@ -531,7 +531,7 @@ exports[`complete grammars > full syntax 1`] = `
     "StrNumericLiteral",
   ],
   "kinds": {
-    "(grammar)": 379,
+    "(grammar)": 383,
   },
 }
 `;
@@ -562,7 +562,7 @@ exports[`complete grammars > grammar 1`] = `
     "BitwiseXORExpression",
   ],
   "kinds": {
-    "(grammar)": 191,
+    "(grammar)": 192,
   },
 }
 `;
@@ -593,7 +593,7 @@ exports[`complete grammars > grammar no filter 1`] = `
     "StrNumericLiteral",
   ],
   "kinds": {
-    "(grammar)": 379,
+    "(grammar)": 383,
   },
 }
 `;
@@ -740,7 +740,7 @@ exports[`complete grammars > starting trigger char only 1`] = `
     "StrNumericLiteral",
   ],
   "kinds": {
-    "(grammar)": 379,
+    "(grammar)": 383,
   },
 }
 `;
@@ -759,7 +759,7 @@ exports[`complete intrinsics > intrinsic 1`] = `
       "insertText": undefined,
       "kind": 12,
       "label": "%Array.prototype%",
-      "sortText": "0.01",
+      "sortText": "0.4641588833612779",
       "textEdit": {
         "newText": "%Array.prototype% ",
         "range": {
@@ -783,7 +783,7 @@ exports[`complete intrinsics > intrinsic 1`] = `
     "%WeakRef.prototype%",
   ],
   "kinds": {
-    "(term)": 42,
+    "(term)": 45,
   },
 }
 `;
@@ -793,7 +793,7 @@ exports[`complete intrinsics > intrinsic no filter 1`] = `
   "around": "<p>%🔽%</p>",
   "examples": [
     {
-      "detail": "(term) %Symbol.asyncIterator%",
+      "detail": "(term) %Symbol.asyncDispose%",
       "documentation": {
         "kind": "markdown",
         "value": "[https://tc39.es/ecma262/#sec-well-known-symbols](https://tc39.es/ecma262/#sec-well-known-symbols)",
@@ -801,10 +801,10 @@ exports[`complete intrinsics > intrinsic no filter 1`] = `
       "filterText": undefined,
       "insertText": undefined,
       "kind": 12,
-      "label": "%Symbol.asyncIterator%",
+      "label": "%Symbol.asyncDispose%",
       "sortText": "0",
       "textEdit": {
-        "newText": "%Symbol.asyncIterator% ",
+        "newText": "%Symbol.asyncDispose% ",
         "range": {
           "end": {
             "character": 13,
@@ -819,14 +819,14 @@ exports[`complete intrinsics > intrinsic no filter 1`] = `
     },
   ],
   "high5": [
+    "%Symbol.asyncDispose%",
     "%Symbol.asyncIterator%",
+    "%Symbol.dispose%",
     "%Symbol.hasInstance%",
     "%Symbol.isConcatSpreadable%",
-    "%Symbol.iterator%",
-    "%Symbol.match%",
   ],
   "kinds": {
-    "(term)": 115,
+    "(term)": 123,
   },
 }
 `;
@@ -836,7 +836,7 @@ exports[`complete intrinsics > intrinsic no filter no closing 1`] = `
   "around": "<p>%🔽</p>",
   "examples": [
     {
-      "detail": "(term) %Symbol.asyncIterator%",
+      "detail": "(term) %Symbol.asyncDispose%",
       "documentation": {
         "kind": "markdown",
         "value": "[https://tc39.es/ecma262/#sec-well-known-symbols](https://tc39.es/ecma262/#sec-well-known-symbols)",
@@ -844,10 +844,10 @@ exports[`complete intrinsics > intrinsic no filter no closing 1`] = `
       "filterText": undefined,
       "insertText": undefined,
       "kind": 12,
-      "label": "%Symbol.asyncIterator%",
+      "label": "%Symbol.asyncDispose%",
       "sortText": "0",
       "textEdit": {
-        "newText": "%Symbol.asyncIterator% ",
+        "newText": "%Symbol.asyncDispose% ",
         "range": {
           "end": {
             "character": 12,
@@ -862,14 +862,14 @@ exports[`complete intrinsics > intrinsic no filter no closing 1`] = `
     },
   ],
   "high5": [
+    "%Symbol.asyncDispose%",
     "%Symbol.asyncIterator%",
+    "%Symbol.dispose%",
     "%Symbol.hasInstance%",
     "%Symbol.isConcatSpreadable%",
-    "%Symbol.iterator%",
-    "%Symbol.match%",
   ],
   "kinds": {
-    "(term)": 115,
+    "(term)": 123,
   },
 }
 `;
@@ -941,7 +941,7 @@ exports[`complete intrinsics > should suggest intrinsics (intrinsic) 1`] = `
   "insertText": undefined,
   "kind": 12,
   "label": "%Array.prototype%",
-  "sortText": "0.01",
+  "sortText": "0.4641588833612779",
   "textEdit": {
     "newText": "%Array.prototype% ",
     "range": {
@@ -1296,7 +1296,7 @@ exports[`complete well-known symbols > intrinsic 1`] = `
       "insertText": undefined,
       "kind": 12,
       "label": "%Symbol.iterator%",
-      "sortText": "0.08",
+      "sortText": "0.6564197879454707",
       "textEdit": {
         "newText": "%Symbol.iterator% ",
         "range": {
@@ -1328,18 +1328,18 @@ exports[`complete well-known symbols > intrinsic no filter 1`] = `
   "around": "<p>@@🔽</p>",
   "examples": [
     {
-      "detail": "(term) %Symbol.asyncIterator%",
+      "detail": "(term) %Symbol.asyncDispose%",
       "documentation": {
         "kind": "markdown",
         "value": "[https://tc39.es/ecma262/#sec-well-known-symbols](https://tc39.es/ecma262/#sec-well-known-symbols)",
       },
-      "filterText": "@@Symbol.asyncIterator",
+      "filterText": "@@Symbol.asyncDispose",
       "insertText": undefined,
       "kind": 12,
-      "label": "%Symbol.asyncIterator%",
+      "label": "%Symbol.asyncDispose%",
       "sortText": "0",
       "textEdit": {
-        "newText": "%Symbol.asyncIterator% ",
+        "newText": "%Symbol.asyncDispose% ",
         "range": {
           "end": {
             "character": 13,
@@ -1354,14 +1354,14 @@ exports[`complete well-known symbols > intrinsic no filter 1`] = `
     },
   ],
   "high5": [
+    "%Symbol.asyncDispose%",
     "%Symbol.asyncIterator%",
+    "%Symbol.dispose%",
     "%Symbol.hasInstance%",
     "%Symbol.isConcatSpreadable%",
-    "%Symbol.iterator%",
-    "%Symbol.match%",
   ],
   "kinds": {
-    "(term)": 14,
+    "(term)": 16,
   },
 }
 `;
@@ -1426,9 +1426,9 @@ MyFunction
     "implementation-approximated",
   ],
   "kinds": {
-    "(grammar)": 378,
-    "(method)": 696,
-    "(term)": 414,
+    "(grammar)": 382,
+    "(method)": 757,
+    "(term)": 439,
   },
 }
 `;

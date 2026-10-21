@@ -1,6 +1,8 @@
-import { lint } from 'ecmarkup/lib/lint/lint.js'
-import Spec, { walk } from 'ecmarkup/lib/Spec.js'
 import ClauseNumbers from 'ecmarkup/lib/clauseNums.js'
+import { lint } from 'ecmarkup/lib/lint/lint.js'
+import * as SpecModule from 'ecmarkup/lib/Spec.js'
+import { walk } from 'ecmarkup/lib/Spec.js'
+import { typecheck } from 'ecmarkup/lib/typechecker.js'
 import { JSDOM, VirtualConsole } from 'jsdom'
 import {
     type CancellationToken,
@@ -18,7 +20,6 @@ import {
 import type { TextDocument } from 'vscode-languageserver-textdocument'
 import { documents } from '../server-shared.js'
 import type { Program } from '../workspace/program.js'
-import { typecheck } from 'ecmarkup/lib/typechecker.js'
 
 export class Diagnostics {
     async diagnostic(
@@ -37,7 +38,10 @@ export class Diagnostics {
         })
         const js_document = new JSDOM(source, { includeNodeLocations: true, virtualConsole })
         // biome-ignore lint/suspicious/noExplicitAny: cjs interop
-        const spec: Spec = new ((Spec as any).default as typeof Spec)(
+        const Spec = ((SpecModule as any).default?.default ?? (SpecModule as any).default) as any
+        // biome-ignore lint/suspicious/noExplicitAny: cjs interop
+        const ClauseNumberer: typeof ClauseNumbers.default = ((ClauseNumbers as any).default?.default ?? (ClauseNumbers as any).default) as any
+        const spec: SpecModule.default = new Spec(
             document.uri,
             () => Promise.resolve(''),
             js_document,
@@ -49,7 +53,7 @@ export class Diagnostics {
                         entries: biblio as any,
                     },
                 ],
-                warn(error) {
+                warn(error: { line?: number; column?: number; message: string; ruleId: string }) {
                     const error_pos = { line: (error.line ?? 1) - 1, character: (error.column ?? 1) - 1 }
                     diagnostic.push({
                         message: error.message,
@@ -73,8 +77,7 @@ export class Diagnostics {
             importStack: [],
             clauseStack: [],
             tagStack: [],
-            // biome-ignore lint/suspicious/noExplicitAny: cjs...
-            clauseNumberer: (ClauseNumbers as any).default(spec),
+            clauseNumberer: ClauseNumberer(spec),
             inNoAutolink: false,
             inAlg: false,
             inNoEmd: false,

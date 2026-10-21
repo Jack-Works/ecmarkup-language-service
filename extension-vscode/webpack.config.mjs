@@ -29,7 +29,11 @@ const config = {
     externals: { vscode: 'module vscode', child_process: 'module child_process' },
     module: {
         rules: [
-            { test: /\.([cm]?ts|tsx)$/, loader: 'ts-loader', options: { transpileOnly: true } },
+            {
+                test: /\.([cm]?ts|tsx)$/,
+                loader: 'ts-loader',
+                options: { transpileOnly: true, ignoreDiagnostics: [6059] },
+            },
             { test: /\.grammar/, type: 'asset/resource' },
         ],
     },
@@ -37,6 +41,7 @@ const config = {
         minimize: false,
         moduleIds: 'named',
     },
+    node: { __dirname: true },
     target: 'node',
 }
 ;['crypto', 'child_process', 'fs', 'net', 'os', 'path', 'util', 'fs/promises', 'perf_hooks', 'url'].forEach((mod) => {

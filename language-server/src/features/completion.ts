@@ -92,9 +92,9 @@ export class Completion {
             let insertTitle: Range | undefined
             if (is_in_href_of_a_tag && node.sourceCodeLocation && !getNodeInnerText(source, node)?.trim().length) {
                 insertTitle = Range.create(
-                    sourceFile.text.positionAt(node.sourceCodeLocation.startTag.endOffset),
+                    sourceFile.text.positionAt(node.sourceCodeLocation.startTag!.endOffset),
                     sourceFile.text.positionAt(
-                        node.sourceCodeLocation.endTag?.startOffset ?? node.sourceCodeLocation.startTag.endOffset,
+                        node.sourceCodeLocation.endTag?.startOffset ?? node.sourceCodeLocation.startTag!.endOffset,
                     ),
                 )
             }
