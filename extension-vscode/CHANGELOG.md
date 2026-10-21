@@ -1,5 +1,11 @@
 # ecmarkup-language-extension-vscode
 
+## 0.6.0
+
+### Minor Changes
+
+- 115165f: Detect emu in html files
+
 ## 0.5.0
 
 ### Minor Changes
