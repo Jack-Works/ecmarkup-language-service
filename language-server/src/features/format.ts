@@ -1,5 +1,4 @@
-import type { ChildNode, Node } from 'parse5'
-import { isCommentNode, isElementNode, isTextNode } from 'parse5/lib/tree-adapters/default.js'
+import { type DefaultTreeAdapterTypes, defaultTreeAdapter } from 'parse5'
 import {
     type Connection,
     type DocumentFormattingClientCapabilities,
@@ -16,6 +15,13 @@ import type { Program } from '../workspace/program.js'
 import formatter = require('ecmarkup/lib/formatter/ecmarkup.js')
 
 import { documents } from '../server-shared.js'
+
+type ChildNode = DefaultTreeAdapterTypes.ChildNode
+type Node = DefaultTreeAdapterTypes.Node
+type FormatterNode = Parameters<typeof formatter.printChildNodes>[1][number]
+const isCommentNode = (node: Node): node is DefaultTreeAdapterTypes.CommentNode => defaultTreeAdapter.isCommentNode(node)
+const isElementNode = (node: Node): node is DefaultTreeAdapterTypes.Element => defaultTreeAdapter.isElementNode(node)
+const isTextNode = (node: Node): node is DefaultTreeAdapterTypes.TextNode => defaultTreeAdapter.isTextNode(node)
 
 export class Formatter {
     constructor(public capabilities: DocumentFormattingClientCapabilities | undefined) {}
@@ -78,7 +84,14 @@ export class Formatter {
                     )
                     indent_count = first_line.length - first_line.trimStart().length
 
-                    const formatted = await formatter.printChildNodes(source, [node], false, false, indent_count / 2)
+                    const formatted = await formatter.printChildNodes(
+                        source,
+                        [node as unknown as FormatterNode],
+                        'block',
+                        false,
+                        false,
+                        indent_count / 2,
+                    )
                     edits.push(
                         TextEdit.replace(
                             {
@@ -148,15 +161,15 @@ function findFormatRange(a: Node, b: Node): Node[] {
     const parent_a: Node[] = []
     const parent_b: Node[] = []
 
-    for (let init: Node = a; 'parentNode' in init; init = init.parentNode) {
+    for (let init: Node | undefined = a; init && 'parentNode' in init; init = init.parentNode ?? undefined) {
         parent_a.unshift(init)
-        if (init.parentNode.nodeName === '#document') {
+        if (init.parentNode?.nodeName === '#document') {
             parent_a.unshift(init.parentNode)
         }
     }
-    for (let init: Node = b; 'parentNode' in init; init = init.parentNode) {
+    for (let init: Node | undefined = b; init && 'parentNode' in init; init = init.parentNode ?? undefined) {
         parent_b.unshift(init)
-        if (init.parentNode.nodeName === '#document') {
+        if (init.parentNode?.nodeName === '#document') {
             parent_b.unshift(init.parentNode)
         }
     }
@@ -184,7 +197,7 @@ function findFormatRange(a: Node, b: Node): Node[] {
 
 function* findChildrenWithRange(node: Node): Generator<Node> {
     if ('sourceCodeLocation' in node && node.sourceCodeLocation) {
-        if (isTextNode(node) && 'sourceCodeLocation' in node.parentNode && node.parentNode.sourceCodeLocation)
+        if (isTextNode(node) && node.parentNode && 'sourceCodeLocation' in node.parentNode && node.parentNode.sourceCodeLocation)
             yield node.parentNode
         else yield node
     } else if ('childNodes' in node) {

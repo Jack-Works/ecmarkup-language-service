@@ -3,7 +3,6 @@ import type {
     Connection,
     LinkedEditingRangeParams,
     LinkedEditingRanges,
-    ResultProgressReporter,
     ServerCapabilities,
     TextDocuments,
     WorkDoneProgressReporter,
@@ -19,7 +18,6 @@ export class LinkedEditingRange {
         params: LinkedEditingRangeParams,
         token?: CancellationToken | undefined,
         workDoneProgress?: WorkDoneProgressReporter | undefined,
-        _resultProgress?: ResultProgressReporter<LinkedEditingRanges> | undefined,
     ): LinkedEditingRanges | null | undefined {
         const references = new Reference().findReferences(
             document,
@@ -43,10 +41,10 @@ export class LinkedEditingRange {
         documents: TextDocuments<TextDocument>,
     ) {
         const provider = new LinkedEditingRange()
-        connection.languages.onLinkedEditingRange((params, token, workDoneProgress, resultProgress) => {
+        connection.languages.onLinkedEditingRange((params, token, workDoneProgress) => {
             const document = documents.get(params.textDocument.uri)
             if (!document) return undefined
-            return provider.findLinkedEditingRanges(document, program, params, token, workDoneProgress, resultProgress)
+            return provider.findLinkedEditingRanges(document, program, params, token, workDoneProgress)
         })
         capabilities.linkedEditingRangeProvider = true
     }

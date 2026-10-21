@@ -1,6 +1,6 @@
 import { join } from 'node:path'
 import type { ExtensionContext } from 'vscode'
-import { LanguageClient, type ServerOptions, TransportKind } from 'vscode-languageclient/node.js'
+import { LanguageClient, type ServerOptions, TransportKind } from 'vscode-languageclient/node'
 import { applyNodeIO } from './io/node.js'
 import { onActivate } from './main.js'
 
@@ -20,7 +20,7 @@ export async function activate(context: ExtensionContext) {
             options: { execArgv: isProd ? [] : ['--nolazy', '--inspect=29381'] },
         },
     }
-    onActivate(context, (clientOptions) => {
+    return onActivate(context, (clientOptions) => {
         return new LanguageClient(
             'ecmarkup.language.service',
             'ecmarkup language service',

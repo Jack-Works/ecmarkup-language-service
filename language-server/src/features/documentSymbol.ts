@@ -1,4 +1,4 @@
-import { isElementNode } from 'parse5/lib/tree-adapters/default.js'
+import { type DefaultTreeAdapterTypes, defaultTreeAdapter } from 'parse5'
 import {
     type CancellationToken,
     type Connection,
@@ -17,6 +17,10 @@ import { getAbstractOperationHeader } from '../parser/ecmarkup.js'
 import { documents } from '../server-shared.js'
 import { formatSpecValueText } from '../utils/format.js'
 import type { Program } from '../workspace/program.js'
+
+type Node = DefaultTreeAdapterTypes.Node
+type Element = DefaultTreeAdapterTypes.Element
+const isElementNode = (node: Node): node is Element => defaultTreeAdapter.isElementNode(node)
 
 export class DocumentSymbols {
     constructor(
@@ -73,8 +77,8 @@ export class DocumentSymbols {
             }
 
             const parent = operation.node.parentNode
-            const source = sourceFile.getNodeInnerText(parent)
-            if (isElementNode(parent) && source) {
+            const source = sourceFile.getNodeInnerText(parent ?? undefined)
+            if (parent && isElementNode(parent) && source) {
                 for (const match of source.matchAll(/let\s*_(\w+)_/dgi)) {
                     if (!seenVariables.has(match[1]!)) {
                         seenVariables.add(match[1]!)

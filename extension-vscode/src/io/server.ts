@@ -1,5 +1,5 @@
-import type { LanguageClient as WebClient,  } from 'vscode-languageclient/browser.js'
-import type { LanguageClient as NodeClient,  } from 'vscode-languageclient/node.js'
+import type { LanguageClient as WebClient } from 'vscode-languageclient/browser'
+import type { LanguageClient as NodeClient } from 'vscode-languageclient/node'
 import type { ServerAPI } from '../../../language-server/src/workspace/io.js'
 import { timeout } from '../utils/timeout.js'
 

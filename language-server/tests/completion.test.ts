@@ -38,6 +38,20 @@ it('suggest clause id (#sec-...)', async () => {
     }
 })
 
+it('does not complete biblio entries in an HTML start tag', async () => {
+    const completer = new Completion()
+    const { document, textDocument, mark, program } = File.of`<emu-clause id="sec-structured-data" ${File.mark(
+        'attribute position',
+    )}>
+            <h1>Structured Data</h1>
+        </emu-clause>
+    `
+
+    const result = await completer.complete(document, program, { textDocument, position: mark.position })
+
+    expect(result).toBeNull()
+})
+
 it('complete variables in emu-alg', async () => {
     const completer = new Completion()
     const { document, textDocument, markers, program } = File.of`

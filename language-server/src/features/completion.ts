@@ -83,6 +83,17 @@ export class Completion {
             leadingContextWord,
         } = word_at_cursor(source, cursorAt)
 
+        // Leave HTML start-tag attribute completion to vscode.html-language-features,
+        // which owns the custom-data definitions contributed by the extension.
+        const startTag = node.sourceCodeLocation?.startTag
+        if (startTag && startTag.startOffset <= cursorAt && cursorAt < startTag.endOffset) {
+            const beforeCursor = source.slice(startTag.startOffset, cursorAt)
+            const attributeMatch = /(?:^|\s)([^\s"'=<>]*)$/u.exec(beforeCursor)
+            if (/^<[^\s>]+(?:\s+|$)/u.test(beforeCursor) && attributeMatch) {
+                return null
+            }
+        }
+
         // try to match <a href="...
         const noWhiteSpaceAfter = source[rightBoundary + (isGrammar || isIntrinsic || isVariable ? 1 : 0)] === ' '
         const is_in_href_of_a_tag = node.nodeName === 'a' && withinAttributeValue(source, node, 'href', cursorAt)
@@ -92,9 +103,9 @@ export class Completion {
             let insertTitle: Range | undefined
             if (is_in_href_of_a_tag && node.sourceCodeLocation && !getNodeInnerText(source, node)?.trim().length) {
                 insertTitle = Range.create(
-                    sourceFile.text.positionAt(node.sourceCodeLocation.startTag.endOffset),
+                    sourceFile.text.positionAt(node.sourceCodeLocation.startTag!.endOffset),
                     sourceFile.text.positionAt(
-                        node.sourceCodeLocation.endTag?.startOffset ?? node.sourceCodeLocation.startTag.endOffset,
+                        node.sourceCodeLocation.endTag?.startOffset ?? node.sourceCodeLocation.startTag!.endOffset,
                     ),
                 )
             }

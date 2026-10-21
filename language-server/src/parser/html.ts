@@ -1,5 +1,10 @@
-import type { ChildNode, Element, Node } from 'parse5'
-import { isElementNode, isTextNode } from 'parse5/lib/tree-adapters/default.js'
+import { type DefaultTreeAdapterTypes, defaultTreeAdapter } from 'parse5'
+
+type ChildNode = DefaultTreeAdapterTypes.ChildNode
+type Element = DefaultTreeAdapterTypes.Element
+type Node = DefaultTreeAdapterTypes.Node
+const isElementNode = (node: Node): node is Element => defaultTreeAdapter.isElementNode(node)
+const isTextNode = (node: Node): node is DefaultTreeAdapterTypes.TextNode => defaultTreeAdapter.isTextNode(node)
 
 export function getFirstElementChild(node: Node | undefined): Element | undefined {
     if (!node) return undefined
@@ -23,7 +28,7 @@ export function find_first<T, Q>(array: T[], mapper: (value: T) => Q | undefined
  */
 export function getRelativePositionToTagStart(node: ChildNode, position: number) {
     if (!isElementNode(node)) return position
-    return position + (node.sourceCodeLocation!.startTag.endOffset - node.sourceCodeLocation!.startOffset)
+    return position + (node.sourceCodeLocation!.startTag!.endOffset - node.sourceCodeLocation!.startOffset)
 }
 
 /**
@@ -35,7 +40,7 @@ export function getNodeInnerText(source: string, node: Node | undefined) {
     if (isTextNode(node)) {
         return node.value
     } else if (isElementNode(node)) {
-        const from = node.sourceCodeLocation?.startTag.endOffset
+        const from = node.sourceCodeLocation?.startTag?.endOffset
         const to = node.sourceCodeLocation?.endTag?.startOffset
         if (from !== undefined && to !== undefined) return source.slice(from, to)
     }

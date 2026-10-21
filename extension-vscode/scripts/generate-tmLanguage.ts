@@ -3,7 +3,7 @@ import biblio from '@tc39/ecma262-biblio' with { type: 'json' }
 // op, term, table, clause, production, step, figure, note
 
 import { readFile, writeFile } from 'node:fs/promises'
-import YAML from 'js-yaml'
+import * as YAML from 'js-yaml'
 
 const aoid =
     '\\b(' +

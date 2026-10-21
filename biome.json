@@ -1,5 +1,5 @@
 {
-    "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
+    "$schema": "https://biomejs.dev/schemas/2.6.2/schema.json",
     "files": {
         "includes": [
             "extension-vscode/src/**/*.ts",
@@ -21,7 +21,7 @@
     "linter": {
         "enabled": true,
         "rules": {
-            "recommended": true,
+            "preset": "recommended",
             "style": { "useTemplate": "off", "noUselessElse": "off", "noNonNullAssertion": "off" },
             "complexity": { "useLiteralKeys": "off", "noAdjacentSpacesInRegex": "off" },
             "correctness": { "noUnusedImports": "error" }

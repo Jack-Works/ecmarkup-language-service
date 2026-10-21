@@ -8,6 +8,7 @@ import { Reference } from './features/findAllReferences.js'
 import { Formatter } from './features/format.js'
 import { GoToDefinition } from './features/gotoDefinition.js'
 import { Hovers } from './features/hover.js'
+import { InsertClause } from './features/insertClause.js'
 import { Rename } from './features/rename.js'
 import { SemanticToken } from './features/semanticTokens.js'
 import { createRemoteIO, type ServerAPI } from './workspace/io.js'
@@ -37,6 +38,7 @@ export function initialize(connection: Connection, version: string) {
         // linked editing range behaves strange when using ctrl-x to delete a line
         // LinkedEditingRange.enable(features.capabilities, connection, globalProgram, documents)
         Formatter.enable(features.capabilities, connection, globalProgram, capabilities)
+        InsertClause.enable(connection, globalProgram)
         const diagnosticConfig = Diagnostics.enable(
             features.capabilities,
             connection,
