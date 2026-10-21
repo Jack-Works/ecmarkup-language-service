@@ -1,5 +1,11 @@
 # ecmarkup-language-extension-vscode
 
+## 0.6.0
+
+### Minor Changes
+
+- 6941931: add command "ecmarkup: Insert clause" (`ecmarkup.insertClause` in vscode, "ecmarkup/insertClause" in the language server)
+
 ## 0.5.0
 
 ### Minor Changes
