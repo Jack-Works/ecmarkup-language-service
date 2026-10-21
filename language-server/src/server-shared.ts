@@ -45,6 +45,7 @@ export function initialize(connection: Connection, version: string) {
             globalProgram,
             capabilities?.publishDiagnostics,
             capabilities?.diagnostic,
+            params.capabilities.workspace?.diagnostics?.refreshSupport,
         )
 
         Object.entries({
@@ -56,7 +57,6 @@ export function initialize(connection: Connection, version: string) {
         })
         return features
     })
-
 
     documents.onDidClose((e) => globalProgram.onDocumentRemoved(e.document))
     connection.onShutdown(() => globalProgram.dispose())

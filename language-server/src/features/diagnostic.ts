@@ -9,6 +9,7 @@ import {
     type Connection,
     type Diagnostic,
     type DiagnosticClientCapabilities,
+    DiagnosticRefreshRequest,
     type DocumentDiagnosticParams,
     type DocumentDiagnosticReport,
     type PublishDiagnosticsClientCapabilities,
@@ -99,36 +100,62 @@ export class Diagnostics {
         program: Program,
         push_capabilities: PublishDiagnosticsClientCapabilities | undefined,
         pull_capabilities: DiagnosticClientCapabilities | undefined,
+        pull_refresh_support: boolean | undefined,
     ) {
         const linter = new Diagnostics()
+        const usePullDiagnostics = pull_capabilities !== undefined
+        const usePushDiagnostics = !usePullDiagnostics && push_capabilities !== undefined
+        const diagnosticRuns = new Map<string, number>()
+
+        function startDiagnostic(uri: string) {
+            const run = (diagnosticRuns.get(uri) ?? 0) + 1
+            diagnosticRuns.set(uri, run)
+            return run
+        }
+
         const config = {
             enabled: false,
             enable(enable: boolean) {
                 this.enabled = enable
-                documents.all().forEach((document) => {
-                    pushDiagnostics({ document })
-                })
+                if (usePushDiagnostics) {
+                    documents.all().forEach((document) => {
+                        pushDiagnostics({ document })
+                    })
+                } else if (pull_refresh_support) {
+                    void connection.sendRequest(DiagnosticRefreshRequest.type).catch(() => {})
+                }
             },
         }
 
         const pushDiagnostics = (params: TextDocumentChangeEvent<TextDocument>) => {
+            const document = params.document
+            const uri = document.uri
+            const run = startDiagnostic(uri)
             if (!config.enabled) {
-                connection.sendDiagnostics({ uri: params.document.uri, diagnostics: [] })
+                connection.sendDiagnostics({ uri, diagnostics: [] })
                 return
             }
-            const document = params.document
-            if (!document) return
+            const documentVersion = document.version
             linter.diagnostic(document, program, undefined).then((diagnostic) => {
-                connection.sendDiagnostics({ uri: document.uri, diagnostics: diagnostic })
+                if (diagnosticRuns.get(uri) !== run || documents.get(uri)?.version !== documentVersion) return
+                connection.sendDiagnostics({ uri, diagnostics: diagnostic })
             })
         }
-        if (pull_capabilities) {
+        if (usePullDiagnostics) {
             connection.languages.diagnostics.on(
                 async (params, token, workDoneProgress): Promise<DocumentDiagnosticReport> => {
                     if (!config.enabled) return { items: [], kind: 'full' }
                     const document = documents.get(params.textDocument.uri)
                     if (!document) return { items: [], kind: 'full' }
+                    const run = startDiagnostic(document.uri)
+                    const documentVersion = document.version
                     const diagnostic = await linter.diagnostic(document, program, params, token, workDoneProgress)
+                    if (
+                        diagnosticRuns.get(document.uri) !== run ||
+                        documents.get(document.uri)?.version !== documentVersion
+                    ) {
+                        return { items: [], kind: 'full' }
+                    }
                     return { items: diagnostic, kind: 'full' }
                 },
             )
@@ -137,7 +164,7 @@ export class Diagnostics {
                 interFileDependencies: false,
                 workspaceDiagnostics: false,
             }
-        } else if (push_capabilities) {
+        } else if (usePushDiagnostics) {
             documents.onDidOpen(pushDiagnostics)
             documents.onDidChangeContent(pushDiagnostics)
         }
