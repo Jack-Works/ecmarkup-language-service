@@ -12,33 +12,73 @@ function formatSignature({ aoid, signature }: BiblioOp): string {
             .join(',\n  ')
         str += '\n'
     }
-    str += '): ' + formatSpecValue(signature.return, 0)
+    str += '): ' + formatSpecValueForHover(signature.return)
     return str
 }
 function formatParameter(value: SpecOperations.Parameter, optional: boolean): string {
     let str = value.name.slice(1, -1)
     if (optional) str += '?'
-    if (value.type) str += ': ' + formatSpecValue(value.type, 2)
+    if (value.type) str += ': ' + formatSpecValueForHover(value.type)
     return str
 }
-function formatSpecValue(value: SpecValue.SpecDataType, identLevel: number): string {
+function formatSpecValueForHover(value: SpecValue.SpecDataType): string {
     if (value.kind === 'completion') {
         if (!value.typeOfValueIfNormal) return Cap(value.completionType) + 'Completion'
-        return `Completion<${formatSpecValue(value.typeOfValueIfNormal, identLevel)}>`
+        return `Completion<${formatSpecValueForHover(value.typeOfValueIfNormal)}>`
     } else if (value.kind === 'list') {
-        return `List<${formatSpecValue(value.elements, identLevel)}>`
+        return `List<${formatSpecValueForHover(value.elements)}>`
     } else if (value.kind === 'opaque') {
         return formatSpecValueText(value.type)
     } else if (value.kind === 'unused') {
         return 'unused'
     } else if (value.kind === 'union') {
-        return value.types.map(formatSpecValue).join(' | ')
+        return value.types.map(formatSpecValueForHover).join(' | ')
     } else if (value.kind === 'record') {
         return `Record { ${Object.entries(value.fields)
-            .map(([key, value]) => `${key}: ${formatSpecValue(value, identLevel)}`)
+            .map(([key, value]) => `${key}: ${formatSpecValueForHover(value)}`)
             .join(', ')} }`
     }
     throw new Error(`Unknown SpecValue: ${JSON.stringify(value)}`)
+}
+
+export function formatSpecValueForHeader(value: SpecValue.SpecDataType | undefined, operationName?: string): string {
+    if (!value) return ''
+    if (value.kind === 'completion') {
+        if (value.completionType === 'normal') return 'a normal completion'
+        if (value.completionType === 'abrupt') {
+            if (operationName === 'ThrowCompletion') return 'a throw completion'
+            if (operationName === 'ReturnCompletion') return 'a return completion'
+            return 'an abrupt completion'
+        }
+        const normal = value.typeOfValueIfNormal
+            ? ` containing ${value.typeOfValueIfNormal.kind === 'union' ? 'either ' : ''}${formatSpecValueForHeader(value.typeOfValueIfNormal)}`
+            : ''
+        return `either a normal completion${normal} or a throw completion`
+    }
+    if (value.kind === 'opaque') return value.type
+    if (value.kind === 'unused') return '~unused~'
+    if (value.kind === 'union') return joinWithOr(value.types.map((type) => formatSpecValueForHeader(type)))
+    if (value.kind === 'list') return `a List of ${removeArticle(formatSpecValueForHeader(value.elements))}`
+    if (value.kind === 'record') {
+        const fields = Object.entries(value.fields)
+            .map(([name, field]) => `${name}: ${formatSpecValueForHeader(field)}`)
+            .join(', ')
+        return `a Record with fields { ${fields} }`
+    }
+    return assertNever(value)
+}
+
+function removeArticle(value: string) {
+    return value.replace(/^an? /u, '')
+}
+
+function joinWithOr(values: readonly string[]) {
+    if (values.length < 2) return values[0] ?? ''
+    return `${values.slice(0, -1).join(', ')} or ${values.at(-1)}`
+}
+
+function assertNever(value: never): never {
+    throw new Error(`Unknown spec value: ${JSON.stringify(value)}`)
 }
 
 export function formatSpecValueText(text: string) {

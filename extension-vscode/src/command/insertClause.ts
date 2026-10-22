@@ -1,5 +1,5 @@
-import type { ExtensionContext } from 'vscode'
-import { commands, Range, window } from 'vscode'
+import type { ExtensionContext, Uri } from 'vscode'
+import { commands, Range, window, workspace } from 'vscode'
 import type { LanguageClient as WebClient } from 'vscode-languageclient/browser'
 import type { LanguageClient as NodeClient } from 'vscode-languageclient/node'
 import {
@@ -32,6 +32,7 @@ export function registerInsertClauseCommand(context: ExtensionContext, getClient
                 textDocument: { uri: editor.document.uri.toString() },
                 position: editor.selection.active,
                 clauseNumber,
+                indentSize: getConfiguredIndentSize(editor.document.uri),
             }
             const edits = await getClient().sendRequest<InsertClauseResult>(insertClauseRequest, params)
             if (!edits) {
@@ -55,4 +56,16 @@ export function registerInsertClauseCommand(context: ExtensionContext, getClient
             if (!applied) await window.showErrorMessage('Could not apply the inserted clause.')
         }),
     )
+}
+
+function getConfiguredIndentSize(uri: Uri) {
+    const inspected = workspace.getConfiguration('editor', uri).inspect<number | 'auto'>('tabSize')
+    const tabSize =
+        inspected?.workspaceFolderLanguageValue ??
+        inspected?.workspaceLanguageValue ??
+        inspected?.workspaceFolderValue ??
+        inspected?.workspaceValue ??
+        inspected?.globalLanguageValue ??
+        inspected?.globalValue
+    return typeof tabSize === 'number' ? tabSize : undefined
 }

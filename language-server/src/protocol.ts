@@ -6,6 +6,7 @@ export interface InsertClauseParams {
     textDocument: TextDocumentIdentifier
     position: Position
     clauseNumber: string
+    indentSize?: number
 }
 
 export type InsertClauseResult = TextEdit[] | null
