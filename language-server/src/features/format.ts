@@ -116,6 +116,10 @@ export class Formatter {
         const sourceFile = program.getSourceFile(document)
         const source = document.getText()
         const cursorAt = sourceFile.text.offsetAt(params.position)
+
+        // TODO: workaround: should be fixed in ecmarkup's formatter
+        const lineStart = source.lastIndexOf('\n', cursorAt - 1) + 1
+        if (params.ch === '.' && /^\s*\d+\.$/u.test(source.slice(lineStart, cursorAt))) return undefined
         if (source[cursorAt] === '\n' && sourceFile.findElementAt(cursorAt)?.tagName === 'emu-alg') {
             return this.formatRange(document, program, {
                 range: {

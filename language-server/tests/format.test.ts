@@ -84,6 +84,25 @@ it('format on range', async () => {
     `)
 })
 
+const formatter = new Formatter({})
+it("does not format after a numbered algorithm step marker (workaround: should be fixed in ecmarkup's formatter)", async () => {
+    const file = File.of`
+      <emu-alg>
+        1. Let _obj_ be the *this* value.
+        1.${File.mark()}
+      </emu-alg>
+    `
+
+    const result = await formatter.formatOnType(file.document, file.program, {
+        options: { insertSpaces: true, tabSize: 2 },
+        position: file.mark.position,
+        textDocument: file.textDocument,
+        ch: '.',
+    })
+
+    expect(result).toBeUndefined()
+})
+
 async function format(source: TemplateStringsArray, symbol: symbol, ...symbols: symbol[]) {
     const formatter = new Formatter({})
     const { document, textDocument, markers, program } = File.of(source, symbol, ...symbols)
