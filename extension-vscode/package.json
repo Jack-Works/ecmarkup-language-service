@@ -38,6 +38,11 @@
                     "type": "boolean",
                     "default": true,
                     "markdownDescription": "Automatically treat `.html` files as ecmarkup when they contain an `<emu-clause` tag.\n\nSome TC39 proposals (e.g. Temporal) write their spec text in `.html` files rather than `.emu`. When enabled, such files are switched to the ecmarkup language mode; other HTML files are left untouched."
+                },
+                "ecmarkup.ecma262Repo": {
+                    "type": "string",
+                    "scope": "machine",
+                    "markdownDescription": "Absolute path to a local ECMA-262 repository. Its `spec.html` is used as an external source for Go to Definition."
                 }
             }
         },

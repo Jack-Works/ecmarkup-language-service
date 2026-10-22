@@ -103,6 +103,9 @@ export function mockClient(io: Partial<ClientAPI>): ClientAPI {
         async resolveBiblio() {
             return undefined
         },
+        async resolveEcma262Source() {
+            return undefined
+        },
         async warn(...message) {
             console.warn(...message)
         },

@@ -52,6 +52,9 @@ export function initialize(connection: Connection, version: string) {
             enableDiagnostics(boolean) {
                 diagnosticConfig.enable(boolean)
             },
+            resetEcma262Source() {
+                globalProgram.resetEcma262Source()
+            },
         } satisfies ServerAPI as ServerAPI).forEach(([key, f]) => {
             connection.onRequest(`api/${key}`, (params) => f(...params))
         })

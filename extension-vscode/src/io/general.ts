@@ -48,6 +48,14 @@ export const client: ClientAPI = {
             }
         }
     },
+    async resolveEcma262Source() {
+        const repo = workspace.getConfiguration('ecmarkup').get<string>('ecma262Repo')
+        if (!repo) return undefined
+
+        const source = Uri.joinPath(Uri.file(repo), 'spec.html')
+        const file = await workspace.fs.readFile(source)
+        return { uri: source.toString(), text: new TextDecoder().decode(file) }
+    },
 }
 
 type FsPath = string

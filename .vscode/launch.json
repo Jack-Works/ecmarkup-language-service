@@ -2,20 +2,24 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "extensionHost",
+            "type": "node-terminal",
             "request": "launch",
             "name": "Launch Client",
-            "runtimeExecutable": "${execPath}",
-            "args": ["--extensionDevelopmentPath=${workspaceRoot}/extension-vscode/"],
-            "outFiles": ["${workspaceRoot}/extension-vscode/lib/**/*.js"],
-            "sourceMaps": true,
+            "command": "code --new-window --inspect-extensions=9229 --extensionDevelopmentPath=\"${workspaceFolder}/extension-vscode\" \"${workspaceFolder}\"",
             "preLaunchTask": {
                 "type": "npm",
                 "script": "watch"
-            },
-            "env": {
-                "VSCODE_TEXTMATE_DEBUG": "1"
             }
+        },
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach to Extension Host",
+            "port": 9229,
+            "restart": true,
+            "timeout": 0,
+            "outFiles": ["${workspaceFolder}/extension-vscode/lib/**/*.js"],
+            "sourceMaps": true
         },
         {
             "type": "node",
@@ -23,14 +27,8 @@
             "name": "Attach to Server",
             "port": 29381,
             "restart": true,
-            "outFiles": ["${workspaceRoot}/language-server/lib/**/*.js"],
+            "outFiles": ["${workspaceFolder}/language-server/lib/**/*.js"],
             "sourceMaps": true
-        }
-    ],
-    "compounds": [
-        {
-            "name": "Client + Server",
-            "configurations": ["Launch Client", "Attach to Server"]
         }
     ]
 }

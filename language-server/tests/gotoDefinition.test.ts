@@ -1,6 +1,7 @@
 import { expect, it } from 'vitest'
 import { GoToDefinition } from '../src/features/gotoDefinition.js'
-import { File } from './File.js'
+import { createProgram } from '../src/workspace/program.js'
+import { File, mockClient } from './File.js'
 
 it('go to definition', async () => {
     const goto = new GoToDefinition()
@@ -37,13 +38,49 @@ it('go to definition', async () => {
     `
 
     for (const { position, around, desc } of markers) {
-        const result = goto.onDefinition(document, program, { textDocument, position })
+        const result = await goto.onDefinition(document, program, { textDocument, position })
         expect([around, result]).toMatchSnapshot(desc)
     }
 
     goto.capabilities = { linkSupport: true }
     for (const { position, around, desc } of markers) {
-        const result = goto.onDefinition(document, program, { textDocument, position })
+        const result = await goto.onDefinition(document, program, { textDocument, position })
         expect([around, result]).toMatchSnapshot('linkSupport: ' + desc)
     }
+})
+
+it('go to a definition in the local ECMA-262 repository', async () => {
+    const goto = new GoToDefinition({ linkSupport: true })
+    const file = File.of`
+        <emu-alg>
+            1. Perform ? OrdinaryObjectCreate${File.mark('external AO')}( *null* ).
+        </emu-alg>
+    `
+    const sourceUri = 'file:///ecma262/spec.html'
+    const sourceText = `<emu-clause id="sec-ordinaryobjectcreate" type="abstract operation">
+<h1>OrdinaryObjectCreate ( _proto_: an Object ): an Object</h1>
+<dl class="header"></dl>
+</emu-clause>`
+    const program = createProgram(
+        mockClient({
+            async resolveEcma262Source() {
+                return { uri: sourceUri, text: sourceText }
+            },
+        }),
+    )
+
+    const result = await goto.onDefinition(file.document, program, {
+        textDocument: file.textDocument,
+        position: file.mark.position,
+    })
+
+    expect(result).toEqual([
+        expect.objectContaining({
+            targetUri: sourceUri,
+            targetSelectionRange: {
+                start: { line: 1, character: 4 },
+                end: { line: 1, character: 24 },
+            },
+        }),
+    ])
 })

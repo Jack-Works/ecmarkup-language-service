@@ -1,6 +1,6 @@
 import bundledBiblio from '@tc39/ecma262-biblio' with { type: 'json' }
 import type { BiblioEntry } from '@tc39/ecma262-biblio'
-import type { TextDocument } from 'vscode-languageserver-textdocument'
+import { TextDocument } from 'vscode-languageserver-textdocument'
 import { getLanguageModelCache } from '../parser/cache.js'
 import { EcmarkupDocument } from '../parser/ecmarkup.js'
 import type { ClientAPI } from './io.js'
@@ -11,6 +11,8 @@ export interface Program {
     dispose(): void
 
     resolveBiblio(base: string): Promise<readonly BiblioEntry[]>
+    resolveEcma262Source(base: string): Promise<EcmarkupDocument | undefined>
+    resetEcma262Source(): void
     getEditorCursorCount(): Promise<number>
     warn(...message: unknown[]): Promise<void>
 }
@@ -18,6 +20,7 @@ export interface Program {
 export function createProgram(client: ClientAPI): Program {
     const fileCache = getLanguageModelCache(10, 60, (doc) => new EcmarkupDocument(doc))
     const biblioCache = new Map<string, Promise<readonly BiblioEntry[]>>()
+    let ecma262Source: Promise<EcmarkupDocument | undefined> | undefined
 
     return {
         getSourceFile(document) {
@@ -28,6 +31,24 @@ export function createProgram(client: ClientAPI): Program {
         },
         dispose() {
             fileCache.dispose()
+        },
+        resolveEcma262Source(base) {
+            if (ecma262Source) return ecma262Source
+            ecma262Source = client
+                .resolveEcma262Source(base)
+                .then((source) => {
+                    if (!source) return undefined
+                    const document = TextDocument.create(source.uri, 'ecmarkup', 0, source.text)
+                    return new EcmarkupDocument(document)
+                })
+                .catch((err) => {
+                    client.warn(`Could not resolve the local ECMA-262 repository from ${base}`, err)
+                    return undefined
+                })
+            return ecma262Source
+        },
+        resetEcma262Source() {
+            ecma262Source = undefined
         },
         warn: client.warn,
         getEditorCursorCount: client.getEditorCursorCount,

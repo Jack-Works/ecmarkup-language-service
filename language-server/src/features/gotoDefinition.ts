@@ -19,13 +19,13 @@ import type { Program } from '../workspace/program.js'
 export class GoToDefinition {
     constructor(public capabilities?: DefinitionClientCapabilities) {}
 
-    onDefinition(
+    async onDefinition(
         document: TextDocument,
         program: Program,
         params: DefinitionParams,
         _token?: CancellationToken,
         _workDoneProgress?: WorkDoneProgressReporter,
-    ): Definition | DefinitionLink[] | undefined | null {
+    ): Promise<Definition | DefinitionLink[] | undefined | null> {
         const sourceFile = program.getSourceFile(document)
         const offset = document.offsetAt(params.position)
         const { word, isGrammarLeading, isVariableLeading, leftBoundary, rightBoundary } = word_at_cursor(
@@ -40,12 +40,28 @@ export class GoToDefinition {
         const node = sourceFile.findElementAt(offset)
         if (node?.nodeName === 'emu-grammar' || isGrammarLeading) {
             const result = sourceFile.localDefinedGrammars.filter((define) => define.name === word)
+            if (result.length) {
+                return this.toClient(
+                    result.map(
+                        (define): LocationLink => ({
+                            targetUri: document.uri,
+                            targetRange: sourceFile.getRelativeRange(define.node, define.fullDefinitionRange),
+                            targetSelectionRange: sourceFile.getRelativeRange(define.node, define.range),
+                            originSelectionRange,
+                        }),
+                    ),
+                )
+            }
+
+            const externalSourceFile = await program.resolveEcma262Source(document.uri)
+            if (!externalSourceFile) return undefined
+            const externalResult = externalSourceFile.localDefinedGrammars.filter((define) => define.name === word)
             return this.toClient(
-                result.map(
+                externalResult.map(
                     (define): LocationLink => ({
-                        targetUri: document.uri,
-                        targetRange: sourceFile.getRelativeRange(define.node, define.fullDefinitionRange),
-                        targetSelectionRange: sourceFile.getRelativeRange(define.node, define.range),
+                        targetUri: externalSourceFile.text.uri,
+                        targetRange: externalSourceFile.getRelativeRange(define.node, define.fullDefinitionRange),
+                        targetSelectionRange: externalSourceFile.getRelativeRange(define.node, define.range),
                         originSelectionRange,
                     }),
                 ),
@@ -103,6 +119,26 @@ export class GoToDefinition {
                         },
                     ])
                 }
+
+                const externalSourceFile = await program.resolveEcma262Source(document.uri)
+                const externalOperation = externalSourceFile?.localDefinedAbstractOperations.find(
+                    (entry) => entry.name === word,
+                )
+                if (!externalSourceFile || !externalOperation) return undefined
+                return this.toClient([
+                    {
+                        targetUri: externalSourceFile.text.uri,
+                        targetSelectionRange: externalSourceFile.getRelativeRange(
+                            externalOperation.node,
+                            externalOperation.range,
+                        ),
+                        targetRange: externalSourceFile.getRelativeRange(
+                            externalOperation.node,
+                            externalOperation.fullDefinitionRange,
+                        ),
+                        originSelectionRange,
+                    },
+                ])
             }
         }
 

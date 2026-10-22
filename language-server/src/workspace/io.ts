@@ -8,6 +8,14 @@ export interface ClientAPI {
      */
     resolveBiblio(base: string): Promise<{ entries: BiblioEntry[]; location?: string; source?: string } | undefined>
 
+    /**
+     * Resolve and read the local ECMA-262 repository's spec.html.
+     *
+     * The language server cannot access the filesystem directly in the web
+     * extension, so this is deliberately part of the client IO boundary.
+     */
+    resolveEcma262Source(base: string): Promise<{ uri: string; text: string } | undefined>
+
     getEditorCursorCount(): Promise<number>
 
     warn(...message: unknown[]): Promise<void>
@@ -15,6 +23,7 @@ export interface ClientAPI {
 
 export interface ServerAPI {
     enableDiagnostics(boolean: boolean): void
+    resetEcma262Source(): void
 }
 
 export function createRemoteIO(connection: Connection) {

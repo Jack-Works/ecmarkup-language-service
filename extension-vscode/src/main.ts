@@ -40,7 +40,12 @@ export async function onActivate(
 
     const server = createRemoteIO(client)
 
-    workspace.onDidChangeConfiguration(updateConfiguration)
+    context.subscriptions.push(
+        workspace.onDidChangeConfiguration((event) => {
+            if (event.affectsConfiguration('ecmarkup.ecma262Repo')) server.resetEcma262Source()
+            updateConfiguration()
+        }),
+    )
     updateConfiguration()
     function updateConfiguration() {
         const config = workspace.getConfiguration('ecmarkup')
