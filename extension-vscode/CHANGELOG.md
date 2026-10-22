@@ -1,5 +1,15 @@
 # ecmarkup-language-extension-vscode
 
+## 0.7.0
+
+### Minor Changes
+
+- 468868c: go to definition now can jump to ecma262 spec (need to configure "ecmarkup.ecma262Repo")
+
+### Patch Changes
+
+- fa01cf2: let insert clause support tab size
+
 ## 0.6.0
 
 ### Minor Changes
