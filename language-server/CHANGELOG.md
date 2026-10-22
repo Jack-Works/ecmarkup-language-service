@@ -1,5 +1,17 @@
 # ecmarkup-language-server
 
+## 0.8.0
+
+### Minor Changes
+
+- 468868c: go to definition now can jump to ecma262 spec (need to configure "ecmarkup.ecma262Repo")
+
+### Patch Changes
+
+- 69caebb: fix go to definition not work in emu-meta
+- 71f6fb5: a workaround fix of ecmarkup's formatter will indent in "\n 1."
+- fa01cf2: let insert clause support tab size
+
 ## 0.7.0
 
 ### Minor Changes
