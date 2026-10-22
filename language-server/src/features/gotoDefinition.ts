@@ -66,7 +66,11 @@ export class GoToDefinition {
                     }),
                 ),
             )
-        } else if (node?.nodeName === 'emu-alg' || node?.nodeName === 'h1') {
+        } else if (
+            node?.nodeName === 'emu-alg' ||
+            node?.nodeName === 'h1' ||
+            node?.nodeName === 'emu-meta'
+        ) {
             if (isVariableLeading) {
                 const header = sourceFile.getAbstractOperationHeader(offset)
                 const headerText = sourceFile.getNodeInnerText(header)

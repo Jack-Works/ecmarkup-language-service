@@ -84,3 +84,39 @@ it('go to a definition in the local ECMA-262 repository', async () => {
         }),
     ])
 })
+
+it('go to a definition from an abstract operation metadata reference', async () => {
+    const goto = new GoToDefinition({ linkSupport: true })
+    const file = File.of`
+        <emu-alg>
+            1. Let _newBuffer_ be ? <emu-meta suppress-effects="user-code">OrdinaryObjectCreate${File.mark('external AO')}(*null*)</emu-meta>.
+        </emu-alg>
+    `
+    const sourceUri = 'file:///ecma262/spec.html'
+    const sourceText = `<emu-clause id="sec-ordinaryobjectcreate" type="abstract operation">
+<h1>OrdinaryObjectCreate ( _proto_: an Object ): an Object</h1>
+<dl class="header"></dl>
+</emu-clause>`
+    const program = createProgram(
+        mockClient({
+            async resolveEcma262Source() {
+                return { uri: sourceUri, text: sourceText }
+            },
+        }),
+    )
+
+    const result = await goto.onDefinition(file.document, program, {
+        textDocument: file.textDocument,
+        position: file.mark.position,
+    })
+
+    expect(result).toEqual([
+        expect.objectContaining({
+            targetUri: sourceUri,
+            targetSelectionRange: {
+                start: { line: 1, character: 4 },
+                end: { line: 1, character: 24 },
+            },
+        }),
+    ])
+})
